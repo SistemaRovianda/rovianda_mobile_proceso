@@ -1,0 +1,7 @@
+{
+  "name": "rovianda_mobile_proceso",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,8 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "rovianda_mobile_proceso",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {}
+}
