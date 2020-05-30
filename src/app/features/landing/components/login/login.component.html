@@ -1,0 +1,60 @@
+<form [formGroup]="form">
+  <ion-grid class="form-grid">
+    <ion-row class="form-image">
+      <ion-col size="12">
+        <div class="image"></div>
+      </ion-col>
+    </ion-row>
+    <ion-row class="form-message">
+      <ion-col size="12">
+        <h1>Introduce tu usuario y contraseña</h1>
+        <h1>Para iniciar sesión</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-item lines="none" class="form-input">
+        <ion-icon name="user" class="color"></ion-icon>
+        <ion-input
+          formControlName="email"
+          type="email"
+          placeholder="Nombre de usuario"
+          required
+        ></ion-input>
+      </ion-item>
+    </ion-row>
+    <div class="error">
+      <ion-label *ngIf="email.errors">
+        Por favor ingresa un correo electr&oacute;nico v&aacute;lido
+      </ion-label>
+    </div>
+    <ion-row>
+      <ion-item lines="none" class="form-input">
+        <ion-icon name="lock" class="color"></ion-icon>
+        <ion-input
+          formControlName="password"
+          type="password"
+          placeholder="Contraseña"
+          required
+        ></ion-input>
+      </ion-item>
+    </ion-row>
+    <div class="error">
+      <ion-label *ngIf="password.errors">
+        Por favor ingresa una contraseña válida
+      </ion-label>
+    </div>
+    <ion-row class="row-button">
+      <ion-button class="btn-login" (click)="onSubmit()" [disabled]="loading">
+        <ion-grid>
+          <ion-row *ngIf="!loading"> <ion-col>Iniciar sesión</ion-col></ion-row>
+          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+        </ion-grid>
+      </ion-button>
+    </ion-row>
+    <div class="error" style="text-align: center; font-size: 2.5vw;">
+      <ion-label  *ngIf="form.errors?.loginError">
+        {{ translateError(form.errors.loginError) }}
+      </ion-label>
+    </div>
+  </ion-grid>
+</form>
