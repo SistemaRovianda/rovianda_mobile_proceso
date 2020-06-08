@@ -4,6 +4,7 @@
       <ion-back-button
         [text]="titlePath || 'titlePath'"
         [defaultHref]="path || '/'"
+        (click)="signOut()"
         icon="arrow-back"
       >
       </ion-back-button>
