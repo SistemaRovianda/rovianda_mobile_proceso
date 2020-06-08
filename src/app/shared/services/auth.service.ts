@@ -48,7 +48,6 @@ export class AuthService {
   }
 
   getUserData(uid: string): Observable<AuthenticationUser> {
-    console.log(this.url);
     return this.http.get<AuthenticationUser>(`${this.url}/user/${uid}`);
   }
 

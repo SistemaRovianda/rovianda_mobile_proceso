@@ -1,0 +1,14 @@
+<div class="container">
+  <ion-grid>
+    <ion-row>
+      <ion-col class="material" size="4">Materia prima</ion-col>
+      <ion-col size="5">Producto - Lote</ion-col>
+      <ion-col size="3">Fecha</ion-col>
+    </ion-row>
+    <ion-grid scrolly="true" class="table">
+      <app-raw-recent-record [process]="process"
+        *ngFor="let process of recentProcess"
+      ></app-raw-recent-record>
+    </ion-grid>
+  </ion-grid>
+</div>

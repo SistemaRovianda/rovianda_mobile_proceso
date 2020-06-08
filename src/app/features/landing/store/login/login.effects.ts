@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import { AuthService } from "src/app/shared/services/auth.service";
 import * as fromLoginActions from "./login.action";
 import * as fromAuthenticationUser from "../authentication/authentication.action";
-import { exhaustMap, switchMap, catchError } from "rxjs/operators";
+import { exhaustMap, switchMap, catchError, tap } from "rxjs/operators";
 import { of, from } from "rxjs";
 
 @Injectable()
@@ -86,7 +86,8 @@ export class LoginEffects {
     this.action$.pipe(
       ofType(fromLoginActions.singInSuccess),
       exhaustMap(() =>
-        from(this.router.navigate(["/"])).pipe(
+        from(this.router.navigate(["/process/recent-records"])).pipe(
+          tap((o) => console.log(o)),
           switchMap((result) =>
             result
               ? [fromLoginActions.finishLoad()]

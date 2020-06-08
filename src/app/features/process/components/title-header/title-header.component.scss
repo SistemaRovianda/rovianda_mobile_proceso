@@ -1,0 +1,21 @@
+$color-text-secondary: #adabab;
+ion-toolbar {
+  --background: white;
+  padding-top: 3%;
+  box-sizing: border-box;
+  ion-buttons {
+    position: absolute !important;
+    color: $color-text-secondary;
+    font-weight: 100;
+    ion-back-button {
+      text-transform: none;
+      font-size: 3vw;
+    }
+  }
+}
+
+ion-title {
+  text-align: center;
+  color: $color-text-secondary;
+  font-size: 3.1vw;
+}

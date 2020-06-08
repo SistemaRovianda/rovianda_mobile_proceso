@@ -1,3 +1,5 @@
+import { RecentRecords } from "./recent-records.interface";
+
 export interface LoginState {
   loading: boolean;
   error: string;
@@ -10,11 +12,13 @@ export interface AuthenticationUser {
   role?: string;
   token?: string;
   currentToken?: string;
+  rol?: string;
 }
 
 export interface AppState {
   auth: AuthenticationUser;
   login: LoginState;
+  recentRecords: RecentRecords;
 }
 
 export interface SignIn {

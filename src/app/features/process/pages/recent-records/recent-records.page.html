@@ -1,0 +1,23 @@
+<app-title-header titlePath="Regresar" path="/"></app-title-header>
+
+<ion-grid class="container">
+  <ion-row>
+    <ion-col>
+      <h1 class="title">Registros recientes</h1>
+    </ion-col>
+  </ion-row>
+  <ion-row class="body">
+    <app-table-recent-record></app-table-recent-record>
+  </ion-row>
+  <ion-row class="footer">
+    <ion-button class="button" (click)="onClick()">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12">
+            Agregar nuevo registro
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-button>
+  </ion-row>
+</ion-grid>

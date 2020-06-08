@@ -1,0 +1,26 @@
+$color-primary: #575552;
+$color-secondary: #e1bc5c;
+.container {
+  width: 90vw;
+  height: 100%;
+  color: $color-primary;
+  ion-row {
+    margin-bottom: 1%;
+    ion-col {
+      font-size: 3.2vw;
+      font-weight: 500;
+      text-align: center;
+    }
+    .material {
+      padding-left: 8%;
+    }
+  }
+  .table {
+    height: 62vh;
+    width: 100%;
+    overflow: hidden;
+  }
+  .table[scrolly="true"] {
+    overflow-y: auto;
+  }
+}
