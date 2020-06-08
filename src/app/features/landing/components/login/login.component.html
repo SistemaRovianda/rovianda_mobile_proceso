@@ -44,7 +44,11 @@
       </ion-label>
     </div>
     <ion-row class="row-button">
-      <ion-button class="btn-login" (click)="onSubmit()" [disabled]="loading">
+      <ion-button
+        class="btn-login"
+        (click)="onSubmit()"
+        [disabled]="form.invalid || loading"
+      >
         <ion-grid>
           <ion-row *ngIf="!loading"> <ion-col>Iniciar sesión</ion-col></ion-row>
           <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
@@ -52,7 +56,7 @@
       </ion-button>
     </ion-row>
     <div class="error" style="text-align: center; font-size: 2.5vw;">
-      <ion-label  *ngIf="form.errors?.loginError">
+      <ion-label *ngIf="form.errors?.loginError">
         {{ translateError(form.errors.loginError) }}
       </ion-label>
     </div>
