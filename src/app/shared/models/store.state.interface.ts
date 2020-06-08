@@ -9,7 +9,6 @@ export interface AuthenticationUser {
   uid?: string;
   name?: string;
   email?: string;
-  role?: string;
   token?: string;
   currentToken?: string;
   rol?: string;

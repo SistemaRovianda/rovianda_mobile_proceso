@@ -11,7 +11,7 @@ const AUTHENTICATION_USER_INIT: AuthenticationUser = {
   currentToken: null,
   email: null,
   name: null,
-  role: null,
+  rol: null,
 };
 
 export const authenticationReducer = createReducer<AuthenticationUser>(

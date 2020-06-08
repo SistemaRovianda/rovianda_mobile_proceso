@@ -15,7 +15,7 @@ export const SELECT_USER_UID = createSelector(
 
 export const SELECT_USER_ROLE = createSelector(
   AUTHENTICATION_STATE,
-  (state) => state.role
+  (state) => state.rol
 );
 
 export const SELECT_USER_CURRENT_TOKEN = createSelector(
