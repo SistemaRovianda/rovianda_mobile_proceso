@@ -1,0 +1,14 @@
+ion-button {
+  width: 100%;
+  height: 90%;
+  padding: 2%;
+  margin-top: 15%;
+  text-transform: none;
+  font-size: 2.5vw;
+  --ion-color-primary: #575552;
+  flex-flow: column;
+  font-weight: 500;
+}
+.button-inner {
+  flex-flow: column;
+}

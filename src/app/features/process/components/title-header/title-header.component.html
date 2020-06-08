@@ -5,6 +5,7 @@
         [text]="titlePath || 'titlePath'"
         [defaultHref]="path || '/'"
         icon="arrow-back"
+        (click)="onClick(titlePath)"
       >
       </ion-back-button>
     </ion-buttons>

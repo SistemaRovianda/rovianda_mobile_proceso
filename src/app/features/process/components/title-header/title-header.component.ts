@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
 
 @Component({
   selector: "app-title-header",
@@ -9,7 +9,13 @@ export class TitleHeaderComponent implements OnInit {
   @Input() titlePath: string;
   @Input() path: string;
 
+  @Output() OnClickEvent = new EventEmitter<string>();
+
   constructor() {}
 
   ngOnInit() {}
+
+  onClick(message: string) {
+    this.OnClickEvent.emit(message);
+  }
 }
