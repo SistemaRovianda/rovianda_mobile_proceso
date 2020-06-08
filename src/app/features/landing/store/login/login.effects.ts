@@ -67,7 +67,7 @@ export class LoginEffects {
           switchMap(({ email, name, rol }) => {
             localStorage.setItem("role", rol);
             return [
-              fromAuthenticationUser.loadUser({ email, name, role: rol }),
+              fromAuthenticationUser.loadUser({ email, name, rol }),
               fromLoginActions.singInSuccess(),
             ];
           }),
