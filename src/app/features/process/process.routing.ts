@@ -8,6 +8,8 @@ import { ProcessDetailPageModule } from "./pages/process-detail/process-detail.m
 import { BasicRegistrationPage } from "./pages/basic-registration/basic-registration.page";
 import { BasicRegistrationPageModule } from "./pages/basic-registration/basic-registration.module";
 import { ProcessDetailResolver } from "src/app/shared/resolvers/process-detail.resolver";
+import { ConditioningPageModule } from "./pages/conditioning/conditioning.module";
+import { ConditioningPage } from "./pages/conditioning/conditioning.page";
 
 const routes: Routes = [
   {
@@ -31,6 +33,10 @@ const routes: Routes = [
         path: "basic-registration",
         component: BasicRegistrationPage,
       },
+      {
+        path: "conditioning",
+        component: ConditioningPage,
+      },
     ],
   },
 ];
@@ -41,6 +47,7 @@ const routes: Routes = [
     RecentRecordsPageModule,
     ProcessDetailPageModule,
     BasicRegistrationPageModule,
+    ConditioningPageModule,
   ],
   exports: [RouterModule],
   providers: [RecentRecordsResolver, ProcessDetailResolver],
