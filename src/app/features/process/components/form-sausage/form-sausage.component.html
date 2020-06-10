@@ -1,0 +1,130 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">Producto*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingrese producto"
+          formControlName="productId"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="5">
+      <ion-item class="item-datetime">
+        <ion-label position="floating">Fecha de embutido*</ion-label>
+        <ion-datetime
+          displayFormat="MM/DD/YYYY"
+          class="item-form"
+          formControlName="date"
+        ></ion-datetime>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">Temperatura (°C)*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresa temperatura"
+          formControlName="temperature"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+  <h1 class="subtitle">Tiempo</h1>
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">Peso(Kg) inicial*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresa peso en Kg"
+          formControlName="weightInitial"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="5">
+      <ion-item class="item-datetime">
+        <ion-label position="floating">Hora 1*</ion-label>
+        <ion-datetime
+          class="item-form"
+          displayFormat="HH:mm"
+          formControlName="hour1"
+        ></ion-datetime>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">Peso(Kg) medio*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresa peso en Kg"
+          formControlName="weightMedium"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="5">
+      <ion-item class="item-datetime">
+        <ion-label position="floating">Hora 2*</ion-label>
+        <ion-datetime
+          class="item-form"
+          displayFormat="HH:mm"
+          formControlName="hour2"
+        ></ion-datetime>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">Peso(Kg) final*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresa peso en Kg"
+          formControlName="weightFinal"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="5">
+      <ion-item class="item-datetime">
+        <ion-label position="floating">Hora 3*</ion-label>
+        <ion-datetime
+          class="item-form"
+          displayFormat="HH:mm"
+          formControlName="hour3"
+        ></ion-datetime>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+</form>

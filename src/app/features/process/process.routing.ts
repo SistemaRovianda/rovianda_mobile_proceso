@@ -11,10 +11,13 @@ import { ProcessDetailResolver } from "src/app/shared/resolvers/process-detail.r
 import { ConditioningPageModule } from "./pages/conditioning/conditioning.module";
 import { ConditioningPage } from "./pages/conditioning/conditioning.page";
 import { GrindingPage } from "./pages/grinding/grinding.page";
-import { GrindingPageRoutingModule } from "./pages/grinding/grinding-routing.module";
 import { GrindingPageModule } from "./pages/grinding/grinding.module";
 import { TenderizedPage } from "./pages/tenderized/tenderized.page";
-import { TenderizedPageModule } from './pages/tenderized/tenderized.module';
+import { TenderizedPageModule } from "./pages/tenderized/tenderized.module";
+import { SausagePage } from "./pages/sausage/sausage.page";
+import { SausagePageModule } from "./pages/sausage/sausage.module";
+import { UserPage } from "./pages/user/user.page";
+import { UserPageModule } from './pages/user/user.module';
 
 const routes: Routes = [
   {
@@ -50,6 +53,14 @@ const routes: Routes = [
         path: "tenderized",
         component: TenderizedPage,
       },
+      {
+        path: "sausage",
+        component: SausagePage,
+      },
+      {
+        path: "users",
+        component: UserPage,
+      },
     ],
   },
 ];
@@ -63,6 +74,8 @@ const routes: Routes = [
     ConditioningPageModule,
     GrindingPageModule,
     TenderizedPageModule,
+    SausagePageModule,
+    UserPageModule
   ],
   exports: [RouterModule],
   providers: [RecentRecordsResolver, ProcessDetailResolver],
