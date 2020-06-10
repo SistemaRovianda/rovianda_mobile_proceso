@@ -10,6 +10,9 @@ import { BasicRegistrationPageModule } from "./pages/basic-registration/basic-re
 import { ProcessDetailResolver } from "src/app/shared/resolvers/process-detail.resolver";
 import { ConditioningPageModule } from "./pages/conditioning/conditioning.module";
 import { ConditioningPage } from "./pages/conditioning/conditioning.page";
+import { GrindingPage } from "./pages/grinding/grinding.page";
+import { GrindingPageRoutingModule } from "./pages/grinding/grinding-routing.module";
+import { GrindingPageModule } from "./pages/grinding/grinding.module";
 
 const routes: Routes = [
   {
@@ -37,6 +40,10 @@ const routes: Routes = [
         path: "conditioning",
         component: ConditioningPage,
       },
+      {
+        path: "grinding",
+        component: GrindingPage,
+      },
     ],
   },
 ];
@@ -48,6 +55,7 @@ const routes: Routes = [
     ProcessDetailPageModule,
     BasicRegistrationPageModule,
     ConditioningPageModule,
+    GrindingPageModule,
   ],
   exports: [RouterModule],
   providers: [RecentRecordsResolver, ProcessDetailResolver],
