@@ -1,0 +1,38 @@
+$color-text-primary: #575552;
+$color-text-secondary: #b2b2b2;
+.container {
+  background-color: white;
+  height: 100%;
+  width: 100vw;
+  padding: 0 5%;
+  .title {
+    font-size: 3.8vw;
+    color: $color-text-primary;
+    font-weight: 700;
+    margin: 0;
+    margin-top: 5%;
+  }
+  .body {
+    height: 70vh;
+    width: 100%;
+  }
+  .stepper {
+    height: 6%;
+  }
+  .buttons {
+    height: 11%;
+    padding: 2% 0;
+    ion-col {
+      ion-button {
+        width: 100%;
+        height: 85%;
+        text-transform: none;
+        font-size: 2.8vw;
+        --ion-color-primary: #e2bd53;
+      }
+      .button-save {
+        --ion-color-primary: #575552;
+      }
+    }
+  }
+}

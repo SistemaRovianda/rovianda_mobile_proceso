@@ -1,4 +1,5 @@
 import { RecentRecords } from "./recent-records.interface";
+import { Stepper } from "./stepper.interface";
 
 export interface LoginState {
   loading: boolean;
@@ -19,6 +20,7 @@ export interface AppState {
   auth: AuthenticationUser;
   login: LoginState;
   recentRecords: RecentRecords;
+  steps: Stepper;
 }
 
 export interface SignIn {

@@ -17,7 +17,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () =>
       import("./features/process/process.module").then((m) => m.ProcessModule),
-  },
+  }
+
 ];
 
 @NgModule({
