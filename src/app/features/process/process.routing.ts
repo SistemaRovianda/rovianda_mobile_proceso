@@ -13,6 +13,8 @@ import { ConditioningPage } from "./pages/conditioning/conditioning.page";
 import { GrindingPage } from "./pages/grinding/grinding.page";
 import { GrindingPageRoutingModule } from "./pages/grinding/grinding-routing.module";
 import { GrindingPageModule } from "./pages/grinding/grinding.module";
+import { TenderizedPage } from "./pages/tenderized/tenderized.page";
+import { TenderizedPageModule } from './pages/tenderized/tenderized.module';
 
 const routes: Routes = [
   {
@@ -44,6 +46,10 @@ const routes: Routes = [
         path: "grinding",
         component: GrindingPage,
       },
+      {
+        path: "tenderized",
+        component: TenderizedPage,
+      },
     ],
   },
 ];
@@ -56,6 +62,7 @@ const routes: Routes = [
     BasicRegistrationPageModule,
     ConditioningPageModule,
     GrindingPageModule,
+    TenderizedPageModule,
   ],
   exports: [RouterModule],
   providers: [RecentRecordsResolver, ProcessDetailResolver],
