@@ -4,6 +4,7 @@ import { AppState } from "src/app/shared/models/store.state.interface";
 import { Store } from "@ngrx/store";
 import { recentRecordsLoadSelectProcess } from "../../store/recent-records/recent-records.actions";
 import { Router } from "@angular/router";
+import * as fromBasicRegisterActions from "../../store/basic-register/basic-register.actions";
 
 @Component({
   selector: "app-raw-recent-record",
@@ -19,6 +20,9 @@ export class RawRecentRecordComponent implements OnInit {
   onClick() {
     this.store.dispatch(
       recentRecordsLoadSelectProcess({ processSelected: this.process })
+    );
+    this.store.dispatch(
+      fromBasicRegisterActions.basicRegisterLoadStatus({ status: "USED" })
     );
     this.router.navigate(["/process/process-detail"]);
   }

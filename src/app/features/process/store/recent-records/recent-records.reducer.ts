@@ -17,5 +17,9 @@ export const recentRecordsReducer = createReducer(
   on(
     fromRecentRecordsActions.recentRecordsLoadSelectProcess,
     (state, { processSelected }) => ({ ...state, processSelected })
-  )
+  ),
+  on(fromRecentRecordsActions.recentRecordsLoadRecords, (state) => ({
+    ...state,
+    processSelected: null,
+  }))
 );

@@ -12,8 +12,7 @@
       <div class="error">
         <ion-label
           *ngIf="
-            form.hasError('required', 'productId') &&
-            (form.controls.productId.touched || form.controls.productId.dirty)
+            form.hasError('required', 'productId') && form.submitted
           "
         >
           Ingrese un valor
@@ -29,14 +28,14 @@
           placeholder="Seleccionar lote"
           formControlName="lotId"
         >
-          <ion-select-option>1</ion-select-option>
+          <ion-select-option [value]="lot" *ngFor="let lot of lots">{{
+            lot.lotId
+          }}</ion-select-option>
         </ion-select>
       </ion-item>
       <div class="error">
         <ion-label
-          *ngIf="
-            form.hasError('required', 'lotId') &&
-            (form.controls.lotId.touched || form.controls.lotId.dirty)
+          *ngIf=" form.submitted
           "
         >
           Ingrese un valor
