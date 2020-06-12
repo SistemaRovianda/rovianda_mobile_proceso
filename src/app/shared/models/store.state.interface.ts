@@ -1,5 +1,6 @@
 import { RecentRecords } from "./recent-records.interface";
 import { Stepper } from "./stepper.interface";
+import { GrindingPage } from "./grinding-page.interface";
 
 export interface LoginState {
   loading: boolean;
@@ -21,6 +22,7 @@ export interface AppState {
   login: LoginState;
   recentRecords: RecentRecords;
   steps: Stepper;
+  grinding: GrindingPage;
 }
 
 export interface SignIn {

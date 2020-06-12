@@ -11,8 +11,8 @@ import { ProcessDetailResolver } from "src/app/shared/resolvers/process-detail.r
 import { ConditioningPageModule } from "./pages/conditioning/conditioning.module";
 import { ConditioningPage } from "./pages/conditioning/conditioning.page";
 import { GrindingPage } from "./pages/grinding/grinding.page";
-import { GrindingPageRoutingModule } from "./pages/grinding/grinding-routing.module";
 import { GrindingPageModule } from "./pages/grinding/grinding.module";
+import { GrindingResolver } from "src/app/shared/resolvers/grinding.resolver";
 
 const routes: Routes = [
   {
@@ -43,6 +43,9 @@ const routes: Routes = [
       {
         path: "grinding",
         component: GrindingPage,
+        resolve: {
+          grinding: GrindingResolver,
+        },
       },
     ],
   },
@@ -58,6 +61,6 @@ const routes: Routes = [
     GrindingPageModule,
   ],
   exports: [RouterModule],
-  providers: [RecentRecordsResolver, ProcessDetailResolver],
+  providers: [RecentRecordsResolver, ProcessDetailResolver, GrindingResolver],
 })
 export class ProcessRoutingModule {}
