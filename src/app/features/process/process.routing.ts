@@ -10,6 +10,7 @@ import { BasicRegistrationPageModule } from "./pages/basic-registration/basic-re
 import { ProcessDetailResolver } from "src/app/shared/resolvers/process-detail.resolver";
 import { ConditioningPageModule } from "./pages/conditioning/conditioning.module";
 import { ConditioningPage } from "./pages/conditioning/conditioning.page";
+import { ConditioningResolver } from "src/app/shared/resolvers/conditioning.resolver";
 
 const routes: Routes = [
   {
@@ -36,6 +37,9 @@ const routes: Routes = [
       {
         path: "conditioning",
         component: ConditioningPage,
+        resolve: {
+          conditioning: ConditioningResolver,
+        },
       },
     ],
   },
@@ -50,6 +54,10 @@ const routes: Routes = [
     ConditioningPageModule,
   ],
   exports: [RouterModule],
-  providers: [RecentRecordsResolver, ProcessDetailResolver],
+  providers: [
+    RecentRecordsResolver,
+    ProcessDetailResolver,
+    ConditioningResolver,
+  ],
 })
 export class ProcessRoutingModule {}
