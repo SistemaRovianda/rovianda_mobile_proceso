@@ -17,7 +17,8 @@ import { TenderizedPageModule } from "./pages/tenderized/tenderized.module";
 import { SausagePage } from "./pages/sausage/sausage.page";
 import { SausagePageModule } from "./pages/sausage/sausage.module";
 import { UserPage } from "./pages/user/user.page";
-import { UserPageModule } from './pages/user/user.module';
+import { UserPageModule } from "./pages/user/user.module";
+import { SausageResolver } from "src/app/shared/resolvers/sausage.resolver";
 
 const routes: Routes = [
   {
@@ -56,6 +57,9 @@ const routes: Routes = [
       {
         path: "sausage",
         component: SausagePage,
+        resolve: {
+          sausage: SausageResolver,
+        },
       },
       {
         path: "users",
@@ -75,9 +79,9 @@ const routes: Routes = [
     GrindingPageModule,
     TenderizedPageModule,
     SausagePageModule,
-    UserPageModule
+    UserPageModule,
   ],
   exports: [RouterModule],
-  providers: [RecentRecordsResolver, ProcessDetailResolver],
+  providers: [RecentRecordsResolver, ProcessDetailResolver, SausageResolver],
 })
 export class ProcessRoutingModule {}

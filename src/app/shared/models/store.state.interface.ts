@@ -1,5 +1,6 @@
 import { RecentRecords } from "./recent-records.interface";
 import { Stepper } from "./stepper.interface";
+import { SausageInterface } from "./sausage-page.interface";
 
 export interface LoginState {
   loading: boolean;
@@ -21,6 +22,7 @@ export interface AppState {
   login: LoginState;
   recentRecords: RecentRecords;
   steps: Stepper;
+  sausage: SausageInterface;
 }
 
 export interface SignIn {

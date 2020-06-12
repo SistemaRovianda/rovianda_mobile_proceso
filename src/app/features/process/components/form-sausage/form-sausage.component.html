@@ -10,7 +10,13 @@
         ></ion-input>
       </ion-item>
       <div class="error">
-        <ion-label></ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'productId') &&
+            (form.controls.productId.touched || form.controls.productId.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
     <ion-col size="5">
@@ -23,7 +29,13 @@
         ></ion-datetime>
       </ion-item>
       <div class="error">
-        <ion-label></ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'date') &&
+            (form.controls.date.touched || form.controls.date.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
   </ion-row>
@@ -38,7 +50,14 @@
         ></ion-input>
       </ion-item>
       <div class="error">
-        <ion-label></ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'temperature') &&
+            (form.controls.temperature.touched ||
+              form.controls.temperature.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
   </ion-row>
@@ -54,7 +73,14 @@
         ></ion-input>
       </ion-item>
       <div class="error">
-        <ion-label></ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'weightInitial') &&
+            (form.controls.weightInitial.touched ||
+              form.controls.weightInitial.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
     <ion-col size="5">
@@ -67,14 +93,20 @@
         ></ion-datetime>
       </ion-item>
       <div class="error">
-        <ion-label></ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'hour1') &&
+            (form.controls.hour1.touched || form.controls.hour1.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col size="7">
       <ion-item>
-        <ion-label position="floating">Peso(Kg) medio*</ion-label>
+        <ion-label position="floating">Peso(Kg) medio</ion-label>
         <ion-input
           class="item-form"
           placeholder="Ingresa peso en Kg"
@@ -87,7 +119,7 @@
     </ion-col>
     <ion-col size="5">
       <ion-item class="item-datetime">
-        <ion-label position="floating">Hora 2*</ion-label>
+        <ion-label position="floating">Hora 2</ion-label>
         <ion-datetime
           class="item-form"
           displayFormat="HH:mm"
@@ -102,7 +134,7 @@
   <ion-row>
     <ion-col size="7">
       <ion-item>
-        <ion-label position="floating">Peso(Kg) final*</ion-label>
+        <ion-label position="floating">Peso(Kg) final</ion-label>
         <ion-input
           class="item-form"
           placeholder="Ingresa peso en Kg"
@@ -115,7 +147,7 @@
     </ion-col>
     <ion-col size="5">
       <ion-item class="item-datetime">
-        <ion-label position="floating">Hora 3*</ion-label>
+        <ion-label position="floating">Hora 3</ion-label>
         <ion-datetime
           class="item-form"
           displayFormat="HH:mm"
