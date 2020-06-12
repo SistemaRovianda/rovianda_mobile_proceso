@@ -6,7 +6,7 @@ import { AuthGuard } from "./shared/guards/auth.guard";
 const routes: Routes = [
   {
     path: "",
-    canActivate: [IsAuthGuard],
+    // canActivate: [IsAuthGuard],
     loadChildren: () =>
       import("./features/landing/layout/layout.module").then(
         (m) => m.LayoutModule
@@ -14,11 +14,10 @@ const routes: Routes = [
   },
   {
     path: "process",
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     loadChildren: () =>
       import("./features/process/process.module").then((m) => m.ProcessModule),
-  }
-
+  },
 ];
 
 @NgModule({

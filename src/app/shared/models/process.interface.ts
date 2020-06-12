@@ -1,5 +1,6 @@
 export class Process {
   id: number;
+  processId?: number;
   loteInterno?: string;
   newLote: string;
   weigth: number;
