@@ -11,10 +11,10 @@ import { ProcessDetailResolver } from "src/app/shared/resolvers/process-detail.r
 import { ConditioningPageModule } from "./pages/conditioning/conditioning.module";
 import { ConditioningPage } from "./pages/conditioning/conditioning.page";
 import { GrindingPage } from "./pages/grinding/grinding.page";
-import { GrindingPageRoutingModule } from "./pages/grinding/grinding-routing.module";
 import { GrindingPageModule } from "./pages/grinding/grinding.module";
 import { TenderizedPage } from "./pages/tenderized/tenderized.page";
-import { TenderizedPageModule } from './pages/tenderized/tenderized.module';
+import { TenderizedPageModule } from "./pages/tenderized/tenderized.module";
+import { TenderizedResolver } from "src/app/shared/resolvers/tenderized.resolver";
 
 const routes: Routes = [
   {
@@ -49,6 +49,9 @@ const routes: Routes = [
       {
         path: "tenderized",
         component: TenderizedPage,
+        resolve: {
+          tenderized: TenderizedResolver,
+        },
       },
     ],
   },
@@ -65,6 +68,6 @@ const routes: Routes = [
     TenderizedPageModule,
   ],
   exports: [RouterModule],
-  providers: [RecentRecordsResolver, ProcessDetailResolver],
+  providers: [RecentRecordsResolver, ProcessDetailResolver, TenderizedResolver],
 })
 export class ProcessRoutingModule {}
