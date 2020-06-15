@@ -1,0 +1,86 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <ion-row>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="floating">Producto*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingrese producto"
+          formControlName="productId"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="floating">Temperatura*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresa temperatura"
+          formControlName="temperature"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="floating">Peso(Kg)*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresa peso en Kg"
+          formControlName="weight"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="floating">Peso (Kg) salmuera*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresa peso salmuera"
+          formControlName="weightSalmuera"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="floating">% de inyección*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresa temperatura"
+          formControlName="percentage"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="6">
+      <ion-item class="item-datetime">
+        <ion-label position="floating">Fecha*</ion-label>
+        <ion-datetime
+          displayFormat="MM/DD/YYYY"
+          class="item-form"
+          formControlName="date"
+        ></ion-datetime>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+</form>

@@ -1,0 +1,37 @@
+$color-text-primary: #575552;
+$color-text-secondary: #717171;
+$color-text-ternary: #717171;
+$color-primary: #e2bd53;
+form {
+  margin: 0;
+  padding-top: 10%;
+  height: 100%;
+  width: 100%;
+
+  ion-row {
+    margin: 0;
+    margin-top: 3%;
+    box-sizing: border-box;
+    ion-item {
+      font-size: 3.5vw;
+      color: $color-text-ternary;
+
+      .item-form {
+        font-size: 3.1vw;
+        color: $color-text-ternary;
+      }
+      &.item-has-focus {
+        ion-label {
+          color: #e2bd53;
+        }
+      }
+    }
+  }
+  .error {
+    margin-top: 1vh;
+    height: 2vh;
+    font-size: 2.5vw;
+    color: red;
+    transition: all 2s;
+  }
+}

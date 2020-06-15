@@ -1,0 +1,17 @@
+$color-secondary: #b2b2b2;
+$color-primary: #e2bd53;
+.container {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 2.2% 0;
+
+  .stepper {
+    height: 35%;
+    margin-left: 2%;
+    width: 14%;
+    border-radius: 15px;
+  }
+  .active{
+    background-color: $color-primary; 
+  }
+}

@@ -1,0 +1,89 @@
+<form [formGroup]="form" class="form" (ngSubmit)="onSubmit()">
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">Materia prima*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresar producto"
+          formControlName="rawMaterial"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <ion-label class="title-checkbox">Proceso*</ion-label>
+      <ion-item lines="none" class="checkbox">
+        <ion-label>Deshuese</ion-label>
+        <ion-checkbox formControlName="bone"></ion-checkbox>
+        <ion-label class="item-check">Limpieza</ion-label>
+        <ion-checkbox formControlName="clean"></ion-checkbox>
+        <ion-label class="item-check">Salado y curado</ion-label>
+        <ion-checkbox formControlName="healthing"></ion-checkbox>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">Peso (KG)*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresar peso en Kg"
+          type="number"
+          formControlName="weight"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="5">
+      <ion-item>
+        <ion-label position="floating">Temperatura(°C)*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresar peso en Kg"
+          type="number"
+          formControlName="temperature"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">Producto*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingresar producto"
+          type="number"
+          formControlName="productId"
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+    <ion-col size="5">
+      <ion-item class="item-datetime">
+        <ion-label position="floating">Fecha*</ion-label>
+        <ion-datetime
+          class="item-form"
+          displayFormat="MM/DD/YYYY"
+          formControlName="date"
+        ></ion-datetime>
+      </ion-item>
+      <div class="error">
+        <ion-label></ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+</form>

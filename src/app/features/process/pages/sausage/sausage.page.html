@@ -1,0 +1,38 @@
+<app-title-header titlePath="Regresar" path="/process/process-detail">
+</app-title-header>
+<ion-grid class="container">
+  <ion-row>
+    <ion-col>
+      <h1 class="title">Embutido</h1>
+    </ion-col>
+  </ion-row>
+  <ion-grid class="body"><app-form-sausage #form></app-form-sausage></ion-grid>
+  <ion-row class="stepper">
+    <ion-col size="12">
+      <app-stepper></app-stepper>
+    </ion-col>
+  </ion-row>
+  <ion-row class="buttons">
+    <ion-col size="4">
+      <ion-button (click)="onBackButton(form.form)">
+        <ion-col size="2"
+          ><ion-icon name="chevron-back-outline"></ion-icon
+        ></ion-col>
+        <ion-col size="10">Regresar</ion-col>
+      </ion-button>
+    </ion-col>
+    <ion-col size="4">
+      <ion-button class="button-save" (click)="form.onSubmit()"
+        >Guardar</ion-button
+      >
+    </ion-col>
+    <ion-col size="4">
+      <ion-button (click)="onNextButton(form.form)">
+        <ion-col size="10">Siguiente</ion-col>
+        <ion-col size="2"
+          ><ion-icon name="chevron-forward-outline"></ion-icon
+        ></ion-col>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
