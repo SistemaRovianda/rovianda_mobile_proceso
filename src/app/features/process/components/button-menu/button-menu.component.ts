@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
 import { MenuButton } from "src/app/shared/models/menu-button.interface";
 import { Router } from "@angular/router";
 
@@ -9,11 +9,14 @@ import { Router } from "@angular/router";
 })
 export class ButtonMenuComponent implements OnInit {
   @Input() menuOption: MenuButton;
+  @Output("onClick") submit = new EventEmitter();
+
   constructor(private router: Router) {}
 
   ngOnInit() {}
 
   onClick() {
     this.router.navigate([`${this.menuOption.path}`]);
+    
   }
 }

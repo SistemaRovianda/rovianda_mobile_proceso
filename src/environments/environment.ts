@@ -7,6 +7,7 @@ export const environment = {
   basePath:
     "https://us-central1-rovianda-88249.cloudfunctions.net/app/rovianda",
   basePathMock: "https://2c94f13e-22f8-4cfc-80cb-1a54b163bd72.mock.pstmn.io",
+  basePathMockJsonServer: " http://localhost:3000",
 };
 
 /*

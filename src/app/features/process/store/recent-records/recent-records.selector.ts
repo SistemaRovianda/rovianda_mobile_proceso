@@ -17,3 +17,7 @@ export const SELECT_RECENT_RECORDS_PROCESS_SELECTED = createSelector(
   SELECT_RECENT_RECORDS,
   (state) => state.processSelected
 );
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/feature/basic-registration

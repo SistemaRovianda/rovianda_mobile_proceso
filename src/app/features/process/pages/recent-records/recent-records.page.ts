@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { AppState } from "src/app/shared/models/store.state.interface";
 import { Store } from "@ngrx/store";
-import { signOut } from "src/app/features/landing/store/login/login.action";
+import { AppState } from "src/app/shared/models/store.state.interface";
+import * as fromBasicRegisterActions from "../../store/basic-register/basic-register.actions";
 
 @Component({
   selector: "app-recent-records",
@@ -19,6 +19,9 @@ export class RecentRecordsPage implements OnInit {
   }
 
   onClick() {
+    this.store.dispatch(
+      fromBasicRegisterActions.basicRegisterLoadStatus({ status: "NOTUSED" })
+    );
     this.router.navigate(["process/basic-registration"]);
   }
 }
