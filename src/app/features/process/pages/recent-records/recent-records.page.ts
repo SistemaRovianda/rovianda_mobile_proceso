@@ -17,4 +17,8 @@ export class RecentRecordsPage implements OnInit {
   logout(evt) {
     this.store.dispatch(signOut());
   }
+
+  onClick() {
+    this.router.navigate(["process/basic-registration"]);
+  }
 }

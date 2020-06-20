@@ -23,7 +23,7 @@
       </ion-item>
     </ion-row>
     <div class="error">
-      <ion-label *ngIf="email.errors">
+      <ion-label *ngIf="email.invalid && (email.dirty || email.touched)">
         Por favor ingresa un correo electr&oacute;nico v&aacute;lido
       </ion-label>
     </div>
@@ -35,11 +35,13 @@
           type="password"
           placeholder="Contraseña"
           required
-        ></ion-input>
+        ></ion-input> 
       </ion-item>
     </ion-row>
     <div class="error">
-      <ion-label *ngIf="password.errors">
+      <ion-label
+        *ngIf="password.invalid && (password.dirty || password.touched)"
+      >
         Por favor ingresa una contraseña válida
       </ion-label>
     </div>

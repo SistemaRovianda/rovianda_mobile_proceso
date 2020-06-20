@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
     this._store
       .select(SELECT_IS_LOADING)
       .subscribe((res) => (this.loading = res));
+    this.form.reset();
   }
 
   translateError(errorMessage: string): string {
