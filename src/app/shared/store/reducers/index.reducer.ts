@@ -7,6 +7,7 @@ import { recentRecordsReducer } from "src/app/features/process/store/recent-reco
 import { StepperReducer } from "src/app/features/process/store/stepper/stepper.reducer";
 import { basicRegisterReducer } from "src/app/features/process/store/basic-register/basic-register.reducer";
 import { sausageReducer } from "src/app/features/process/store/sausage/sausage.reducer";
+import { conditioningReducer } from "src/app/features/process/store/conditioning/conditioning.reducer";
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authenticationReducer,
@@ -15,5 +16,6 @@ export const reducers: ActionReducerMap<AppState> = {
   steps: StepperReducer,
   basicRegister: basicRegisterReducer,
   sausage: sausageReducer,
+  conditioning: conditioningReducer,
 };
 export const metaReducers: MetaReducer<AppState>[] = [];

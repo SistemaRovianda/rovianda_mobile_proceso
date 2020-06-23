@@ -2,6 +2,7 @@ import { RecentRecords } from "./recent-records.interface";
 import { Stepper } from "./stepper.interface";
 import { SausageInterface } from "./sausage-page.interface";
 import { BasicRegister } from "./basic-register.interface";
+import { ConditioningInterface } from "./conditioning-page.interface";
 
 export interface LoginState {
   loading: boolean;
@@ -22,8 +23,7 @@ export interface AppState {
   login: LoginState;
   recentRecords: RecentRecords;
   steps: Stepper;
-  sausage: SausageInterface;
-  basicRegister: BasicRegister;
+  conditioning: ConditioningInterface;
 }
 
 export interface SignIn {

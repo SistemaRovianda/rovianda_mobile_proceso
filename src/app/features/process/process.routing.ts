@@ -19,6 +19,7 @@ import { SausagePageModule } from "./pages/sausage/sausage.module";
 import { UserPage } from "./pages/user/user.page";
 import { UserPageModule } from "./pages/user/user.module";
 import { SausageResolver } from "src/app/shared/resolvers/sausage.resolver";
+import { ConditioningResolver } from "src/app/shared/resolvers/conditioning.resolver";
 
 const routes: Routes = [
   {
@@ -45,6 +46,9 @@ const routes: Routes = [
       {
         path: "conditioning",
         component: ConditioningPage,
+        resolve: {
+          conditioning: ConditioningResolver,
+        },
       },
       {
         path: "grinding",
@@ -82,6 +86,14 @@ const routes: Routes = [
     UserPageModule,
   ],
   exports: [RouterModule],
+<<<<<<< HEAD
   providers: [RecentRecordsResolver, ProcessDetailResolver, SausageResolver],
+=======
+  providers: [
+    RecentRecordsResolver,
+    ProcessDetailResolver,
+    ConditioningResolver,
+  ],
+>>>>>>> origin/feature/conditioning
 })
 export class ProcessRoutingModule {}
