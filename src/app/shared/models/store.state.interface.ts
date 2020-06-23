@@ -23,6 +23,8 @@ export interface AppState {
   login: LoginState;
   recentRecords: RecentRecords;
   steps: Stepper;
+  sausage: SausageInterface;
+  basicRegister: BasicRegister;
   conditioning: ConditioningInterface;
 }
 
