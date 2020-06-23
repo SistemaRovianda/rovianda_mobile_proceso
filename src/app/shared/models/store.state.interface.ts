@@ -1,10 +1,7 @@
 import { RecentRecords } from "./recent-records.interface";
 import { Stepper } from "./stepper.interface";
-<<<<<<< HEAD
 import { SausageInterface } from "./sausage-page.interface";
-=======
 import { BasicRegister } from "./basic-register.interface";
->>>>>>> origin/feature/basic-registration
 
 export interface LoginState {
   loading: boolean;
@@ -25,11 +22,8 @@ export interface AppState {
   login: LoginState;
   recentRecords: RecentRecords;
   steps: Stepper;
-<<<<<<< HEAD
   sausage: SausageInterface;
-=======
   basicRegister: BasicRegister;
->>>>>>> origin/feature/basic-registration
 }
 
 export interface SignIn {

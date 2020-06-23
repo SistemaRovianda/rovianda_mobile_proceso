@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import * as fromBasicRegisterActions from "../../store/basic-register/basic-register.actions";
+import { signOut } from 'src/app/features/landing/store/login/login.action';
 
 @Component({
   selector: "app-recent-records",

@@ -100,4 +100,7 @@ export class BasicRegistrationPage implements OnInit {
   redirectBack() {
     this.router.navigate([`/process/recent-records`]);
   }
+  test() {
+    return "/process/recent-records";
+  }
 }
