@@ -86,14 +86,10 @@ const routes: Routes = [
     UserPageModule,
   ],
   exports: [RouterModule],
-<<<<<<< HEAD
-  providers: [RecentRecordsResolver, ProcessDetailResolver, SausageResolver],
-=======
   providers: [
     RecentRecordsResolver,
     ProcessDetailResolver,
     ConditioningResolver,
   ],
->>>>>>> origin/feature/conditioning
 })
 export class ProcessRoutingModule {}
