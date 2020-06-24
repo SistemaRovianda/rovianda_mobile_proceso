@@ -1,9 +1,9 @@
 import * as fromGrindingActions from "./grinding.actions";
 import * as fromRecentRecordsActions from "../recent-records/recent-records.actions";
-import { GrindingPage } from "src/app/shared/models/grinding-page.interface";
+import { GrindingPageInterface } from "src/app/shared/models/grinding-page.interface";
 import { createReducer, on } from "@ngrx/store";
 
-const STATE_INITIAL_GRINDING: GrindingPage = {
+const STATE_INITIAL_GRINDING: GrindingPageInterface = {
   grinding: null,
   result: false,
 };

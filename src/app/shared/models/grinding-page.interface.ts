@@ -1,6 +1,6 @@
 import { Grinding } from "./grinding.interface";
 
-export interface GrindingPage {
+export interface GrindingPageInterface {
   grinding: Grinding;
   result: boolean;
 }

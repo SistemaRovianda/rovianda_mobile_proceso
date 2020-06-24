@@ -3,6 +3,7 @@ import { Stepper } from "./stepper.interface";
 import { SausageInterface } from "./sausage-page.interface";
 import { BasicRegister } from "./basic-register.interface";
 import { ConditioningInterface } from "./conditioning-page.interface";
+import { GrindingPageInterface } from "./grinding-page.interface";
 
 export interface LoginState {
   loading: boolean;
@@ -26,6 +27,7 @@ export interface AppState {
   sausage: SausageInterface;
   basicRegister: BasicRegister;
   conditioning: ConditioningInterface;
+  grinding: GrindingPageInterface;
 }
 
 export interface SignIn {

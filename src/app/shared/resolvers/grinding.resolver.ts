@@ -8,7 +8,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../models/store.state.interface";
 import { SELECT_RECENT_RECORDS_PROCESS_SELECTED } from "src/app/features/process/store/recent-records/recent-records.selector";
 import { Process } from "../models/process.interface";
-import { grindingSearchInformation } from "src/app/features/process/store/grinding/grinding.actions";
+import * as fromGrindingActions from  "../../features/process/store/grinding/grinding.actions"
 
 @Injectable()
 export class GrindingResolver implements Resolve<boolean> {
@@ -23,7 +23,7 @@ export class GrindingResolver implements Resolve<boolean> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (this.process != null) {
       this.store.dispatch(
-        grindingSearchInformation({ processId: this.process.processId })
+        fromGrindingActions.grindingSearchInformation({ processId: this.process.processId })
       );
     }
     return true;
