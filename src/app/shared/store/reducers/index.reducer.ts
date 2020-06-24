@@ -7,7 +7,8 @@ import { StepperReducer } from "src/app/features/process/store/stepper/stepper.r
 import { basicRegisterReducer } from "src/app/features/process/store/basic-register/basic-register.reducer";
 import { sausageReducer } from "src/app/features/process/store/sausage/sausage.reducer";
 import { conditioningReducer } from "src/app/features/process/store/conditioning/conditioning.reducer";
-import { grindingReducer } from 'src/app/features/process/store/grinding/grinding.reducer';
+import { grindingReducer } from "src/app/features/process/store/grinding/grinding.reducer";
+import { tenderizedReducer } from "src/app/features/process/store/tenderized/tenderized.reducer";
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authenticationReducer,
@@ -17,6 +18,7 @@ export const reducers: ActionReducerMap<AppState> = {
   basicRegister: basicRegisterReducer,
   sausage: sausageReducer,
   conditioning: conditioningReducer,
-  grinding: grindingReducer
+  grinding: grindingReducer,
+  tenderized: tenderizedReducer,
 };
 export const metaReducers: MetaReducer<AppState>[] = [];

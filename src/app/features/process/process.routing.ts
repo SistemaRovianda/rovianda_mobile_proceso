@@ -20,7 +20,8 @@ import { UserPage } from "./pages/user/user.page";
 import { UserPageModule } from "./pages/user/user.module";
 import { SausageResolver } from "src/app/shared/resolvers/sausage.resolver";
 import { ConditioningResolver } from "src/app/shared/resolvers/conditioning.resolver";
-import { GrindingResolver } from 'src/app/shared/resolvers/grinding.resolver';
+import { GrindingResolver } from "src/app/shared/resolvers/grinding.resolver";
+import { TenderizedResolver } from "src/app/shared/resolvers/tenderized.resolver";
 
 const routes: Routes = [
   {
@@ -61,6 +62,9 @@ const routes: Routes = [
       {
         path: "tenderized",
         component: TenderizedPage,
+        resolve: {
+          tenderized: TenderizedResolver,
+        },
       },
       {
         path: "sausage",
@@ -94,7 +98,8 @@ const routes: Routes = [
     RecentRecordsResolver,
     ProcessDetailResolver,
     ConditioningResolver,
-    GrindingResolver
+    GrindingResolver,
+    TenderizedResolver,
   ],
 })
 export class ProcessRoutingModule {}

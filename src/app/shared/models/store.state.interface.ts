@@ -4,6 +4,7 @@ import { SausageInterface } from "./sausage-page.interface";
 import { BasicRegister } from "./basic-register.interface";
 import { ConditioningInterface } from "./conditioning-page.interface";
 import { GrindingPageInterface } from "./grinding-page.interface";
+import { TenderizedInterface } from './tenderized-page.interface';
 
 export interface LoginState {
   loading: boolean;
@@ -28,6 +29,7 @@ export interface AppState {
   basicRegister: BasicRegister;
   conditioning: ConditioningInterface;
   grinding: GrindingPageInterface;
+  tenderized: TenderizedInterface;
 }
 
 export interface SignIn {
