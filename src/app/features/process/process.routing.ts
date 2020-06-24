@@ -20,6 +20,7 @@ import { UserPage } from "./pages/user/user.page";
 import { UserPageModule } from "./pages/user/user.module";
 import { SausageResolver } from "src/app/shared/resolvers/sausage.resolver";
 import { ConditioningResolver } from "src/app/shared/resolvers/conditioning.resolver";
+import { GrindingResolver } from 'src/app/shared/resolvers/grinding.resolver';
 
 const routes: Routes = [
   {
@@ -53,6 +54,9 @@ const routes: Routes = [
       {
         path: "grinding",
         component: GrindingPage,
+        resolve: {
+          grinding: GrindingResolver,
+        },
       },
       {
         path: "tenderized",
@@ -90,6 +94,7 @@ const routes: Routes = [
     RecentRecordsResolver,
     ProcessDetailResolver,
     ConditioningResolver,
+    GrindingResolver
   ],
 })
 export class ProcessRoutingModule {}
