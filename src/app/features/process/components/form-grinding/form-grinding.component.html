@@ -67,6 +67,8 @@
           displayFormat="MM/DD/YYYY"
           class="item-form"
           formControlName="date"
+          [min]="minDate"
+          [max]="maxDate"
         ></ion-datetime>
       </ion-item>
       <div class="error">

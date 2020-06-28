@@ -21,6 +21,10 @@ export class FormConditioningComponent implements OnInit {
 
   @Output("onSubmit") submit = new EventEmitter();
 
+  minDate = new Date().toISOString();
+
+  maxDate = new Date().getFullYear() + 5;
+
   constructor(
     private fb: FormBuilder,
     private store: Store<AppState>,
@@ -34,7 +38,7 @@ export class FormConditioningComponent implements OnInit {
       weight: ["", Validators.required],
       temperature: ["", Validators.required],
       productId: ["", Validators.required],
-      date: [new Date().toDateString(), Validators.required],
+      date: [this.minDate, Validators.required],
     });
   }
 

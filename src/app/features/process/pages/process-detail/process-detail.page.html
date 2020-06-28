@@ -1,6 +1,7 @@
 <app-title-header
   titlePath="Regresar"
   path="/process/recent-records"
+  (OnClickEvent)="onBackButton()"
 ></app-title-header>
 <ion-grid class="container">
   <ion-row>
@@ -15,4 +16,7 @@
       ></ion-col>
     </ion-row>
   </ion-grid>
+  <ion-row class="footer">
+    <ion-button>Terminar</ion-button>
+  </ion-row>
 </ion-grid>

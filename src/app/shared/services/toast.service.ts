@@ -12,7 +12,6 @@ export class ToastService {
       duration: 2000,
       color: "success",
     });
-    this.router.navigate(["/process/process-detail"]);
     toast.present();
   }
 
@@ -21,6 +20,15 @@ export class ToastService {
       message: "Error en la operación!",
       duration: 2000,
       color: "danger",
+    });
+    toast.present();
+  }
+
+  async presentToastMessageWarning(message: string) {
+    const toast = await this.toastCtrl.create({
+      message: `${message}`,
+      duration: 2000,
+      color: "warning",
     });
     toast.present();
   }

@@ -3,11 +3,18 @@
     <ion-col size="7">
       <ion-item>
         <ion-label position="floating">Producto*</ion-label>
-        <ion-input
+        <ion-select
           class="item-form"
-          placeholder="Ingrese producto"
+          interface="action-sheet"
+          placeholder="Seleccionar producto"
           formControlName="productId"
-        ></ion-input>
+        >
+          <ion-select-option
+          [value]="product.id"
+            *ngFor="let product of products"
+            >{{ product.name  }}</ion-select-option
+          >
+        </ion-select>
       </ion-item>
       <div class="error">
         <ion-label
@@ -26,6 +33,8 @@
           displayFormat="MM/DD/YYYY"
           class="item-form"
           formControlName="date"
+          [min]="minDate"
+          [max]="maxDate"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -47,6 +56,7 @@
           class="item-form"
           placeholder="Ingresa temperatura"
           formControlName="temperature"
+          type="number"
         ></ion-input>
       </ion-item>
       <div class="error">

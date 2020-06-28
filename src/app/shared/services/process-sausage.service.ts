@@ -19,10 +19,9 @@ export class SausageService {
     return this.http.get<any>(`${this.url}/sausage/${processId}`);
   }
 
-  registerSausage(tenderized: Sausage, processId: number): Observable<any> {
-    console.log(tenderized);
+  registerSausage(sausage: Sausage, processId: number): Observable<any> {
     return this.http.post<any>(`${this.url}/sausage/${processId}`, {
-      tenderized,
+      ...sausage,
     });
   }
 }

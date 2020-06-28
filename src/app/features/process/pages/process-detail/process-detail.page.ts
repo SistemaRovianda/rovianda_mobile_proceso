@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MenuButton } from "src/app/shared/models/menu-button.interface";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-process-detail",
@@ -8,7 +9,7 @@ import { MenuButton } from "src/app/shared/models/menu-button.interface";
 })
 export class ProcessDetailPage implements OnInit {
   options: MenuButton[];
-  constructor() {
+  constructor(private router: Router) {
     this.options = [
       {
         name: "Datos de \n registro básico",
@@ -38,4 +39,8 @@ export class ProcessDetailPage implements OnInit {
   }
 
   ngOnInit() {}
+
+  onBackButton() {
+    this.router.navigate([`/process/recent-records`]);
+  }
 }

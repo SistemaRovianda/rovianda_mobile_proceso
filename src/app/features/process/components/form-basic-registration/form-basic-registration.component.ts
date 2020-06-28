@@ -11,8 +11,12 @@ import { Observable } from "rxjs";
 import {
   SELECT_RECENT_RECORDS_PROCESS,
   SELECT_RECENT_RECORDS_PROCESS_SELECTED,
+  SELECT_RECENT_RECORDS_IS_SELECTED,
 } from "../../store/recent-records/recent-records.selector";
 import { Process } from "src/app/shared/models/process.interface";
+import { RawMaterial } from "src/app/shared/models/rawMaterial.interface";
+import { basicRegisterSelectMaterial } from "../../store/basic-register/basic-register.actions";
+import { SELECT_BASIC_REGISTER_LOTS } from "../../store/basic-register/basic-register.select";
 
 @Component({
   selector: "app-form-basic-registration",
@@ -21,12 +25,22 @@ import { Process } from "src/app/shared/models/process.interface";
 })
 export class FormBasicRegistrationComponent implements OnInit {
   form: FormGroup;
-  @Input() lots: LotMeatOutput[];
+
+  @Input() materials: RawMaterial[];
+
+  lots: LotMeatOutput[];
+
   @Output("onSubmit") submit = new EventEmitter();
 
   @Output("onDefrost") defrost = new EventEmitter();
 
+  isSelected: boolean;
+
   process: Process;
+
+  minDate = new Date().toISOString();
+
+  maxDate = new Date().getFullYear() + 5;
 
   constructor(
     private fb: FormBuilder,
@@ -39,8 +53,8 @@ export class FormBasicRegistrationComponent implements OnInit {
       weight: ["", Validators.required],
       temperature: ["", Validators.required],
       hourEntrance: [new Date().toISOString(), Validators.required],
-      hourExit: [new Date().toISOString(), Validators.required],
-      dateIni: [new Date().toISOString(), Validators.required],
+      hourExit: [],
+      dateIni: [this.minDate, Validators.required],
       dateFinal: [""],
     });
   }
@@ -55,18 +69,30 @@ export class FormBasicRegistrationComponent implements OnInit {
           this.updateForm();
         }
       });
+    this.store
+      .select(SELECT_BASIC_REGISTER_LOTS)
+      .subscribe((lots) => (this.lots = lots));
+    this.store
+      .select(SELECT_RECENT_RECORDS_IS_SELECTED)
+      .subscribe((selected) => (this.isSelected = selected));
   }
 
   checkValues() {
     this.store.dispatch(stepperNextStep({ num: 0, step: !this.form.invalid }));
   }
 
+  selectMaterial() {
+    this.lotId.setValue("");
+    this.store.dispatch(
+      basicRegisterSelectMaterial({
+        status: "NOTUSED",
+        rawMaterialId: this.productId.value,
+      })
+    );
+  }
+
   onSubmit() {
     const buttons: any = [
-      {
-        text: "Cancel",
-        role: "cancel",
-      },
       {
         text: "Aceptar",
         handler: () => {
@@ -74,28 +100,33 @@ export class FormBasicRegistrationComponent implements OnInit {
         },
       },
     ];
-    if (this.dateFinal.value === "" && !this.form.invalid) {
-      this.alert.showAlert(
-        "Informacion",
-        "Los campos opcionales, deberán igual ser llenados al salir la carne del descongelamiento",
-        buttons
-      );
-    } else if (!this.form.invalid) {
-      this.registerNewProcess();
-    }
+    this.alert.showAlert(
+      "Informacion",
+      "Los campos inhabilitados, deberán igual ser llenados al salir la carne del descongelamiento",
+      buttons
+    );
+  }
+
+  onSubmitDefrost() {
+    console.log(this.form.value);
+    const { hourExit, dateFinal } = this.form.value;
+    const payload = {
+      defrost: {
+        hourExit,
+        dateFin: moment(dateFinal).format("YYYY-MM-DD"),
+      },
+      processId: this.process.processId,
+    };
+    this.defrost.emit(payload);
   }
 
   private registerNewProcess() {
-    const {
-      lotId,
-      dateIni,
-      dateFinal,
-      hourEntrance,
-      hourExit,
-      ...value
-    } = this.form.value;
+    const { lotId, dateIni, hourEntrance, ...value } = this.form.value;
     const payload = {
-      lote: lotId,
+      lote: {
+        loteId: lotId.lotId,
+        outputId: lotId.outputId,
+      },
       dateIni: moment(dateIni).format("YYYY-MM-DD"),
       hourEntrance: moment(hourEntrance).format("HH:mm"),
       ...value,
@@ -104,9 +135,51 @@ export class FormBasicRegistrationComponent implements OnInit {
     this.submit.emit(payload);
   }
 
-  private updateForm() {}
+  private updateForm() {
+    const {
+      productName,
+      weigth,
+      entrance_hour,
+      output_hour,
+      start_date,
+      end_date,
+      ...values
+    } = this.process;
+
+    this.form.patchValue({
+      productId: productName,
+      weight: weigth,
+      hourEntrance: entrance_hour,
+      hourExit: output_hour,
+      dateIni: start_date,
+      dateFinal: end_date,
+      ...values,
+    });
+  }
 
   get dateFinal() {
     return this.form.get("dateFinal");
+  }
+
+  get hourExit() {
+    return this.form.get("hourExit");
+  }
+
+  get dateIni() {
+    return new Date(this.form.get("dateIni").value).toISOString();
+  }
+
+  get productId() {
+    return this.form.get("productId");
+  }
+  get lotId() {
+    return this.form.get("lotId");
+  }
+
+  get dataDefrost() {
+    return (
+      this.form.get("dateFinal").value === "" ||
+      this.form.get("hourExit").value === ""
+    );
   }
 }

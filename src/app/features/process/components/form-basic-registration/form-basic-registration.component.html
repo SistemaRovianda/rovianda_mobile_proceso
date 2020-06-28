@@ -1,18 +1,37 @@
 <form [formGroup]="form" class="form" (ngSubmit)="onSubmit()">
   <ion-row>
     <ion-col size="7">
-      <ion-item>
+      <ion-item *ngIf="!isSelected">
+        <ion-label position="floating">Producto*</ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar producto"
+          formControlName="productId"
+          (ionChange)="selectMaterial()"
+          [disabled]="materials.length == 0"
+        >
+          <ion-select-option
+            [value]="material.rawMaterialId"
+            *ngFor="let material of materials"
+            >{{ material.rawMaterial }}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="isSelected">
         <ion-label position="floating">Producto*</ion-label>
         <ion-input
           class="item-form"
-          placeholder="Ingresar producto"
+          placeholder="Producto"
           formControlName="productId"
+          disabled
         ></ion-input>
       </ion-item>
       <div class="error">
         <ion-label
           *ngIf="
-            form.hasError('required', 'productId') && form.submitted
+            form.hasError('required', 'productId') &&
+            (form.controls.productId.touched || form.controls.productId.dirty)
           "
         >
           Ingrese un valor
@@ -20,22 +39,34 @@
       </div>
     </ion-col>
     <ion-col size="5">
-      <ion-item>
+      <ion-item *ngIf="!isSelected">
         <ion-label position="floating">Lote de carne*</ion-label>
         <ion-select
           class="item-form"
           interface="action-sheet"
           placeholder="Seleccionar lote"
           formControlName="lotId"
+          [disabled]="lots.length == 0"
         >
-          <ion-select-option [value]="lot" *ngFor="let lot of lots">{{
-            lot.lotId
-          }}</ion-select-option>
+          <ion-select-option [value]="lot" *ngFor="let lot of lots"
+            >{{ lot.lotId }}: {{ lot.quantity }}</ion-select-option
+          >
         </ion-select>
+      </ion-item>
+      <ion-item *ngIf="isSelected">
+        <ion-label position="floating">Lote de carne*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Producto"
+          formControlName="lotId"
+          disabled
+        ></ion-input>
       </ion-item>
       <div class="error">
         <ion-label
-          *ngIf=" form.submitted
+          *ngIf="
+            form.hasError('required', 'lotId') &&
+            (form.controls.lotId.touched || form.controls.lotId.dirty)
           "
         >
           Ingrese un valor
@@ -52,6 +83,7 @@
           placeholder="Ingresar peso en Kg"
           type="number"
           formControlName="weight"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -72,6 +104,8 @@
           class="item-form"
           placeholder="Ingresar temperatura"
           formControlName="temperature"
+          type="number"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -95,6 +129,7 @@
           class="item-form"
           displayFormat="HH:mm"
           formControlName="hourEntrance"
+          [disabled]="isSelected"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -111,11 +146,12 @@
     </ion-col>
     <ion-col size="5">
       <ion-item class="item-datetime">
-        <ion-label position="floating">Hora de salida*</ion-label>
+        <ion-label position="floating">Hora de salida</ion-label>
         <ion-datetime
           displayFormat="HH:mm"
           class="item-form"
           formControlName="hourExit"
+          [disabled]="!isSelected"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -139,6 +175,9 @@
           display-timezone="utc"
           class="item-form"
           formControlName="dateIni"
+          [min]="minDate"
+          [max]="maxDate"
+          [disabled]="isSelected"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -160,6 +199,9 @@
           display-timezone="utc"
           class="item-form"
           formControlName="dateFinal"
+          [disabled]="!isSelected"
+          [min]="dateIni"
+          [max]="maxDate"
         ></ion-datetime>
       </ion-item>
     </ion-col>

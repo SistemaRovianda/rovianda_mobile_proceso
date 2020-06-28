@@ -17,3 +17,13 @@ export const SELECT_RECENT_RECORDS_PROCESS_SELECTED = createSelector(
   SELECT_RECENT_RECORDS,
   (state) => state.processSelected
 );
+
+export const SELECT_RECENT_RECORDS_PROCESS_PROCESS_ID = createSelector(
+  SELECT_RECENT_RECORDS,
+  (state) => state.processSelected.processId
+);
+
+export const SELECT_RECENT_RECORDS_IS_SELECTED = createSelector(
+  SELECT_RECENT_RECORDS,
+  (state) => state.isSelected
+);

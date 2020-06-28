@@ -23,6 +23,16 @@ $color-text-secondary: #b2b2b2;
       background-color: white;
     }
   }
+  .footer {
+    height: 10vh;
+    padding: 0 30%;
+    ion-button {
+      width: 100%;
+      text-transform: none;
+      font-size: 3.2vw;
+      --ion-color-primary: #e1bc5c;
+    }
+  }
 }
 .button-inner {
   flex-flow: column;

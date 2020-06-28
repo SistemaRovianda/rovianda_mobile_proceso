@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-title-header",
@@ -11,7 +12,7 @@ export class TitleHeaderComponent implements OnInit {
 
   @Output() OnClickEvent = new EventEmitter<string>();
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {}
 

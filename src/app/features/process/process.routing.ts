@@ -22,6 +22,7 @@ import { SausageResolver } from "src/app/shared/resolvers/sausage.resolver";
 import { ConditioningResolver } from "src/app/shared/resolvers/conditioning.resolver";
 import { GrindingResolver } from "src/app/shared/resolvers/grinding.resolver";
 import { TenderizedResolver } from "src/app/shared/resolvers/tenderized.resolver";
+import { BasicRegisterResolver } from "src/app/shared/resolvers/basic-register.resolver";
 
 const routes: Routes = [
   {
@@ -44,6 +45,9 @@ const routes: Routes = [
       {
         path: "basic-registration",
         component: BasicRegistrationPage,
+        resolve: {
+          basicRegister: BasicRegisterResolver,
+        },
       },
       {
         path: "conditioning",
@@ -100,6 +104,8 @@ const routes: Routes = [
     ConditioningResolver,
     GrindingResolver,
     TenderizedResolver,
+    SausageResolver,
+    BasicRegisterResolver,
   ],
 })
 export class ProcessRoutingModule {}

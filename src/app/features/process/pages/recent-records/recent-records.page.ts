@@ -20,9 +20,6 @@ export class RecentRecordsPage implements OnInit {
   }
 
   onClick() {
-    this.store.dispatch(
-      fromBasicRegisterActions.basicRegisterLoadStatus({ status: "NOTUSED" })
-    );
     this.router.navigate(["process/basic-registration"]);
   }
 }

@@ -20,6 +20,10 @@ export class FormTenderizedComponent implements OnInit {
   form: FormGroup;
   @Output("onSubmit") submit = new EventEmitter();
 
+  minDate = new Date().toISOString();
+
+  maxDate = new Date().getFullYear() + 5;
+
   constructor(
     private fb: FormBuilder,
     private store: Store<AppState>,
@@ -31,7 +35,7 @@ export class FormTenderizedComponent implements OnInit {
       weight: ["", Validators.required],
       weightSalmuera: ["", Validators.required],
       percentage: ["", Validators.required],
-      date: [new Date().toISOString(), Validators.required],
+      date: [this.minDate, Validators.required],
     });
   }
 

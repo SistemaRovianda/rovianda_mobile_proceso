@@ -1,6 +1,7 @@
 <app-title-header
   titlePath="Regresar"
   path="/process/process-detail"
+  (OnClickEvent)="onBackButton(form.form)"
 ></app-title-header>
 <ion-grid class="container">
   <ion-row>
@@ -9,21 +10,8 @@
     </ion-col>
   </ion-row>
   <ion-grid class="body"><app-form-users #form></app-form-users></ion-grid>
-  <ion-row class="stepper">
-    <ion-col size="12">
-      <app-stepper></app-stepper>
-    </ion-col>
-  </ion-row>
   <ion-row class="buttons">
-    <ion-col size="4">
-      <ion-button>
-        <ion-col size="2"
-          ><ion-icon name="chevron-back-outline"></ion-icon
-        ></ion-col>
-        <ion-col size="10">Regresar</ion-col>
-      </ion-button>
-    </ion-col>
-    <ion-col size="4">
+    <ion-col size="4" offset="4">
       <ion-button class="button-save" (click)="form.onSubmit()"
         >Guardar</ion-button
       >

@@ -21,9 +21,6 @@ export class RawRecentRecordComponent implements OnInit {
     this.store.dispatch(
       recentRecordsLoadSelectProcess({ processSelected: this.process })
     );
-    this.store.dispatch(
-      fromBasicRegisterActions.basicRegisterLoadStatus({ status: "USED" })
-    );
     this.router.navigate(["/process/process-detail"]);
   }
 }

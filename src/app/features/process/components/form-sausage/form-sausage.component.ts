@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { Store } from "@ngrx/store";
@@ -8,6 +8,8 @@ import { SELECT_SAUSAGE_DATA } from "../../store/sausage/sausage.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
 import * as moment from "moment";
 import { sausageRegister } from "../../store/sausage/sausage.actions";
+import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
+import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 
 @Component({
   selector: "app-form-sausage",
@@ -19,7 +21,13 @@ export class FormSausageComponent implements OnInit {
 
   form: FormGroup;
 
+  @Input() products: ProductCatalog[];
+
   @Output("onSubmit") submit = new EventEmitter();
+
+  minDate = new Date().toISOString();
+
+  maxDate = new Date().getFullYear() + 5;
 
   constructor(
     private fb: FormBuilder,
@@ -29,13 +37,13 @@ export class FormSausageComponent implements OnInit {
     this.form = fb.group({
       productId: ["", Validators.required],
       temperature: ["", Validators.required],
-      date: [new Date().toISOString(), Validators.required],
+      date: [this.minDate, Validators.required],
       hour1: [new Date().toISOString(), Validators.required],
-      weightInitial: ["", Validators.required],
+      weightInitial: ["", [Validators.required, decimalValidator]],
       hour2: [""],
-      weightMedium: [""],
+      weightMedium: ["", [decimalValidator]],
       hour3: [""],
-      weightFinal: [""],
+      weightFinal: ["", [decimalValidator]],
     });
   }
 

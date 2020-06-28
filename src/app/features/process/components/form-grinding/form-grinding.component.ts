@@ -18,7 +18,12 @@ export class FormGrindingComponent implements OnInit {
   grinding: Grinding;
 
   form: FormGroup;
+
   @Output("onSubmit") submit = new EventEmitter();
+
+  minDate = new Date().toISOString();
+
+  maxDate = new Date().getFullYear() + 5;
 
   constructor(
     private fb: FormBuilder,
@@ -29,7 +34,7 @@ export class FormGrindingComponent implements OnInit {
       rawMaterial: ["", Validators.required],
       process: ["", Validators.required],
       weight: ["", Validators.required],
-      date: [new Date().toISOString()],
+      date: [this.minDate],
     });
   }
 

@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/shared/models/store.state.interface';
-import { SELECT_SAUSAGE_RESULT } from '../../store/sausage/sausage.selector';
+import { Component, OnInit } from "@angular/core";
+import { AlertService } from "src/app/shared/services/alert.service";
+import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { AppState } from "src/app/shared/models/store.state.interface";
+import { SELECT_SAUSAGE_RESULT } from "../../store/sausage/sausage.selector";
+import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
+import { Observable } from "rxjs";
+import { SELECT_PROCESS_DETAIL_PRODUCTS } from "../../store/process-detail/process-detail.selector";
 
 @Component({
-  selector: 'app-sausage',
-  templateUrl: './sausage.page.html',
-  styleUrls: ['./sausage.page.scss'],
+  selector: "app-sausage",
+  templateUrl: "./sausage.page.html",
+  styleUrls: ["./sausage.page.scss"],
 })
 export class SausagePage implements OnInit {
+  products$: Observable<ProductCatalog[]> = this.store.select(
+    SELECT_PROCESS_DETAIL_PRODUCTS
+  );
 
   constructor(
     private alert: AlertService,
@@ -22,8 +28,8 @@ export class SausagePage implements OnInit {
 
   ngOnInit() {
     this.store
-    .select(SELECT_SAUSAGE_RESULT)
-    .subscribe((tempResult) => (this.result = tempResult));
+      .select(SELECT_SAUSAGE_RESULT)
+      .subscribe((tempResult) => (this.result = tempResult));
   }
   onBackButton(form) {
     const buttons: any = [
@@ -69,5 +75,4 @@ export class SausagePage implements OnInit {
   redirectNext() {
     this.router.navigate([`/process/users`]);
   }
-
 }

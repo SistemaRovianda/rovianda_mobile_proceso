@@ -17,3 +17,13 @@ export const SELECT_BASIC_REGISTER_RESULT = createSelector(
   SELECT_BASIC_REGISTER,
   (state) => state.result
 );
+
+export const SELECT_BASIC_REGISTER_MATERIALS = createSelector(
+  SELECT_BASIC_REGISTER,
+  (state) => state.materials
+);
+
+export const SELECT_BASIC_REGISTER_IS_LOADING = createSelector(
+  SELECT_BASIC_REGISTER,
+  (state) => state.loading
+);

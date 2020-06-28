@@ -1,4 +1,9 @@
-<app-title-header titlePath="Regresar" path=""> </app-title-header>
+<app-title-header
+  titlePath="Regresar"
+  path="/process/recent-records"
+  (OnClickEvent)="onBackButton(form.form)"
+>
+</app-title-header>
 <ion-grid class="container">
   <ion-row>
     <ion-col>
@@ -8,36 +13,31 @@
   <ion-grid class="body"
     ><app-form-basic-registration
       (onSubmit)="onSubmit($event)"
-      [lots]="lots$|async"
+      (onDefrost)="onDefrost($event)"
+      [materials]="materials$|async"
       #form
     ></app-form-basic-registration
   ></ion-grid>
-  <ion-row class="stepper">
-    <ion-col size="12">
-      <app-stepper></app-stepper>
-    </ion-col>
-  </ion-row>
   <ion-row class="buttons">
-    <ion-col size="4">
-      <ion-button (click)="onBackButton(form.form)">
-        <ion-col size="2"
-          ><ion-icon name="chevron-back-outline"></ion-icon
-        ></ion-col>
-        <ion-col size="10">Regresar</ion-col>
-      </ion-button>
-    </ion-col>
-    <ion-col size="4">
-      <ion-button (click)="form.onSubmit(form.form)" class="button-save"
-        >Guardar</ion-button
-      >
-    </ion-col>
-    <ion-col size="4">
-      <ion-button (click)="onNextButton(form.form)">
-        <ion-col size="10">Siguiente</ion-col>
-        <ion-col size="2"
-          ><ion-icon name="chevron-forward-outline"></ion-icon
-        ></ion-col>
-      </ion-button>
+    <ion-col size="4" offset="4">
+      <ion-button
+        *ngIf="!isSelected"
+        (click)="form.onSubmit(form.form)"
+        class="button-save"
+        [disabled]="form.form.invalid || loading"
+        ><ion-grid>
+          <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner> </ion-grid
+      ></ion-button>
+      <ion-button
+        *ngIf="isSelected"
+        (click)="form.onSubmitDefrost()"
+        class="button-save"
+        [disabled]=" form.dataDefrost || loading"
+        ><ion-grid>
+          <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner> </ion-grid
+      ></ion-button>
     </ion-col>
   </ion-row>
 </ion-grid>

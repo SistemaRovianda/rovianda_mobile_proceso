@@ -1,22 +1,21 @@
 import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { API_ENDPOINT_PROVIDER } from "src/app/providers/tokens";
-import { LotMeatOutput } from "../models/Lot-meat-output.interface";
+import { Observable } from "rxjs";
+import { RawMaterial } from "../models/rawMaterial.interface";
 
 @Injectable({ providedIn: "root" })
-export class MeatService {
+export class RawMaterialService {
   url: string;
 
   constructor(
     private http: HttpClient,
     @Inject(API_ENDPOINT_PROVIDER) private endpoint
   ) {
-    this.url = `${endpoint}/meat`;
+    this.url = `${endpoint}/raw`;
   }
 
-  getLotsMeat(status: string, rawMaterialId: number) {
-    return this.http.get<LotMeatOutput[]>(
-      `${this.url}/lots/output?status=${status}&rawMaterialId=${rawMaterialId}`
-    );
+  getMaterials(): Observable<RawMaterial[]> {
+    return this.http.get<RawMaterial[]>(`${this.url}/material`);
   }
 }

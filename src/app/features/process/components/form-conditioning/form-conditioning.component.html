@@ -10,10 +10,14 @@
         ></ion-input>
       </ion-item>
       <div class="error">
-        <ion-label  *ngIf="
-        form.hasError('required', 'rawMaterial') &&
-        (form.controls.rawMaterial.touched || form.controls.rawMaterial.dirty)
-      ">Ingrese un valor</ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'rawMaterial') &&
+            (form.controls.rawMaterial.touched ||
+              form.controls.rawMaterial.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
   </ion-row>
@@ -29,10 +33,14 @@
         <ion-checkbox formControlName="healthing"></ion-checkbox>
       </ion-item>
       <div class="error">
-        <ion-label  *ngIf="
-        form.hasError('required', 'rawMaterial') &&
-        (form.controls.rawMaterial.touched || form.controls.rawMaterial.dirty)
-      ">Ingrese un valor</ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'rawMaterial') &&
+            (form.controls.rawMaterial.touched ||
+              form.controls.rawMaterial.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
   </ion-row>
@@ -48,10 +56,13 @@
         ></ion-input>
       </ion-item>
       <div class="error">
-        <ion-label  *ngIf="
-        form.hasError('required', 'weight') &&
-        (form.controls.weight.touched || form.controls.weight.dirty)
-      ">Ingrese un valor</ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'weight') &&
+            (form.controls.weight.touched || form.controls.weight.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
     <ion-col size="5">
@@ -65,10 +76,14 @@
         ></ion-input>
       </ion-item>
       <div class="error">
-        <ion-label  *ngIf="
-        form.hasError('required', 'temperature') &&
-        (form.controls.temperature.touched || form.controls.temperature.dirty)
-      ">Ingrese un valor</ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'temperature') &&
+            (form.controls.temperature.touched ||
+              form.controls.temperature.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
   </ion-row>
@@ -83,10 +98,13 @@
         ></ion-input>
       </ion-item>
       <div class="error">
-        <ion-label  *ngIf="
-        form.hasError('required', 'productId') &&
-        (form.controls.productId.touched || form.controls.productId.dirty)
-      ">Ingrese un valor</ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'productId') &&
+            (form.controls.productId.touched || form.controls.productId.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
     <ion-col size="5">
@@ -96,13 +114,18 @@
           class="item-form"
           displayFormat="MM/DD/YYYY"
           formControlName="date"
+          [min]="minDate"
+          [max]="maxDate"
         ></ion-datetime>
       </ion-item>
       <div class="error">
-        <ion-label  *ngIf="
-        form.hasError('required', 'date') &&
-        (form.controls.date.touched || form.controls.date.dirty)
-      ">Ingrese un valor</ion-label>
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'date') &&
+            (form.controls.date.touched || form.controls.date.dirty)
+          "
+          >Ingrese un valor</ion-label
+        >
       </div>
     </ion-col>
   </ion-row>
