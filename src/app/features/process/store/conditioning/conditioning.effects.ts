@@ -36,6 +36,9 @@ export class ConditioningEffects {
                   fromConditioningActions.conditioningLoadData({
                     conditioning: null,
                   }),
+                  fromConditioningActions.conditioningIsSelected({
+                    isSelected: false,
+                  }),
                 ]
           ),
           catchError((error) => {
