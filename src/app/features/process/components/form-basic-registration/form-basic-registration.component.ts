@@ -17,6 +17,7 @@ import { Process } from "src/app/shared/models/process.interface";
 import { RawMaterial } from "src/app/shared/models/rawMaterial.interface";
 import { basicRegisterSelectMaterial } from "../../store/basic-register/basic-register.actions";
 import { SELECT_BASIC_REGISTER_LOTS } from "../../store/basic-register/basic-register.select";
+import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 
 @Component({
   selector: "app-form-basic-registration",
@@ -50,7 +51,7 @@ export class FormBasicRegistrationComponent implements OnInit {
     this.form = fb.group({
       productId: ["", Validators.required],
       lotId: ["", Validators.required],
-      weight: ["", Validators.required],
+      weight: ["", [Validators.required, decimalValidator]],
       temperature: ["", Validators.required],
       hourEntrance: [new Date().toISOString(), Validators.required],
       hourExit: [],

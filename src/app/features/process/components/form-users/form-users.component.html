@@ -17,14 +17,12 @@
     <ion-col size="6">
       <ion-item>
         <ion-label position="floating">Puesto*</ion-label>
-        <ion-select
+        <ion-input
           class="item-form"
-          interface="action-sheet"
-          placeholder="Seleccione puesto"
+          placeholder="Puesto"
+          disabled
           formControlName="jobElaborated"
-        >
-          <ion-select-option>1</ion-select-option>
-        </ion-select>
+        ></ion-input>
       </ion-item>
       <div class="error">
         <ion-label></ion-label>
@@ -33,16 +31,28 @@
   </ion-row>
   <ion-row>
     <ion-col size="6">
-      <ion-item>
+      <ion-item *ngIf="!isSelected">
         <ion-label position="floating">Verifico*</ion-label>
         <ion-select
           class="item-form"
           interface="action-sheet"
           placeholder="Seleccione nombre"
           formControlName="nameVerify"
+          (ionChange)="selectVerify()"
         >
-          <ion-select-option>1</ion-select-option>
+          <ion-select-option [value]="user" *ngFor="let user of users">{{
+            user.fullName
+          }}</ion-select-option>
         </ion-select>
+      </ion-item>
+      <ion-item *ngIf="isSelected">
+        <ion-label position="floating">Verifico*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Seleccione nombre"
+          formControlName="nameVerify"
+          disabled
+        ></ion-input>
       </ion-item>
       <div class="error">
         <ion-label></ion-label>
@@ -51,14 +61,12 @@
     <ion-col size="6">
       <ion-item>
         <ion-label position="floating">Puesto*</ion-label>
-        <ion-select
+        <ion-input
           class="item-form"
-          interface="action-sheet"
-          placeholder="Seleccionar puesto"
+          placeholder="Puesto"
+          disabled
           formControlName="jobVerify"
-        >
-          <ion-select-option>1</ion-select-option>
-        </ion-select>
+        ></ion-input>
       </ion-item>
       <div class="error">
         <ion-label></ion-label>

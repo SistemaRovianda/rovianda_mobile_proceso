@@ -3,7 +3,10 @@ import { AlertService } from "src/app/shared/services/alert.service";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
-import { SELECT_GRINDING_RESULT } from "../../store/grinding/grinding.selector";
+import {
+  SELECT_GRINDING_RESULT,
+  SELECT_GRINDING_IS_SELECTED,
+} from "../../store/grinding/grinding.selector";
 
 @Component({
   selector: "app-grinding",
@@ -19,10 +22,15 @@ export class GrindingPage implements OnInit {
 
   result: boolean;
 
+  isSelected: boolean;
+
   ngOnInit() {
     this.store
       .select(SELECT_GRINDING_RESULT)
       .subscribe((tempResult) => (this.result = tempResult));
+    this.store
+      .select(SELECT_GRINDING_IS_SELECTED)
+      .subscribe((selected) => (this.isSelected = selected));
   }
 
   onBackButton(form) {
@@ -39,33 +47,21 @@ export class GrindingPage implements OnInit {
         },
       },
     ];
-    if (form.valid) {
+    if (form.valid && this.isSelected) {
+      this.redirectBack();
+    } else if (form.valid && !this.result) {
       this.alert.showAlert(
         "Informacion",
         "No has guardado la información ingresada, ¿Seguro que quieres retroceder?",
         buttons
       );
     } else if (form.invalid) {
+      form.reset();
       this.redirectBack();
-    }
-  }
-  onNextButton(form) {
-    if (form.valid && !this.result) {
-      this.alert.showAlert(
-        "Informacion",
-        "Primero se tiene que guardar la información ingresada",
-        ["Aceptar"]
-      );
-    } else if (this.result || form.invalid) {
-      this.redirectNext();
     }
   }
 
   redirectBack() {
     this.router.navigate([`/process/process-detail`]);
-  }
-
-  redirectNext() {
-    this.router.navigate([`/process/tenderized`]);
   }
 }

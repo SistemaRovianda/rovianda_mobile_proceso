@@ -1,6 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { MenuButton } from "src/app/shared/models/menu-button.interface";
 import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { AppState } from "src/app/shared/models/store.state.interface";
+import { SELECT_PROCESS_DETAIL_IS_LOADING } from "../../store/process-detail/process-detail.selector";
+import { processDetailStartCloseProcess } from "../../store/process-detail/process-detail.actions";
 
 @Component({
   selector: "app-process-detail",
@@ -9,7 +13,9 @@ import { Router } from "@angular/router";
 })
 export class ProcessDetailPage implements OnInit {
   options: MenuButton[];
-  constructor(private router: Router) {
+
+  loading: boolean;
+  constructor(private router: Router, private store: Store<AppState>) {
     this.options = [
       {
         name: "Datos de \n registro básico",
@@ -38,9 +44,17 @@ export class ProcessDetailPage implements OnInit {
     ];
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.store
+      .select(SELECT_PROCESS_DETAIL_IS_LOADING)
+      .subscribe((loading) => (this.loading = loading));
+  }
 
   onBackButton() {
     this.router.navigate([`/process/recent-records`]);
+  }
+
+  closeProccess() {
+    this.store.dispatch(processDetailStartCloseProcess());
   }
 }

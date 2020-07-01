@@ -22,3 +22,13 @@ export const SELECT_USER_CURRENT_TOKEN = createSelector(
   AUTHENTICATION_STATE,
   (state) => state.currentToken
 );
+
+export const SELECT_USER_JOB = createSelector(
+  AUTHENTICATION_STATE,
+  (state) => state.job
+);
+
+export const SELECT_USER_FULL_NAME = createSelector(
+  AUTHENTICATION_STATE,
+  (state) => state.name + " " + state.firstSurname + " " + state.lastSurname
+);

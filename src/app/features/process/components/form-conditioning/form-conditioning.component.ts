@@ -1,13 +1,18 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { stepperNextStep } from "../../store/stepper/stepper.action";
 import { Conditioning } from "src/app/shared/models/conditioning.interface";
-import { SELECT_CONDITIONING_DATA } from "../../store/conditioning/conditioning.selector";
+import {
+  SELECT_CONDITIONING_DATA,
+  SELECT_CONDITIONING_IS_SELECTED,
+} from "../../store/conditioning/conditioning.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
 import { conditioningRegister } from "../../store/conditioning/conditioning.actions";
 import * as moment from "moment";
+import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
+import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 
 @Component({
   selector: "app-form-conditioning",
@@ -19,11 +24,15 @@ export class FormConditioningComponent implements OnInit {
 
   form: FormGroup;
 
+  @Input() products: ProductCatalog[];
+
   @Output("onSubmit") submit = new EventEmitter();
 
   minDate = new Date().toISOString();
 
   maxDate = new Date().getFullYear() + 5;
+
+  isSelected: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -35,7 +44,7 @@ export class FormConditioningComponent implements OnInit {
       bone: [false, Validators.required],
       clean: [false, Validators.required],
       healthing: [false, Validators.required],
-      weight: ["", Validators.required],
+      weight: ["", [Validators.required, decimalValidator]],
       temperature: ["", Validators.required],
       productId: ["", Validators.required],
       date: [this.minDate, Validators.required],
@@ -52,6 +61,9 @@ export class FormConditioningComponent implements OnInit {
           this.updateForm();
         }
       });
+    this.store
+      .select(SELECT_CONDITIONING_IS_SELECTED)
+      .subscribe((selected) => (this.isSelected = selected));
   }
 
   checkValues() {

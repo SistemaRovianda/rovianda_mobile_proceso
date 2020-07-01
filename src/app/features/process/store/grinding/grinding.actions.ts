@@ -9,6 +9,14 @@ const GRINDING_REGISTER = "[GRINDING] Register";
 
 const GRINDING_REGISTER_RESULT = "[GRINDING] Register Result";
 
+const GRINDING_REGISTER_SUCCESS = "[GRINDING] Register Success";
+
+const GRINDING_REGISTER_FAILURE = "[GRINDING] Register Failure";
+
+const GRINDING_REGISTER_FINISH = "[GRINDING] Register Finish";
+
+const GRINDING_IS_SELECTED = "[CONDITIONING] Is Selected";
+
 export const grindingSearchInformation = createAction(
   GRINDING_SEARCH_INFORMATION,
   props<{ processId: number }>()
@@ -27,4 +35,18 @@ export const grindingRegister = createAction(
 export const grindingRegisterResult = createAction(
   GRINDING_REGISTER_RESULT,
   props<{ result: boolean }>()
+);
+
+export const grindingRegisterFailure = createAction(
+  GRINDING_REGISTER_FAILURE,
+  props<{ error: string }>()
+);
+
+export const grindingRegisterFinish = createAction(GRINDING_REGISTER_FINISH);
+
+export const grindingRegisterSuccess = createAction(GRINDING_REGISTER_SUCCESS);
+
+export const grindingIsSelected = createAction(
+  GRINDING_IS_SELECTED,
+  props<{ isSelected: boolean }>()
 );

@@ -7,3 +7,8 @@ export const SELECT_PROCESS_DETAIL_PRODUCTS = createSelector(
   SELECT_PROCESS_DETAIL,
   (state) => state.products
 );
+
+export const SELECT_PROCESS_DETAIL_IS_LOADING = createSelector(
+  SELECT_PROCESS_DETAIL,
+  (state) => state.loading
+);

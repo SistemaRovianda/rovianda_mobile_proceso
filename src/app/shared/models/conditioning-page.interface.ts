@@ -4,4 +4,6 @@ export interface ConditioningInterface {
   error: string;
   conditioning: Conditioning;
   result: boolean;
+  isSelected: boolean;
+  loading: boolean;
 }

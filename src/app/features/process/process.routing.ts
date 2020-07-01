@@ -23,6 +23,9 @@ import { ConditioningResolver } from "src/app/shared/resolvers/conditioning.reso
 import { GrindingResolver } from "src/app/shared/resolvers/grinding.resolver";
 import { TenderizedResolver } from "src/app/shared/resolvers/tenderized.resolver";
 import { BasicRegisterResolver } from "src/app/shared/resolvers/basic-register.resolver";
+import { UserResolver } from "src/app/shared/resolvers/users.resolver";
+import { ReportPage } from "./pages/report/report.page";
+import { ReportPageModule } from './pages/report/report.module';
 
 const routes: Routes = [
   {
@@ -80,6 +83,13 @@ const routes: Routes = [
       {
         path: "users",
         component: UserPage,
+        resolve: {
+          user: UserResolver,
+        },
+      },
+      {
+        path: "report",
+        component: ReportPage,
       },
     ],
   },
@@ -96,6 +106,7 @@ const routes: Routes = [
     TenderizedPageModule,
     SausagePageModule,
     UserPageModule,
+    ReportPageModule
   ],
   exports: [RouterModule],
   providers: [
@@ -106,6 +117,7 @@ const routes: Routes = [
     TenderizedResolver,
     SausageResolver,
     BasicRegisterResolver,
+    UserResolver,
   ],
 })
 export class ProcessRoutingModule {}

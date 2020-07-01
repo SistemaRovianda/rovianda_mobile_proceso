@@ -1,0 +1,19 @@
+<app-title-header
+  titlePath="Regresar"
+  path="/process/process-detail"
+  (OnClickEvent)="onBackButton()"
+></app-title-header>
+<ion-grid class="container">
+  <ion-row class="pdf-container"> </ion-row>
+  <ion-row>
+    <h1 class="title">Reporte generado con éxito</h1>
+  </ion-row>
+  <ion-row class="button-container">
+    <ion-button class="next-button" (click)="downloadReport()">
+      <ion-grid *ngIf="true">
+        <ion-row> <ion-col>Imprimir reporte</ion-col></ion-row>
+        <ion-spinner *ngIf="false" name="crescent"></ion-spinner>
+      </ion-grid>
+    </ion-button>
+  </ion-row>
+</ion-grid>

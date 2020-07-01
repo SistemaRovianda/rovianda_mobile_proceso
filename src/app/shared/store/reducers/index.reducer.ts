@@ -10,6 +10,7 @@ import { conditioningReducer } from "src/app/features/process/store/conditioning
 import { grindingReducer } from "src/app/features/process/store/grinding/grinding.reducer";
 import { tenderizedReducer } from "src/app/features/process/store/tenderized/tenderized.reducer";
 import { processDetailReducer } from "src/app/features/process/store/process-detail/process-detail.reducer";
+import { userReducer } from "src/app/features/process/store/user/user.reducer";
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authenticationReducer,
@@ -22,5 +23,6 @@ export const reducers: ActionReducerMap<AppState> = {
   grinding: grindingReducer,
   tenderized: tenderizedReducer,
   processDetail: processDetailReducer,
+  user: userReducer,
 };
 export const metaReducers: MetaReducer<AppState>[] = [];

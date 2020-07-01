@@ -4,10 +4,14 @@ import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { stepperNextStep } from "../../store/stepper/stepper.action";
 import { Grinding } from "src/app/shared/models/grinding.interface";
-import { SELECT_GRINDING_DATA } from "../../store/grinding/grinding.selector";
+import {
+  SELECT_GRINDING_DATA,
+  SELECT_GRINDING_IS_SELECTED,
+} from "../../store/grinding/grinding.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
 import * as moment from "moment";
 import { grindingRegister } from "../../store/grinding/grinding.actions";
+import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 
 @Component({
   selector: "app-form-grinding",
@@ -18,6 +22,8 @@ export class FormGrindingComponent implements OnInit {
   grinding: Grinding;
 
   form: FormGroup;
+
+  isSelected: boolean;
 
   @Output("onSubmit") submit = new EventEmitter();
 
@@ -33,8 +39,8 @@ export class FormGrindingComponent implements OnInit {
     this.form = fb.group({
       rawMaterial: ["", Validators.required],
       process: ["", Validators.required],
-      weight: ["", Validators.required],
-      date: [this.minDate],
+      weight: ["", [Validators.required, decimalValidator]],
+      date: [this.minDate, Validators.required],
     });
   }
 
@@ -46,6 +52,9 @@ export class FormGrindingComponent implements OnInit {
         this.updateForm();
       }
     });
+    this.store
+      .select(SELECT_GRINDING_IS_SELECTED)
+      .subscribe((selected) => (this.isSelected = selected));
   }
 
   checkValues() {

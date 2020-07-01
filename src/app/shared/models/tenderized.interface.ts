@@ -1,3 +1,5 @@
+import { ProductCatalog } from "./product-catalog.interface";
+
 export interface Tenderized {
   productId: number;
   temperature: string;
@@ -5,4 +7,6 @@ export interface Tenderized {
   weightSalmuera: number;
   percentage: number;
   date: string;
+  weight_salmuera?: number;
+  product?: ProductCatalog;
 }

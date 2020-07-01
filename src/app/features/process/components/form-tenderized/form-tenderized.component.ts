@@ -1,13 +1,18 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { stepperNextStep } from "../../store/stepper/stepper.action";
 import { Tenderized } from "src/app/shared/models/tenderized.interface";
-import { SELECT_TENDERIZED_DATA } from "../../store/tenderized/tenderized.selector";
+import {
+  SELECT_TENDERIZED_DATA,
+  SELECT_TENDERIZED_IS_SELECTED,
+} from "../../store/tenderized/tenderized.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
 import * as moment from "moment";
 import { tenderizedRegister } from "../../store/tenderized/tenderized.actions";
+import { decimalValidator } from "src/app/shared/validators/decimal.validator";
+import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
 
 @Component({
   selector: "app-form-tenderized",
@@ -18,11 +23,16 @@ export class FormTenderizedComponent implements OnInit {
   tenderized: Tenderized;
 
   form: FormGroup;
+
   @Output("onSubmit") submit = new EventEmitter();
 
   minDate = new Date().toISOString();
 
   maxDate = new Date().getFullYear() + 5;
+
+  isSelected: boolean;
+
+  @Input() products: ProductCatalog[];
 
   constructor(
     private fb: FormBuilder,
@@ -32,8 +42,8 @@ export class FormTenderizedComponent implements OnInit {
     this.form = this.fb.group({
       productId: ["", Validators.required],
       temperature: ["", Validators.required],
-      weight: ["", Validators.required],
-      weightSalmuera: ["", Validators.required],
+      weight: ["", [Validators.required, decimalValidator]],
+      weightSalmuera: ["", [Validators.required, decimalValidator]],
       percentage: ["", Validators.required],
       date: [this.minDate, Validators.required],
     });
@@ -47,6 +57,9 @@ export class FormTenderizedComponent implements OnInit {
         this.updateForm();
       }
     });
+    this.store
+      .select(SELECT_TENDERIZED_IS_SELECTED)
+      .subscribe((selected) => (this.isSelected = selected));
   }
 
   checkValues() {
@@ -86,8 +99,10 @@ export class FormTenderizedComponent implements OnInit {
   }
 
   updateForm() {
-    const { ...value } = this.tenderized;
+    const { weight_salmuera, product, ...value } = this.tenderized;
     this.form.patchValue({
+      weightSalmuera: weight_salmuera,
+      productId: product.description,
       ...value,
     });
   }

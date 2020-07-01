@@ -7,6 +7,7 @@
           class="item-form"
           placeholder="Ingrese materia prima"
           formControlName="rawMaterial"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -27,6 +28,7 @@
           class="item-form"
           placeholder="Ingresa proceso"
           formControlName="process"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -48,6 +50,7 @@
           class="item-form"
           placeholder="Ingrese peso en Kg"
           formControlName="weight"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -69,6 +72,7 @@
           formControlName="date"
           [min]="minDate"
           [max]="maxDate"
+          [disabled]="isSelected"
         ></ion-datetime>
       </ion-item>
       <div class="error">

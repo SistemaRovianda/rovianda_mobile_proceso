@@ -6,6 +6,7 @@ import { ConditioningInterface } from "./conditioning-page.interface";
 import { GrindingPageInterface } from "./grinding-page.interface";
 import { TenderizedInterface } from "./tenderized-page.interface";
 import { ProcessDetail } from "./process-detail-page.interface";
+import { UserPageInterface } from "./user-page.interfac";
 
 export interface LoginState {
   loading: boolean;
@@ -19,6 +20,9 @@ export interface AuthenticationUser {
   token?: string;
   currentToken?: string;
   rol?: string;
+  firstSurname?: string;
+  lastSurname?: string;
+  job?: string;
 }
 
 export interface AppState {
@@ -32,6 +36,7 @@ export interface AppState {
   grinding: GrindingPageInterface;
   tenderized: TenderizedInterface;
   processDetail: ProcessDetail;
+  user: UserPageInterface;
 }
 
 export interface SignIn {

@@ -4,7 +4,10 @@ import { AppState } from "src/app/shared/models/store.state.interface";
 import { Store } from "@ngrx/store";
 import { stepperNextStep } from "../../store/stepper/stepper.action";
 import { Sausage } from "src/app/shared/models/sausage.interface";
-import { SELECT_SAUSAGE_DATA } from "../../store/sausage/sausage.selector";
+import {
+  SELECT_SAUSAGE_DATA,
+  SELECT_SAUSAGE_IS_SELECTED,
+} from "../../store/sausage/sausage.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
 import * as moment from "moment";
 import { sausageRegister } from "../../store/sausage/sausage.actions";
@@ -28,6 +31,8 @@ export class FormSausageComponent implements OnInit {
   minDate = new Date().toISOString();
 
   maxDate = new Date().getFullYear() + 5;
+
+  isSelected: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -55,6 +60,9 @@ export class FormSausageComponent implements OnInit {
         this.updateForm();
       }
     });
+    this.store
+      .select(SELECT_SAUSAGE_IS_SELECTED)
+      .subscribe((selected) => (this.isSelected = selected));
   }
 
   checkValues() {
@@ -120,9 +128,10 @@ export class FormSausageComponent implements OnInit {
   }
 
   updateForm() {
-    const { time, ...value } = this.sausage;
+    const { product, time, ...value } = this.sausage;
     this.form.patchValue({
       ...value,
+      productId: product.description,
       hour1: time.hour1,
       hour2: time.hour2,
       hour3: time.hour3,

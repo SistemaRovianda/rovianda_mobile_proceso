@@ -46,3 +46,17 @@ form {
     transition: all 2s;
   }
 }
+
+::ng-deep ion-action-sheet {
+  --background: white !important;
+  --color: black !important;
+  font-size: 3vw !important;
+}
+
+::ng-deep .action-sheet-button {
+  color: $color-text-primary !important;
+}
+
+::ng-deep ion-picker {
+  color: $color-text-primary !important;
+}

@@ -7,6 +7,8 @@ const STATE_INITIAL_CONDITIONING: ConditioningInterface = {
   conditioning: null,
   error: null,
   result: false,
+  isSelected: false,
+  loading: false,
 };
 
 export const conditioningReducer = createReducer(
@@ -19,8 +21,24 @@ export const conditioningReducer = createReducer(
     fromRecentRecordsActions.recentRecordsLoadRecordsSuccess,
     (state) => STATE_INITIAL_CONDITIONING
   ),
+  on(fromConditioningActions.conditioningRegister, (state) => ({
+    ...state,
+    loading: true,
+  })),
   on(
     fromConditioningActions.conditioningRegisterResults,
     (state, { result }) => ({ ...state, result })
+  ),
+  on(
+    fromConditioningActions.conditioningRegisterFailure,
+    (state, { error }) => ({ ...state, error })
+  ),
+  on(fromConditioningActions.conditioningRegisterFinish, (state) => ({
+    ...state,
+    loading: false,
+  })),
+  on(
+    fromConditioningActions.conditioningIsSelected,
+    (state, { isSelected }) => ({ ...state, isSelected })
   )
 );

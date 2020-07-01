@@ -9,6 +9,14 @@ const CONDITIONING_REGISTER = "[CONDITIONING] Register";
 
 const CONDITIONING_REGISTER_RESULTS = "[CONDITIONING] Conditioning Register";
 
+const CONDITIONING_REGISTER_SUCCESS = "[CONDITIONING] Register Success";
+
+const CONDITIONING_REGISTER_FAILURE = "[CONDITIONING] Register Failure";
+
+const CONDITIONING_REGISTER_FINISH = "[CONDITIONING] Register Finish";
+
+const CONDITIONING_IS_SELECTED = "[CONDITIONING] Is Selected";
+
 export const conditioningSearchInformation = createAction(
   CONDITIONING_SEARCH_INFORMATION,
   props<{ processId: number }>()
@@ -27,4 +35,22 @@ export const conditioningRegister = createAction(
 export const conditioningRegisterResults = createAction(
   CONDITIONING_REGISTER_RESULTS,
   props<{ result: boolean }>()
+);
+
+export const conditioningRegisterFailure = createAction(
+  CONDITIONING_REGISTER_FAILURE,
+  props<{ error: string }>()
+);
+
+export const conditioningRegisterSuccess = createAction(
+  CONDITIONING_REGISTER_SUCCESS
+);
+
+export const conditioningRegisterFinish = createAction(
+  CONDITIONING_REGISTER_FINISH
+);
+
+export const conditioningIsSelected = createAction(
+  CONDITIONING_IS_SELECTED,
+  props<{ isSelected: boolean }>()
 );

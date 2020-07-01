@@ -1,12 +1,29 @@
 <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
   <ion-row>
     <ion-col size="6">
-      <ion-item>
+      <ion-item *ngIf="!isSelected">
+        <ion-label position="floating">Producto*</ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar producto"
+          formControlName="productId"
+          [disabled]="isSelected"
+        >
+          <ion-select-option
+            [value]="product.id"
+            *ngFor="let product of products"
+            >{{ product.name }}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="isSelected">
         <ion-label position="floating">Producto*</ion-label>
         <ion-input
           class="item-form"
-          placeholder="Ingrese producto"
+          placeholder="Producto"
           formControlName="productId"
+          disabled
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -27,6 +44,9 @@
           class="item-form"
           placeholder="Ingresa temperatura"
           formControlName="temperature"
+          type="number"
+          min="0"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -50,6 +70,7 @@
           class="item-form"
           placeholder="Ingresa peso en Kg"
           formControlName="weight"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -70,6 +91,7 @@
           class="item-form"
           placeholder="Ingresa peso salmuera"
           formControlName="weightSalmuera"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -91,8 +113,10 @@
         <ion-label position="floating">% de inyección*</ion-label>
         <ion-input
           class="item-form"
-          placeholder="Ingresa temperatura"
+          placeholder="Ingresa % de inyeccion"
           formControlName="percentage"
+          type="number"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -115,6 +139,7 @@
           formControlName="date"
           [min]="minDate"
           [max]="maxDate"
+          [disabled]="isSelected"
         ></ion-datetime>
       </ion-item>
       <div class="error">

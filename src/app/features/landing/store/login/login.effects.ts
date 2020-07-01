@@ -64,10 +64,17 @@ export class LoginEffects {
       ofType(fromLoginActions.signAuthSuccess),
       exhaustMap((action) =>
         this.authService.getUserData(action.uid).pipe(
-          switchMap(({ email, name, rol }) => {
+          switchMap(({ email, name, rol, job, firstSurname, lastSurname }) => {
             localStorage.setItem("role", rol);
             return [
-              fromAuthenticationUser.loadUser({ email, name, rol }),
+              fromAuthenticationUser.loadUser({
+                email,
+                name,
+                rol,
+                job,
+                firstSurname,
+                lastSurname,
+              }),
               fromLoginActions.singInSuccess(),
             ];
           }),

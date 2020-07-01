@@ -21,7 +21,7 @@ export class GrindingService {
 
   registerGrinding(grinding: Grinding, processId: number): Observable<any> {
     return this.http.post<any>(`${this.url}/grinding/${processId}`, {
-      grinding,
+      ...grinding,
     });
   }
 }

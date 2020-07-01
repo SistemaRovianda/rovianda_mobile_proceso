@@ -12,3 +12,8 @@ export const SELECT_GRINDING_RESULT = createSelector(
   SELECT_GRINDING,
   (state) => state.result
 );
+
+export const SELECT_GRINDING_IS_SELECTED = createSelector(
+  SELECT_GRINDING,
+  (state) => state.isSelected
+);

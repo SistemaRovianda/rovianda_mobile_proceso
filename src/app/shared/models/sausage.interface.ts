@@ -1,8 +1,11 @@
+import { ProductCatalog } from "./product-catalog.interface";
+
 export interface Sausage {
   productId: number;
   temperature: string;
   date: string;
   time: Time;
+  product?: ProductCatalog;
 }
 
 export interface Time {

@@ -6,6 +6,9 @@ import { createReducer, on } from "@ngrx/store";
 const STATE_INITIAL_GRINDING: GrindingPageInterface = {
   grinding: null,
   result: false,
+  isSelected: false,
+  loading: false,
+  error: null,
 };
 
 export const grindingReducer = createReducer(
@@ -21,5 +24,21 @@ export const grindingReducer = createReducer(
   on(fromGrindingActions.grindingRegisterResult, (state, { result }) => ({
     ...state,
     result,
+  })),
+  on(fromGrindingActions.grindingRegister, (state) => ({
+    ...state,
+    loading: true,
+  })),
+  on(fromGrindingActions.grindingRegisterFailure, (state, { error }) => ({
+    ...state,
+    error,
+  })),
+  on(fromGrindingActions.grindingRegisterFinish, (state) => ({
+    ...state,
+    loading: false,
+  })),
+  on(fromGrindingActions.grindingIsSelected, (state, { isSelected }) => ({
+    ...state,
+    isSelected,
   }))
 );

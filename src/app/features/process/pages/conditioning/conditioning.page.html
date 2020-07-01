@@ -10,13 +10,21 @@
     </ion-col>
   </ion-row>
   <ion-grid class="body"
-    ><app-form-conditioning #form></app-form-conditioning
+    ><app-form-conditioning
+      [products]="products$|async"
+      #form
+    ></app-form-conditioning
   ></ion-grid>
   <ion-row class="buttons">
     <ion-col size="4" offset="4">
-      <ion-button class="button-save" (click)="form.onSubmit()"
-        >Guardar</ion-button
-      >
+      <ion-button
+        [disabled]="form.form.invalid || loading || isSelected"
+        class="button-save"
+        (click)="form.onSubmit()"
+        ><ion-grid>
+          <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner> </ion-grid
+      ></ion-button>
     </ion-col>
   </ion-row>
 </ion-grid>

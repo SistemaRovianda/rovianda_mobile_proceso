@@ -7,6 +7,7 @@
           class="item-form"
           placeholder="Ingresar producto"
           formControlName="rawMaterial"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -26,11 +27,20 @@
       <ion-label class="title-checkbox">Proceso*</ion-label>
       <ion-item lines="none" class="checkbox">
         <ion-label>Deshuese</ion-label>
-        <ion-checkbox formControlName="bone"></ion-checkbox>
+        <ion-checkbox
+          formControlName="bone"
+          [disabled]="isSelected"
+        ></ion-checkbox>
         <ion-label class="item-check">Limpieza</ion-label>
-        <ion-checkbox formControlName="clean"></ion-checkbox>
+        <ion-checkbox
+          formControlName="clean"
+          [disabled]="isSelected"
+        ></ion-checkbox>
         <ion-label class="item-check">Salado y curado</ion-label>
-        <ion-checkbox formControlName="healthing"></ion-checkbox>
+        <ion-checkbox
+          formControlName="healthing"
+          [disabled]="isSelected"
+        ></ion-checkbox>
       </ion-item>
       <div class="error">
         <ion-label
@@ -51,8 +61,8 @@
         <ion-input
           class="item-form"
           placeholder="Ingresar peso en Kg"
-          type="number"
           formControlName="weight"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -73,6 +83,7 @@
           placeholder="Ingresar peso en Kg"
           type="number"
           formControlName="temperature"
+          [disabled]="isSelected"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -89,12 +100,29 @@
   </ion-row>
   <ion-row>
     <ion-col size="7">
-      <ion-item>
+      <ion-item *ngIf="!isSelected">
+        <ion-label position="floating">Producto*</ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar producto"
+          formControlName="productId"
+          [disabled]="isSelected"
+        >
+          <ion-select-option
+            [value]="product.id"
+            *ngFor="let product of products"
+            >{{ product.name }}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="isSelected">
         <ion-label position="floating">Producto*</ion-label>
         <ion-input
           class="item-form"
-          placeholder="Ingresar producto"
+          placeholder="Producto"
           formControlName="productId"
+          disabled
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -116,6 +144,7 @@
           formControlName="date"
           [min]="minDate"
           [max]="maxDate"
+          [disabled]="isSelected"
         ></ion-datetime>
       </ion-item>
       <div class="error">

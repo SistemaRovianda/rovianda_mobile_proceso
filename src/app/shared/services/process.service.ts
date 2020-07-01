@@ -24,4 +24,11 @@ export class ProcessService {
   getProcess(status): Observable<Process[]> {
     return this.http.get<Process[]>(`${this.url}?status=${status}`);
   }
+
+  closeProcess(): Observable<any> {
+    return this.http.patch<any>(
+      `${this.url}/${localStorage.getItem("processId")}`,
+      {}
+    );
+  }
 }
