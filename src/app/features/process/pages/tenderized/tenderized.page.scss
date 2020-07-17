@@ -1,10 +1,28 @@
 $color-text-primary: #575552;
 $color-text-secondary: #b2b2b2;
+@import "../../../../../theme/mixins.scss";
+
 .container {
-  background-color: white;
   height: 100%;
-  width: 100vw;
-  padding: 0 5%;
+  padding: 0 2%;
+  &--all {
+    @include breakpoint-size(ms-extra-small) {
+      min-height: 800px;
+    }
+
+    @include breakpoint-size(ms-small) {
+      min-height: 1000px;
+    }
+
+    @include breakpoint-size(ms-medium) {
+      min-height: 500px;
+    }
+
+    @include breakpoint-size(ms-extra-large) {
+      min-height: 700px;
+    }
+  }
+
   .title {
     font-size: 3.8vw;
     color: $color-text-primary;
@@ -12,28 +30,58 @@ $color-text-secondary: #b2b2b2;
     margin: 0;
     margin-top: 5%;
   }
-  .body {
-    height: 70vh;
-    width: 100%;
-  }
-  .stepper {
-    height: 6%;
+  &__row {
+    &--forms {
+      height: 80%;
+      width: 100%;
+
+      @include breakpoint-size(ms-extra-small) {
+        height: 83%;
+      }
+
+      @include breakpoint-size(ms-small) {
+        height: 78%;
+      }
+
+      @include breakpoint-size(ms-medium) {
+        height: 75%;
+      }
+
+      @include breakpoint-size(ms-extra-large) {
+        height: 77%;
+      }
+    }
+    &--buttons {
+      height: 6%;
+      @include breakpoint-size(ms-small) {
+        height: 8%;
+      }
+    }
   }
 
-  .buttons {
-    height: 11%;
-    padding: 2% 0;
-    ion-col {
-      ion-button {
-        width: 100%;
-        height: 85%;
-        text-transform: none;
-        font-size: 2.8vw;
-        --ion-color-primary: #e2bd53;
-      }
-      .button-save {
-        --ion-color-primary: #575552;
-      }
+  &__form {
+    height: 100%;
+    width: 100%;
+  }
+  &__button {
+    @include breakpoint-size(ms-extra-small) {
+      height: 35px;
+      font-size: var(--fs-text-xsm);
+    }
+
+    @include breakpoint-size(ms-small) {
+      height: 45px;
+      font-size: var(--fs-text-sm);
+    }
+
+    @include breakpoint-size(ms-medium) {
+      height: 30px;
+      font-size: var(--fs-text-md);
+    }
+
+    @include breakpoint-size(ms-extra-large) {
+      height: 40px;
+      font-size: var(--fs-text-xl);
     }
   }
 }

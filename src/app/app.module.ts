@@ -17,6 +17,15 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 
 import { HttpClientModule } from "@angular/common/http";
 import { AppProvidersModule } from "./providers/app-providers.module";
+import { IonicStorageModule } from "@ionic/storage";
+import { AuthGuard } from "./shared/guards/auth.guard";
+import { IsAuthGuard } from "./shared/guards/isAuth.guard";
+import { File } from "@ionic-native/file/ngx";
+import {
+  FileTransfer,
+  FileTransferObject,
+} from "@ionic-native/file-transfer/ngx";
+import { FileOpener } from "@ionic-native/file-opener/ngx";
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,6 +35,7 @@ import { AppProvidersModule } from "./providers/app-providers.module";
     IonicModule.forRoot(),
     AppRoutingModule,
     AngularFireAuthModule,
+    IonicStorageModule.forRoot(),
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks: {
@@ -41,10 +51,16 @@ import { AppProvidersModule } from "./providers/app-providers.module";
     AppProvidersModule,
   ],
   providers: [
+    AuthGuard,
+    IsAuthGuard,
     StatusBar,
     SplashScreen,
+    FileTransfer,
+    FileTransferObject,
+    FileOpener,
+    File,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    AppProvidersModule
+    AppProvidersModule,
   ],
   bootstrap: [AppComponent],
 })

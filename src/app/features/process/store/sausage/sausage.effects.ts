@@ -94,4 +94,36 @@ export class SausageEffects {
       )
     )
   );
+
+  regiterSausageHour = createEffect(() =>
+    this.action$.pipe(
+      ofType(fromSausageActions.sausageStartRegisterDateAndWeigth),
+      exhaustMap(({hour}) =>
+        this.sausageService.registerAnotherHour(
+          hour,
+          +localStorage.getItem("processId")
+        ).pipe(
+          switchMap((action) => {
+            this.toast.presentToastSuccess();
+            return [
+              fromSausageActions.sausageFinish(),
+              fromSausageActions.sausageRegisterSuccess(),
+            ];
+          }),
+          catchError((error) => {
+            this.toast.presentToastError();
+            fromSausageActions.sausageRegisterResults({
+              result: false,
+            });
+            return of(
+              fromSausageActions.sausageRegisterFailure({
+                error: error.error.msg,
+              }),
+              fromSausageActions.sausageFinish()
+            );
+          })
+        )
+      )
+    )
+  );
 }

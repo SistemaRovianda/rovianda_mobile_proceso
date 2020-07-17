@@ -4,25 +4,74 @@
   (OnClickEvent)="onBackButton(form.form)"
 >
 </app-title-header>
-<ion-grid class="container">
-  <ion-row>
-    <ion-col>
-      <h1 class="title">Embutido</h1>
-    </ion-col>
-  </ion-row>
-  <ion-grid class="body"
-    ><app-form-sausage [products]="products$|async" #form></app-form-sausage
-  ></ion-grid>
-  <ion-row class="buttons">
-    <ion-col size="4" offset="4">
-      <ion-button
-        [disabled]="form.form.invalid || loading || isSelected"
-        class="button-save"
-        (click)="form.onSubmit()"
-        ><ion-grid>
-          <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
-          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner> </ion-grid
-      ></ion-button>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+<ion-content>
+  <ion-grid class="container container--all">
+    <ion-row>
+      <ion-col>
+        <h1 class="title">Embutido</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row class="container container__row container__row--forms">
+      <ion-col class="container container__column" size="12">
+        <div class="container container__form">
+          <app-form-sausage
+            [products]="products$|async"
+            #form
+          ></app-form-sausage>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      class="container container__row container__row--buttons ion-justify-content-around"
+    >
+      <ion-col class="container container__column" size="12">
+        <ion-button
+          *ngIf="!isSelected"
+          [disabled]="!form.fieldsRequireds || loading || isSelected"
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          (click)="form.onSubmit()"
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+            <ion-spinner
+              *ngIf="loading"
+              name="crescent"
+            ></ion-spinner> </ion-grid
+        ></ion-button>
+        <ion-button
+          *ngIf="isSelected && form.optionalMedium"
+          [disabled]="form.fieldsOptionalMedium || loading "
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          (click)="form.onSubmitDate()"
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+            <ion-spinner
+              *ngIf="loading"
+              name="crescent"
+            ></ion-spinner> </ion-grid
+        ></ion-button>
+        <ion-button
+          *ngIf="isSelected && form.optionalFinal"
+          [disabled]="form.fieldsOptionalFinal || loading "
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          (click)="form.onSubmitDate()"
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+            <ion-spinner
+              *ngIf="loading"
+              name="crescent"
+            ></ion-spinner> </ion-grid
+        ></ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

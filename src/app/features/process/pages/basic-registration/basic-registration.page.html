@@ -4,40 +4,60 @@
   (OnClickEvent)="onBackButton(form.form)"
 >
 </app-title-header>
-<ion-grid class="container">
-  <ion-row>
-    <ion-col>
-      <h1 class="title">Datos de registro básico</h1>
-    </ion-col>
-  </ion-row>
-  <ion-grid class="body"
-    ><app-form-basic-registration
-      (onSubmit)="onSubmit($event)"
-      (onDefrost)="onDefrost($event)"
-      [materials]="materials$|async"
-      #form
-    ></app-form-basic-registration
-  ></ion-grid>
-  <ion-row class="buttons">
-    <ion-col size="4" offset="4">
-      <ion-button
-        *ngIf="!isSelected"
-        (click)="form.onSubmit(form.form)"
-        class="button-save"
-        [disabled]="form.form.invalid || loading"
-        ><ion-grid>
-          <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
-          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner> </ion-grid
-      ></ion-button>
-      <ion-button
-        *ngIf="isSelected"
-        (click)="form.onSubmitDefrost()"
-        class="button-save"
-        [disabled]=" form.dataDefrost || loading || form.existDataDefrost"
-        ><ion-grid>
-          <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
-          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner> </ion-grid
-      ></ion-button>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+<ion-content>
+  <ion-grid class="container container--all">
+    <ion-row>
+      <ion-col>
+        <h1 class="title">Datos de registro básico</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row class="container container__row container__row--forms">
+      <ion-col class="container container__column" size="12">
+        <div class="container container__form">
+          <app-form-basic-registration
+            (onSubmit)="onSubmit($event)"
+            (onDefrost)="onDefrost($event)"
+            [materials]="materials$|async"
+            #form
+          ></app-form-basic-registration>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      class="container container__row container__row--buttons ion-justify-content-around"
+    >
+      <ion-col class="container container__column" size="12">
+        <ion-button
+          *ngIf="!isSelected"
+          (click)="form.onSubmit(form.form)"
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          [disabled]="form.form.invalid || loading"
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+            <ion-spinner
+              *ngIf="loading"
+              name="crescent"
+            ></ion-spinner> </ion-grid
+        ></ion-button>
+        <ion-button
+          *ngIf="isSelected"
+          (click)="form.onSubmitDefrost()"
+          class="container container_buttton"
+          color="secondary"
+          expand="block"
+          [disabled]=" form.dataDefrost || loading || form.existDataDefrost"
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+            <ion-spinner
+              *ngIf="loading"
+              name="crescent"
+            ></ion-spinner> </ion-grid
+        ></ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -6,13 +6,15 @@ import * as fromLoginActions from "./login.action";
 import * as fromAuthenticationUser from "../authentication/authentication.action";
 import { exhaustMap, switchMap, catchError, tap } from "rxjs/operators";
 import { of, from } from "rxjs";
+import { Storage } from "@ionic/storage";
 
 @Injectable()
 export class LoginEffects {
   constructor(
     private action$: Actions,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private _storage: Storage
   ) {}
 
   signInEffect$ = createEffect(() =>
@@ -42,7 +44,7 @@ export class LoginEffects {
       exhaustMap((action) =>
         this.authService.getTokenCurrentUser().pipe(
           switchMap(({ currentToken }) => {
-            localStorage.setItem("token", currentToken);
+            this._storage.set("token", currentToken);
             return [
               fromAuthenticationUser.loadUser({ currentToken }),
               fromLoginActions.signAuthSuccess({ uid: action.uid }),
@@ -65,7 +67,11 @@ export class LoginEffects {
       exhaustMap((action) =>
         this.authService.getUserData(action.uid).pipe(
           switchMap(({ email, name, rol, job, firstSurname, lastSurname }) => {
-            localStorage.setItem("role", rol);
+            this._storage.set("role", rol);
+            this._storage.set(
+              "currentUser",
+              name + " " + firstSurname + " " + lastSurname
+            );
             return [
               fromAuthenticationUser.loadUser({
                 email,
@@ -109,6 +115,17 @@ export class LoginEffects {
         )
       )
     )
+  );
+
+  signInFailureEffect$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(fromLoginActions.signInFailure),
+        tap((action) => localStorage.clear())
+      ),
+    {
+      dispatch: false,
+    }
   );
 
   signOutEffect$ = createEffect(() =>

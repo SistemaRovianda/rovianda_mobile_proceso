@@ -3,28 +3,49 @@
   path="/process/process-detail"
   (OnClickEvent)="onBackButton(form.form)"
 ></app-title-header>
-<ion-grid class="container">
-  <ion-row>
-    <ion-col>
-      <h1 class="title">Usuarios</h1>
-    </ion-col>
-  </ion-row>
-  <ion-grid class="body"
-    ><app-form-users [users]="users$| async" #form></app-form-users
-  ></ion-grid>
-  <ion-row class="buttons">
-    <ion-col size="5" offset="0">
-      <ion-button
-        [disabled]="form.form.invalid || loading || isSelected"
-        class="button-save"
-        (click)="form.onSubmit()"
-        ><ion-grid>
-          <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
-          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner> </ion-grid
-      ></ion-button>
-    </ion-col>
-    <ion-col size="5" offset="2">
-      <ion-button (click)="createReport()" class="button-save">Imprimir Reporte</ion-button>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+<ion-content>
+  <ion-grid class="container container--all">
+    <ion-row>
+      <ion-col>
+        <h1 class="title">Usuarios</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row class="container container__row container__row--forms">
+      <ion-col class="container container__column" size="12">
+        <div class="container container__form">
+          <app-form-users [users]="users$| async" #form></app-form-users>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row
+      class="container container__row container__row--buttons ion-justify-content-around"
+    >
+      <ion-col size="5" offset="0">
+        <ion-button
+          [disabled]="form.form.invalid || loading || isSelected"
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          (click)="form.onSubmit()"
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+            <ion-spinner
+              *ngIf="loading"
+              name="crescent"
+            ></ion-spinner> </ion-grid
+        ></ion-button>
+      </ion-col>
+      <ion-col size="5" offset="2">
+        <ion-button
+          (click)="createReport()"
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          >Imprimir Reporte</ion-button
+        >
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

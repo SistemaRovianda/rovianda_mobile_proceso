@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { ProcessReportService } from "src/app/shared/services/process-report.service";
 
 @Component({
   selector: "app-report",
@@ -7,12 +8,18 @@ import { Router } from "@angular/router";
   styleUrls: ["./report.page.scss"],
 })
 export class ReportPage implements OnInit {
-  constructor(private router: Router) {}
+  idProccess: string;
+  constructor(
+    private router: Router,
+    private proccessReport: ProcessReportService
+  ) {
+    this.idProccess = localStorage.getItem("processId");
+  }
 
   ngOnInit() {}
 
   downloadReport() {
-    console.log("descargando reporte");
+    this.proccessReport.getReport(this.idProccess);
   }
 
   onBackButton() {

@@ -40,5 +40,9 @@ export const sausageReducer = createReducer(
   on(fromSausageActions.sausageIsSelected, (state, { isSelected }) => ({
     ...state,
     isSelected,
+  })),
+  on(fromSausageActions.sausageStartRegisterDateAndWeigth, (state) => ({
+    ...state,
+    loading: true,
   }))
 );

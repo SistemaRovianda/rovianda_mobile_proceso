@@ -2,6 +2,9 @@ $color-text-primary: #575552;
 $color-text-secondary: #717171;
 $color-text-ternary: black;
 $color-primary: #e2bd53;
+
+@import "../../../../../theme/mixins.scss";
+
 form {
   margin: 0;
   padding-top: 10%;
@@ -13,11 +16,11 @@ form {
     box-sizing: border-box;
     .item-datetime {
       ion-label {
-        font-size: 3.4vw;
+        font-size: 3.1vw;
       }
     }
     ion-item {
-      font-size: 3.5vw;
+      font-size: 3.1vw;
       color: $color-text-ternary;
 
       .item-form {

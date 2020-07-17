@@ -10,7 +10,10 @@ import {
 } from "../../store/sausage/sausage.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
 import * as moment from "moment";
-import { sausageRegister } from "../../store/sausage/sausage.actions";
+import {
+  sausageRegister,
+  sausageStartRegisterDateAndWeigth,
+} from "../../store/sausage/sausage.actions";
 import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 
@@ -33,6 +36,10 @@ export class FormSausageComponent implements OnInit {
   maxDate = new Date().getFullYear() + 5;
 
   isSelected: boolean;
+
+  optionalMedium = false;
+
+  optionalFinal = false;
 
   constructor(
     private fb: FormBuilder,
@@ -99,29 +106,39 @@ export class FormSausageComponent implements OnInit {
     }
   }
 
+  onSubmitDate() {
+    const { hour2, hour3, weightMedium, weightFinal } = this.form.value;
+    if (this.optionalMedium) {
+      this.store.dispatch(
+        sausageStartRegisterDateAndWeigth({
+          hour: {
+            hour: moment(hour2).format("HH:mm"),
+            weight: weightMedium,
+          },
+        })
+      );
+    } else if (this.optionalFinal) {
+      this.store.dispatch(
+        sausageStartRegisterDateAndWeigth({
+          hour: {
+            hour: moment(hour3).format("HH:mm"),
+            weight: weightFinal,
+          },
+        })
+      );
+    }
+  }
+
   registerSausage() {
-    const {
-      date,
-      hour1,
-      hour2,
-      hour3,
-      weightFinal,
-      weightInitial,
-      weightMedium,
-      ...values
-    } = this.form.value;
+    const { date, hour1, weightInitial, ...values } = this.form.value;
 
     this.store.dispatch(
       sausageRegister({
         ...values,
         date: moment(date).format("YYYY-MM-DD"),
         time: {
-          hour1: moment(hour1).format("HH-MM"),
-          hour2: hour2 !== "" ? moment(hour2).format("HH-MM") : "",
-          hour3: hour3 !== "" ? moment(hour3).format("HH-MM") : "",
-          weightFinal,
-          weightInitial,
-          weightMedium,
+          hour: moment(hour1).format("HH:mm"),
+          weight: weightInitial,
         },
       })
     );
@@ -129,6 +146,10 @@ export class FormSausageComponent implements OnInit {
 
   updateForm() {
     const { product, time, ...value } = this.sausage;
+
+    this.optionalMedium = time.hour2 === "" && time.weightMedium <= 0;
+    this.optionalFinal = time.hour3 !== "" && time.weightFinal > 0;
+
     this.form.patchValue({
       ...value,
       productId: product.description,
@@ -139,6 +160,26 @@ export class FormSausageComponent implements OnInit {
       weightMedium: time.weightMedium,
       weightFinal: time.weightFinal,
     });
+  }
+
+  get productId() {
+    return this.form.get("productId");
+  }
+
+  get temperature() {
+    return this.form.get("temperature");
+  }
+
+  get date() {
+    return this.form.get("date");
+  }
+
+  get hour1() {
+    return this.form.get("hour1");
+  }
+
+  get weightInitial() {
+    return this.form.get("weightInitial");
   }
 
   get hour2() {
@@ -155,5 +196,22 @@ export class FormSausageComponent implements OnInit {
 
   get weightFinal() {
     return this.form.get("weightFinal");
+  }
+
+  get fieldsRequireds() {
+    return (
+      this.productId.valid &&
+      this.temperature.valid &&
+      this.date.valid &&
+      this.hour1.valid &&
+      this.weightInitial.valid
+    );
+  }
+  get fieldsOptionalMedium() {
+    return this.hour2.value === "" || this.weightMedium.invalid;
+  }
+
+  get fieldsOptionalFinal() {
+    return this.hour3.value === "" || this.weightFinal.invalid;
   }
 }

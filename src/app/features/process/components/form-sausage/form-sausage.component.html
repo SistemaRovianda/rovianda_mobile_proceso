@@ -69,6 +69,7 @@
           formControlName="temperature"
           type="number"
           [disabled]="isSelected"
+          pattern="\d+"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -135,7 +136,7 @@
           class="item-form"
           placeholder="Ingresa peso en Kg"
           formControlName="weightMedium"
-          [disabled]="isSelected"
+          [disabled]="!isSelected || !optionalMedium"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -149,7 +150,7 @@
           class="item-form"
           displayFormat="HH:mm"
           formControlName="hour2"
-          [disabled]="isSelected"
+          [disabled]="!isSelected || !optionalMedium"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -165,7 +166,7 @@
           class="item-form"
           placeholder="Ingresa peso en Kg"
           formControlName="weightFinal"
-          [disabled]="isSelected"
+          [disabled]="!isSelected || optionalMedium"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -179,7 +180,7 @@
           class="item-form"
           displayFormat="HH:mm"
           formControlName="hour3"
-          [disabled]="isSelected"
+          [disabled]="!isSelected || optionalMedium"
         ></ion-datetime>
       </ion-item>
       <div class="error">
