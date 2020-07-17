@@ -15,7 +15,7 @@ const GRINDING_REGISTER_FAILURE = "[GRINDING] Register Failure";
 
 const GRINDING_REGISTER_FINISH = "[GRINDING] Register Finish";
 
-const GRINDING_IS_SELECTED = "[CONDITIONING] Is Selected";
+const GRINDING_IS_SELECTED = "[GRINDING] Is Selected";
 
 export const grindingSearchInformation = createAction(
   GRINDING_SEARCH_INFORMATION,

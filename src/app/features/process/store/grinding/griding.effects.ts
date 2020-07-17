@@ -28,7 +28,10 @@ export class GrindingEffects {
                   fromGrindingActions.grindingLoadData({ grinding }),
                   fromGrindingActions.grindingIsSelected({ isSelected: true }),
                 ]
-              : [fromGrindingActions.grindingLoadData({ grinding: null })]
+              : [
+                  fromGrindingActions.grindingLoadData({ grinding: null }),
+                  fromGrindingActions.grindingIsSelected({ isSelected: false }),
+                ]
           ),
           catchError((error) => {
             return of(

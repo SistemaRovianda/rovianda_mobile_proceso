@@ -4,24 +4,38 @@
   path="/"
 ></app-title-header>
 
-<ion-grid class="container">
-  <ion-row>
-    <ion-col>
-      <h1 class="title">Registros recientes</h1>
-    </ion-col>
-  </ion-row>
-  <ion-row class="body">
-    <app-table-recent-record></app-table-recent-record>
-  </ion-row>
-  <ion-row class="footer">
-    <ion-button class="button" (click)="onClick()">
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12">
-            Agregar nuevo registro
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-button>
-  </ion-row>
-</ion-grid>
+<ion-content>
+  <div class="container">
+    <ion-grid class="container-grid">
+      <ion-row
+        class="row row-1 ion-justify-content-center ion-align-items-center"
+      >
+        <ion-col size="12">
+          <h1 class="title">Registros recientes</h1>
+        </ion-col>
+      </ion-row>
+
+      <ion-row
+        class="row row-2 ion-justify-content-start ion-align-items-center"
+      >
+        <app-table-recent-record></app-table-recent-record>
+      </ion-row>
+
+      <ion-row
+        class="row row-3 ion-justify-content-center ion-align-items-center"
+      >
+        <ion-col size="8">
+          <ion-button class="button" (click)="onClick()">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="12">
+                  Agregar nuevo registro
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

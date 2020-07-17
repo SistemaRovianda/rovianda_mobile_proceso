@@ -1,0 +1,42 @@
+@mixin flexible($orientation, $justify: safe, $align) {
+  display: flex;
+  flex-direction: $orientation;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin breakpoint-size($point) {
+  $media-screen-xsm: "(max-width: 600px)";
+  $media-screen-sm: "(min-width: 800px)";
+  $media-screen-md: "(min-width: 960px)";
+  $media-screen-lg: "(min-width: 1024px)";
+  $media-screen-xl: "(min-width: 1280px)";
+
+  @if $point == ms-extra-small {
+    @media #{$media-screen-xsm} {
+      @content;
+    }
+  }
+  @if $point == ms-small {
+    @media #{$media-screen-sm} {
+      @content;
+    }
+  } @else if $point == ms-medium {
+    @media #{$media-screen-md} {
+      @content;
+    }
+  } @else if $point == ms-large {
+    @media #{$media-screen-lg} {
+      @content;
+    }
+  } @else if $point == ms-extra-large {
+    @media #{$media-screen-xl} {
+      @content;
+    }
+  }
+}
+
+@mixin message-error($fSize: 12px, $color: blue) {
+  font-size: $fSize;
+  color: $color;
+}

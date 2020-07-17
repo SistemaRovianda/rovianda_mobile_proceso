@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -24,3 +24,26 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+$color-primary: #e2bd53;
+$color-secundary: #707070;
+$color-text-primary: #e2bd53;
+$color-text-secondary: #dbdbdb;
+
+* {
+  font-size: 14px;
+}
+
+.modal-size {
+  border-radius: 5px;
+  --width: 80%;
+  --height: 180px;
+}
+
+.linea {
+  width: 62px;
+  height: 5px;
+  border-radius: 13px;
+  background-color: $color-primary;
+  margin: 20px 0px 20px 20px;
+}

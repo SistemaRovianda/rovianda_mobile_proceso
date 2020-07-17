@@ -1,34 +1,53 @@
+@import "../../../../theme/mixins.scss";
+
 $color-primary: #e2bd53;
 $color-secondary: #707070;
 $color-text-primary: #e2bd53;
 $color-text-secondary: #dbdbdb;
-.container {
-  height: 100%;
-  width: 100%;
-  background-color: white;
-  background-image: radial-gradient(
-    circle at 40% -20%,
-    $color-primary 50%,
-    transparent 50%
-  );
-  .item-head {
-    height: 15%;
-    text-align: center;
-    padding-top: 5%;
-    h1 {
-      font-weight: 600;
-      font-size: 6vw;
-      margin: 0;
+ion-content {
+  .container {
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+    @include breakpoint-size(ms-extra-large) {
+      height: 800px;
     }
-    .subtitle {
-      font-weight: 300;
-      font-size: 3.5vw;
-      margin: 0;
+    background-image: radial-gradient(
+      circle at 40% -20%,
+      var(--ion-color-primary) 50%,
+      transparent 50%
+    );
+    .item-head {
+      height: 15%;
+      text-align: center;
+      h1 {
+        color: var(--ion-color-medium-contrast);
+        font-weight: 600;
+        font-size: 5vw;
+      }
+      .subtitle {
+        font-weight: 300;
+        font-size: 3.5vw;
+        margin: 0;
+      }
     }
-  }
-  .item-body {
-    height: 75%;
-    padding: 0 12%;
-    padding-top: 10%;
+    .item-body {
+      overflow-y: scroll;
+      width: 100%;
+      height: 85%;
+      padding: 10% 15% 20% 15%;
+
+      ion-col {
+        height: 100%;
+      }
+      @include breakpoint-size(ms-medium) {
+        height: 1015px;
+      }
+
+      @include breakpoint-size(ms-extra-large) {
+        height: 800px;
+        padding: 5% 15%;
+      }
+    }
   }
 }

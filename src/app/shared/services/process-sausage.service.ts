@@ -6,6 +6,7 @@ import {
 } from "src/app/providers/tokens";
 import { Observable } from "rxjs";
 import { Sausage } from "../models/sausage.interface";
+import { SausageHour } from "../models/sausage-hour.interface";
 
 @Injectable({ providedIn: "root" })
 export class SausageService {
@@ -16,16 +17,22 @@ export class SausageService {
     @Inject(API_ENDPOINT_PROVIDER) private endpoint,
     @Inject(API_ENDPOINT_PROVIDER_MOCKUP) private endpointMockup
   ) {
-    this.url = `${endpoint}/process`;
+    this.url = `${endpoint}`;
   }
 
   getDataSausage(processId): Observable<any> {
-    return this.http.get<any>(`${this.url}/sausage/${processId}`);
+    return this.http.get<any>(`${this.url}/process/sausage/${processId}`);
   }
 
   registerSausage(sausage: Sausage, processId: number): Observable<any> {
-    return this.http.post<any>(`${this.url}/sausage/${processId}`, {
+    return this.http.post<any>(`${this.url}/process/sausage/${processId}`, {
       ...sausage,
+    });
+  }
+
+  registerAnotherHour(hour: SausageHour, processId: number): Observable<any> {
+    return this.http.patch<any>(`${this.url}/sausage/${processId}`, {
+      ...hour,
     });
   }
 }

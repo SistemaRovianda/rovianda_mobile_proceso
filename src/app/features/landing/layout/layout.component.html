@@ -1,13 +1,15 @@
-<ion-grid class="container">
-  <ion-row class="item-head">
-    <ion-col size="12" class="ion-align-self-end">
-      <h1>Proceso</h1>
-      <h1 class="subtitle">Descongelamiento</h1>
-    </ion-col>
-  </ion-row>
-  <ion-row class="item-body">
-    <ion-col size="12">
-      <app-login (onSubmit)="onLogin($event)"></app-login>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+<ion-content>
+  <ion-grid fixed class="container">
+    <ion-row class="item-head  ion-align-items-center">
+      <ion-col size="12" class="ion-align-self-end">
+        <h1>Proceso</h1>
+        <h1 class="subtitle">Descongelamiento</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row class="item-body">
+      <ion-col size="12">
+        <app-login (onSubmit)="onLogin($event)"></app-login>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

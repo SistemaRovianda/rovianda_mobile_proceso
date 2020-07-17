@@ -33,7 +33,7 @@
         *ngIf="isSelected"
         (click)="form.onSubmitDefrost()"
         class="button-save"
-        [disabled]=" form.dataDefrost || loading"
+        [disabled]=" form.dataDefrost || loading || form.existDataDefrost"
         ><ion-grid>
           <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
           <ion-spinner *ngIf="loading" name="crescent"></ion-spinner> </ion-grid

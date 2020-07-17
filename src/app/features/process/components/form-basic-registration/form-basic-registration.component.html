@@ -151,7 +151,7 @@
           displayFormat="HH:mm"
           class="item-form"
           formControlName="hourExit"
-          [disabled]="!isSelected"
+          [disabled]="!isSelected || hourExit.value != ''"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -199,7 +199,7 @@
           display-timezone="utc"
           class="item-form"
           formControlName="dateFinal"
-          [disabled]="!isSelected"
+          [disabled]="!isSelected || dateFinal.value != ''"
           [min]="dateIni"
           [max]="maxDate"
         ></ion-datetime>

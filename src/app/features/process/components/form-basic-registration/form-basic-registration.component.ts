@@ -183,4 +183,10 @@ export class FormBasicRegistrationComponent implements OnInit {
       this.form.get("hourExit").value === ""
     );
   }
+  get existDataDefrost() {
+    return (
+      this.form.get("dateFinal").value !== "" &&
+      this.form.get("hourExit").value !== ""
+    );
+  }
 }

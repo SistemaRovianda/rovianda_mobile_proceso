@@ -1,66 +1,117 @@
 <form [formGroup]="form">
-  <ion-grid class="form-grid">
-    <ion-row class="form-image">
-      <ion-col size="12">
-        <div class="image"></div>
+  <ion-grid fixed class="form-grid">
+    <ion-row
+      class="row row-1 row-1--sm row-1--md row-1--lg ion-justify-content-center ion-align-items-center"
+    >
+      <ion-col class="ion-align-self-center" size="12">
+        <img
+          class="header__logo header__logo--sm header__logo--md header__logo--lg"
+          src="../../../../../assets/logo/rovianda_logo.svg"
+        />
       </ion-col>
     </ion-row>
-    <ion-row class="form-message">
+
+    <ion-row
+      class="row row-2 ion-justify-content-center ion-align-items-center"
+    >
       <ion-col size="12">
-        <h1>Introduce tu usuario y contraseña</h1>
-        <h1>Para iniciar sesión</h1>
+        <h6>Introduce tu usuario y contraseña, para iniciar sesión</h6>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-item lines="none" class="form-input">
-        <ion-icon name="user" class="color"></ion-icon>
-        <ion-input
-          formControlName="email"
-          type="email"
-          placeholder="Nombre de usuario"
-          required
-        ></ion-input>
-      </ion-item>
+
+    <ion-row
+      class="row row-3 ion-justify-content-center ion-align-items-center"
+    >
+      <ion-col sizeSm="12">
+        <ion-item lines="none" class="form-input">
+          <ion-icon name="user" class="color"></ion-icon>
+          <ion-input
+            formControlName="email"
+            type="email"
+            placeholder="Nombre de usuario"
+            required
+          ></ion-input>
+        </ion-item>
+      </ion-col>
     </ion-row>
-    <div class="error">
-      <ion-label *ngIf="email.invalid && (email.dirty || email.touched)">
-        Por favor ingresa un correo electr&oacute;nico v&aacute;lido
-      </ion-label>
-    </div>
-    <ion-row>
-      <ion-item lines="none" class="form-input">
-        <ion-icon name="lock" class="color"></ion-icon>
-        <ion-input
-          formControlName="password"
-          type="password"
-          placeholder="Contraseña"
-          required
-        ></ion-input> 
-      </ion-item>
+
+    <ion-row class="row row-4">
+      <ion-col size="12">
+        <div class="error">
+          <ion-label *ngIf="email.invalid && (email.dirty || email.touched)">
+            Dato inválido
+          </ion-label>
+          <ion-label *ngIf="form.get('email').hasError('email')">
+            Ingrese un correo electrónico
+          </ion-label>
+          <ion-label *ngIf="email.touched && email.errors?.whitespace">
+            No se aceptan expacios en blanco
+          </ion-label>
+        </div>
+      </ion-col>
     </ion-row>
-    <div class="error">
-      <ion-label
-        *ngIf="password.invalid && (password.dirty || password.touched)"
-      >
-        Por favor ingresa una contraseña válida
-      </ion-label>
-    </div>
-    <ion-row class="row-button">
-      <ion-button
-        class="btn-login"
-        (click)="onSubmit()"
-        [disabled]="form.invalid || loading"
-      >
-        <ion-grid>
-          <ion-row *ngIf="!loading"> <ion-col>Iniciar sesión</ion-col></ion-row>
-          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-        </ion-grid>
-      </ion-button>
+
+    <ion-row
+      class="row row-5 ion-justify-content-center ion-align-items-center"
+    >
+      <ion-col size="12">
+        <ion-item lines="none" class="form-input">
+          <ion-icon name="lock" class="color"></ion-icon>
+          <ion-input
+            formControlName="password"
+            type="password"
+            placeholder="Contraseña"
+            required
+          ></ion-input>
+        </ion-item>
+      </ion-col>
     </ion-row>
-    <div class="error" style="text-align: center; font-size: 2.5vw;">
-      <ion-label *ngIf="form.errors?.loginError">
-        {{ translateError(form.errors.loginError) }}
-      </ion-label>
-    </div>
+
+    <ion-row class="row row-6">
+      <ion-col size="12">
+        <div class="error">
+          <ion-label
+            *ngIf="password.invalid && (password.dirty || password.touched)"
+          >
+            Dato inválido
+          </ion-label>
+          <ion-label *ngIf="password.touched && password.errors?.whitespace">
+            No se aceptan expacios en blanco
+          </ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="row row-7">
+      <ion-col size="12">
+        <ion-button
+          class="btn"
+          expand="block"
+          size="large"
+          color="primary"
+          (click)="onSubmit()"
+          [disabled]="form.invalid || loading"
+        >
+          <div style="padding: 10px 0;">
+            <label *ngIf="!loading">Iniciar sesión</label>
+            <ion-spinner
+              *ngIf="loading"
+              name="crescent"
+              diameter="32"
+            ></ion-spinner>
+          </div>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="row row-8">
+      <ion-col size="12">
+        <div class="error">
+          <ion-label *ngIf="form.errors?.loginError">
+            {{ translateError(form.errors.loginError) }}
+          </ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </form>
