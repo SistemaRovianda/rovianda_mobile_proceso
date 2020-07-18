@@ -72,6 +72,7 @@ export class LoginEffects {
               "currentUser",
               name + " " + firstSurname + " " + lastSurname
             );
+            this._storage.set("job", job);
             return [
               fromAuthenticationUser.loadUser({
                 email,
