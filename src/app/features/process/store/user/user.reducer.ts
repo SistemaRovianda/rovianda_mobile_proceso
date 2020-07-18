@@ -31,5 +31,12 @@ export const userReducer = createReducer(
     ...state,
     isSelected,
   })),
-  on(fromUserActions.userLoadUsers, (state, { users }) => ({ ...state, users }))
+  on(fromUserActions.userLoadUsers, (state, { users }) => ({
+    ...state,
+    users,
+  })),
+  on(fromUserActions.userRegisterFinish, (state) => ({
+    ...state,
+    loading: false,
+  }))
 );
