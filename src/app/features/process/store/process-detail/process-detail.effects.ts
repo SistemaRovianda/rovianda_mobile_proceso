@@ -64,8 +64,8 @@ export class ProcessDetailEffect {
   closeProcessSuccess = createEffect(() =>
     this.actions$.pipe(
       ofType(fromProcessDetailActions.processDetailCloseProcessSuccess),
-      exhaustMap(() =>
-        from(this.router.navigate(["/process/recent-records"])).pipe(
+      exhaustMap(() => {
+        return from(this.router.navigate(["/process/report"])).pipe(
           switchMap((result) =>
             result
               ? [fromProcessDetailActions.processDetailCloseProcessFinish()]
@@ -75,8 +75,8 @@ export class ProcessDetailEffect {
                   }),
                 ]
           )
-        )
-      )
+        );
+      })
     )
   );
 }
