@@ -98,11 +98,8 @@ export class SausageEffects {
   regiterSausageHour = createEffect(() =>
     this.action$.pipe(
       ofType(fromSausageActions.sausageStartRegisterDateAndWeigth),
-      exhaustMap(({hour}) =>
-        this.sausageService.registerAnotherHour(
-          hour,
-          +localStorage.getItem("processId")
-        ).pipe(
+      exhaustMap(({ hour, sausagedId }) =>
+        this.sausageService.registerAnotherHour(hour, sausagedId).pipe(
           switchMap((action) => {
             this.toast.presentToastSuccess();
             return [

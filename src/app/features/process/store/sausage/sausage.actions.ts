@@ -57,7 +57,7 @@ export const sausageIsSelected = createAction(
 
 export const sausageStartRegisterDateAndWeigth = createAction(
   SAUSAGE_START_REGISTER_DATE_AND_WEIGTH,
-  props<{ hour: SausageHour }>()
+  props<{ hour: SausageHour; sausagedId: number }>()
 );
 
 export const sausageSuccessRegisterDateAndWeigth = createAction(

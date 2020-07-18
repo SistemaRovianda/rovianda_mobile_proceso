@@ -45,11 +45,15 @@
       <div class="error">
         <ion-label
           *ngIf="
-            form.hasError('required', 'rawMaterial') &&
-            (form.controls.rawMaterial.touched ||
-              form.controls.rawMaterial.dirty)
+            !isRequiredOnly &&
+            (form.controls.bone.touched ||
+              form.controls.bone.dirty ||
+              form.controls.clean.touched ||
+              form.controls.clean.dirty ||
+              form.controls.healthing.touched ||
+              form.controls.healthing.dirty)
           "
-          >Ingrese un valor</ion-label
+          >Selecione por lo menos una opcion</ion-label
         >
       </div>
     </ion-col>

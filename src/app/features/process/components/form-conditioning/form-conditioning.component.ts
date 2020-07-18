@@ -110,4 +110,19 @@ export class FormConditioningComponent implements OnInit {
       ...value,
     });
   }
+
+  get bone() {
+    return this.form.get("bone");
+  }
+
+  get clean() {
+    return this.form.get("clean");
+  }
+  get healthing() {
+    return this.form.get("healthing");
+  }
+
+  get isRequiredOnly() {
+    return this.bone.value || this.clean.value || this.healthing.value;
+  }
 }

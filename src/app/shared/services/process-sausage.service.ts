@@ -30,8 +30,8 @@ export class SausageService {
     });
   }
 
-  registerAnotherHour(hour: SausageHour, processId: number): Observable<any> {
-    return this.http.patch<any>(`${this.url}/sausage/${processId}`, {
+  registerAnotherHour(hour: SausageHour, sausagedId: number): Observable<any> {
+    return this.http.patch<any>(`${this.url}/sausage/${sausagedId}`, {
       ...hour,
     });
   }
