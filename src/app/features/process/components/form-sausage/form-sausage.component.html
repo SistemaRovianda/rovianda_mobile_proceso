@@ -166,7 +166,7 @@
           class="item-form"
           placeholder="Ingresa peso en Kg"
           formControlName="weightFinal"
-          [disabled]="!isSelected || optionalMedium"
+          [disabled]="!isSelected || optionalMedium || !optionalFinal"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -180,7 +180,7 @@
           class="item-form"
           displayFormat="HH:mm"
           formControlName="hour3"
-          [disabled]="!isSelected || optionalMedium"
+          [disabled]="!isSelected || optionalMedium || !optionalFinal"
         ></ion-datetime>
       </ion-item>
       <div class="error">

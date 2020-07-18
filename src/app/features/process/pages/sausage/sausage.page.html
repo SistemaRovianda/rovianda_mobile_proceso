@@ -27,7 +27,7 @@
     >
       <ion-col class="container container__column" size="12">
         <ion-button
-          *ngIf="!isSelected"
+          *ngIf="!isSelected || !form.optionalFinal"
           [disabled]="!form.fieldsRequireds || loading || isSelected"
           class="container container_buttton"
           color="secondary"
@@ -57,7 +57,7 @@
             ></ion-spinner> </ion-grid
         ></ion-button>
         <ion-button
-          *ngIf="isSelected && form.optionalFinal"
+          *ngIf="isSelected && form.optionalFinal && !form.optionalMedium"
           [disabled]="form.fieldsOptionalFinal || loading "
           class="container container_buttton"
           color="secondary"

@@ -115,6 +115,7 @@ export class FormSausageComponent implements OnInit {
             hour: moment(hour2).format("HH:mm"),
             weight: weightMedium,
           },
+          sausagedId: this.sausage.sausagedId,
         })
       );
     } else if (this.optionalFinal) {
@@ -124,6 +125,7 @@ export class FormSausageComponent implements OnInit {
             hour: moment(hour3).format("HH:mm"),
             weight: weightFinal,
           },
+          sausagedId: this.sausage.sausagedId,
         })
       );
     }
@@ -148,7 +150,7 @@ export class FormSausageComponent implements OnInit {
     const { product, time, ...value } = this.sausage;
 
     this.optionalMedium = time.hour2 === "" && time.weightMedium <= 0;
-    this.optionalFinal = time.hour3 !== "" && time.weightFinal > 0;
+    this.optionalFinal = time.hour3 === "" && time.weightFinal <= 0;
 
     this.form.patchValue({
       ...value,
