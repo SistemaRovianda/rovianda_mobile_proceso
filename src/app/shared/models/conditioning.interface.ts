@@ -5,7 +5,8 @@ export interface Conditioning {
   healthing: boolean;
   weight: number;
   temperature: string;
-  product: Product;
+  product?: Product;
+  productId?: number;
   date: string;
 }
 
