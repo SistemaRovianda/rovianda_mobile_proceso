@@ -37,6 +37,8 @@ export class FormBasicRegistrationComponent implements OnInit {
 
   isSelected: boolean;
 
+  datesRegistered = false;
+
   process: Process;
 
   minDate = new Date().toISOString();
@@ -67,6 +69,8 @@ export class FormBasicRegistrationComponent implements OnInit {
       .subscribe((tempProcess) => {
         if (tempProcess != null) {
           this.process = tempProcess;
+          this.datesRegistered =
+            this.process.end_date !== "" && this.process.output_hour !== "";
           this.updateForm();
         }
       });
@@ -178,10 +182,7 @@ export class FormBasicRegistrationComponent implements OnInit {
   }
 
   get dataDefrost() {
-    return (
-      this.form.get("dateFinal").value === "" ||
-      this.form.get("hourExit").value === ""
-    );
+    return this.dateFinal.value === "" || this.hourExit.value === "";
   }
   get existDataDefrost() {
     return (

@@ -29,7 +29,7 @@
     >
       <ion-col class="container container__column" size="12">
         <ion-button
-          *ngIf="!isSelected"
+          *ngIf="!isSelected "
           (click)="form.onSubmit(form.form)"
           class="container container_buttton"
           color="secondary"
@@ -49,7 +49,7 @@
           class="container container_buttton"
           color="secondary"
           expand="block"
-          [disabled]=" form.dataDefrost || loading || form.existDataDefrost"
+          [disabled]=" form.dataDefrost || loading || form.datesRegistered"
           ><ion-grid>
             <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
             <ion-spinner
