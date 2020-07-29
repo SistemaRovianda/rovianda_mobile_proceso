@@ -39,7 +39,7 @@ export class FormGrindingComponent implements OnInit {
     this.form = fb.group({
       rawMaterial: ["", Validators.required],
       process: ["", Validators.required],
-      weight: ["", [Validators.required, decimalValidator]],
+      weight: ["", [Validators.required, /*/decimalValidator/*/]],
       date: [this.minDate, Validators.required],
     });
   }
@@ -64,7 +64,7 @@ export class FormGrindingComponent implements OnInit {
   onSubmit() {
     const buttons: any = [
       {
-        text: "Cancel",
+        text: "Cencelar",
         role: "cancel",
       },
       {

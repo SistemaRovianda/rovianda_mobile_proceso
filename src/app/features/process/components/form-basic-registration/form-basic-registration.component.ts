@@ -181,6 +181,10 @@ export class FormBasicRegistrationComponent implements OnInit {
     return this.form.get("lotId");
   }
 
+  get weight() {
+    return this.form.get("weight");
+  }
+
   get dataDefrost() {
     return this.dateFinal.value === "" || this.hourExit.value === "";
   }

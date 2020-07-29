@@ -82,9 +82,9 @@
           <ion-input
             class="item-form"
             placeholder="Ingresar peso en Kg"
-            type="number"
             formControlName="weight"
             [disabled]="isSelected"
+            type="number"
           ></ion-input>
         </ion-item>
         <div class="error">
@@ -95,6 +95,9 @@
             "
           >
             Ingrese un valor
+          </ion-label>
+          <ion-label *ngIf="form.controls.weight.touched && form.controls.weight.errors?.isValidDecimal">
+            Formato invalido
           </ion-label>
         </div>
       </ion-col>
