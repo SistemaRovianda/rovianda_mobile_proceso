@@ -16,7 +16,10 @@ import {
 import { Process } from "src/app/shared/models/process.interface";
 import { RawMaterial } from "src/app/shared/models/rawMaterial.interface";
 import { basicRegisterSelectMaterial } from "../../store/basic-register/basic-register.actions";
-import { SELECT_BASIC_REGISTER_LOTS } from "../../store/basic-register/basic-register.select";
+import {
+  SELECT_BASIC_REGISTER_LOTS,
+  SELECT_BASIC_REGISTER_RESULT,
+} from "../../store/basic-register/basic-register.select";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 
 @Component({
@@ -44,6 +47,10 @@ export class FormBasicRegistrationComponent implements OnInit {
   minDate = new Date().toISOString();
 
   maxDate = new Date().getFullYear() + 5;
+
+  result: boolean;
+
+  onBack = false;
 
   constructor(
     private fb: FormBuilder,
@@ -80,6 +87,9 @@ export class FormBasicRegistrationComponent implements OnInit {
     this.store
       .select(SELECT_RECENT_RECORDS_IS_SELECTED)
       .subscribe((selected) => (this.isSelected = selected));
+    this.store
+      .select(SELECT_BASIC_REGISTER_RESULT)
+      .subscribe((tempResult) => (this.result = tempResult));
   }
 
   checkValues() {
@@ -87,13 +97,15 @@ export class FormBasicRegistrationComponent implements OnInit {
   }
 
   selectMaterial() {
-    this.lotId.setValue("");
-    this.store.dispatch(
-      basicRegisterSelectMaterial({
-        status: "NOTUSED",
-        rawMaterialId: this.productId.value,
-      })
-    );
+    if (!this.onBack) {
+      this.lotId.setValue("");
+      this.store.dispatch(
+        basicRegisterSelectMaterial({
+          status: "NOTUSED",
+          rawMaterialId: this.productId.value,
+        })
+      );
+    }
   }
 
   onSubmit() {

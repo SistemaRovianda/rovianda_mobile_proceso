@@ -75,9 +75,9 @@ export class BasicRegistrationPage implements OnInit {
   }
 
   onBackButton(form) {
-    if (form.invalid) {
+    if (form.form.invalid) {
       this.redirectBack();
-    } else if (form.valid && !this.result) {
+    } else if (form.form.valid && !this.result) {
       const buttons: any = [
         {
           text: "Cancel",
@@ -86,7 +86,8 @@ export class BasicRegistrationPage implements OnInit {
         {
           text: "Aceptar",
           handler: () => {
-            form.reset();
+            form.onBack = true;
+            form.form.reset();
             this.redirectBack();
           },
         },
@@ -97,8 +98,8 @@ export class BasicRegistrationPage implements OnInit {
         "No has guardado la información ingresada, ¿Seguro que quieres retroceder?",
         buttons
       );
-    } else if (form.valid && this.result) {
-      form.reset();
+    } else if (form.form.valid && this.result) {
+      form.form.reset();
       this.router.navigate([`/process/process-detail`]);
     }
   }
