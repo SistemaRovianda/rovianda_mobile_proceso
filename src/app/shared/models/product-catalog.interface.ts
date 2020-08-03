@@ -1,5 +1,6 @@
 export interface ProductCatalog {
   id: number;
-  name: string;
+  productName: string;
+  code?: string;
   description?: string;
 }

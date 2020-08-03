@@ -14,7 +14,7 @@ export class ProductsCatalogService {
     private http: HttpClient,
     @Inject(API_ENDPOINT_PROVIDER) private endpoint
   ) {
-    this.url = `${endpoint}/products/PACKING`;
+    this.url = `${endpoint}/product/rovianda`;
   }
 
   getAllProducts(): Observable<ProductCatalog[]> {

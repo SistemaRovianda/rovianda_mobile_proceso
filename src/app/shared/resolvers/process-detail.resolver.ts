@@ -19,9 +19,9 @@ export class ProcessDetailResolver implements Resolve<boolean> {
     this.store.dispatch(processDetailStartLoadProducts());
     this.store
       .select(SELECT_RECENT_RECORDS_PROCESS_PROCESS_ID)
-      .subscribe((processId) =>
-        localStorage.setItem("processId", `${processId}`)
-      );
+      .subscribe((processId) => {
+        localStorage.setItem("processId", `${processId}`);
+      });
     return true;
   }
 }
