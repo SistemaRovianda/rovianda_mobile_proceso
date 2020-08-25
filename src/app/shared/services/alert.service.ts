@@ -5,9 +5,15 @@ import { AlertController } from "@ionic/angular";
 export class AlertService {
   constructor(private alertCtrl: AlertController) {}
 
-  async showAlert(title = "Titulo", message = "", buttonObj = ["Aceptar"]) {
+  async showAlert(
+    title = "Titulo",
+    subtittle = "",
+    message = "",
+    buttonObj = ["Aceptar"]
+  ) {
     const alert = await this.alertCtrl.create({
       header: title,
+      subHeader: subtittle,
       message,
       buttons: buttonObj,
     });

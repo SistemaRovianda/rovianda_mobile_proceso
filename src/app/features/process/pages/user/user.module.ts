@@ -6,7 +6,6 @@ import { IonicModule } from "@ionic/angular";
 
 import { UserPage } from "./user.page";
 import { TitleHeaderModule } from "../../components/title-header/title-header.module";
-import { StepperModule } from "../../components/stepper/stepper.module";
 import { FormUsersModule } from "../../components/form-users/form-users.module";
 
 const COMMON_DECLARATIONS = [UserPage];
@@ -17,7 +16,6 @@ const COMMON_IMPORTS = [
   IonicModule,
   FormsModule,
   ReactiveFormsModule,
-  StepperModule,
   FormUsersModule,
 ];
 

@@ -1,7 +1,7 @@
 <app-title-header
   titlePath="Regresar"
   path="/process/process-detail"
-  (OnClickEvent)="onBackButton(form.form)"
+  (OnClickEvent)="onBackButton(form)"
 >
 </app-title-header>
 <ion-content>
@@ -11,11 +11,23 @@
         <h1 class="title">Embutido</h1>
       </ion-col>
     </ion-row>
+
+    <ion-row>
+      <ion-col size="3"
+        ><ion-button
+          *ngIf="isSelectedProcess"
+          class="reprocessing-btn"
+          (click)="reprocessing()"
+          >reproceso</ion-button
+        ></ion-col
+      >
+    </ion-row>
     <ion-row class="container container__row container__row--forms">
       <ion-col class="container container__column" size="12">
         <div class="container container__form">
           <app-form-sausage
             [products]="products$|async"
+            [lotsMeat]="lotsMeat$|async"
             #form
           ></app-form-sausage>
         </div>

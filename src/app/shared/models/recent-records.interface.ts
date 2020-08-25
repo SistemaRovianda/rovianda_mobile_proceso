@@ -5,4 +5,7 @@ export interface RecentRecords {
   error: string;
   processSelected: Process;
   isSelected: boolean;
+  isNewRegister: boolean;
+  path: string;
+  newRegisterProcessSuccess: boolean;
 }

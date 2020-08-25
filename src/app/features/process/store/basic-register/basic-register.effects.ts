@@ -2,23 +2,65 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { MeatService } from "src/app/shared/services/meat.service";
 import * as fromBasicRegisterActions from "./basic-register.actions";
+import * as fromRecentRecordsActions from "../recent-records/recent-records.actions";
 import { exhaustMap, switchMap, catchError, tap } from "rxjs/operators";
 import { BasicRegisterService } from "src/app/shared/services/process-basic-register.service";
 import { of, throwError, from } from "rxjs";
-import { RawMaterialService } from "src/app/shared/services/rawMaterial.service";
 import { ToastService } from "src/app/shared/services/toast.service";
 import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { AppState } from "src/app/shared/models/store.state.interface";
+import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.selector";
 
 @Injectable()
 export class BasicRegisterEffect {
+  path: string;
   constructor(
     private action$: Actions,
     private meatService: MeatService,
     private basicRegisterService: BasicRegisterService,
     private router: Router,
-    private rawMaterialService: RawMaterialService,
-    private toastService: ToastService
-  ) {}
+    private toastService: ToastService,
+    private _store: Store<AppState>
+  ) {
+    this.path = "/process/recent-records";
+  }
+
+  loadDataCurrentProcess = createEffect(() =>
+    this.action$.pipe(
+      ofType(fromBasicRegisterActions.basicRegisterSearchInformation),
+      exhaustMap((action) =>
+        this.basicRegisterService.getDefrostData(action.processId).pipe(
+          switchMap((currentProcess) =>
+            currentProcess.currentProccess === "Descongelamiento"
+              ? [
+                  fromBasicRegisterActions.basicRegisterLoadData({
+                    currentProcess,
+                  }),
+                  fromBasicRegisterActions.basiRegisterIsSelected({
+                    isSelected: true,
+                  }),
+                ]
+              : [
+                  fromBasicRegisterActions.basicRegisterLoadData({
+                    currentProcess: null,
+                  }),
+                  fromBasicRegisterActions.basiRegisterIsSelected({
+                    isSelected: false,
+                  }),
+                ]
+          ),
+          catchError((error) => {
+            return of(
+              fromBasicRegisterActions.basicRegisterNewProcessFailure({
+                error: error.error.msg,
+              })
+            );
+          })
+        )
+      )
+    )
+  );
 
   loadLotsMeatEffect = createEffect(() =>
     this.action$.pipe(
@@ -26,11 +68,26 @@ export class BasicRegisterEffect {
       exhaustMap((action) =>
         this.meatService.getLotsMeat(action.status, action.rawMaterialId).pipe(
           switchMap((lots) => {
+            lots.length === 0
+              ? this.toastService.presentToastMessageWarning(
+                  "Materia prima sin lotes disponibles"
+                )
+              : this.toastService.presentToastSuccessCustom("Lotes obtenidos");
             return [
               fromBasicRegisterActions.basicRegisterLoadLotsOutputMeat({
                 lots,
               }),
             ];
+          }),
+          catchError((error) => {
+            this.toastService.presentToastMessageWarning(
+              "Producto seleccionado no encontrado en el congelador"
+            );
+            return of(
+              fromBasicRegisterActions.basicRegisterNewProcessFailure({
+                error: error.error.msg,
+              })
+            );
           })
         )
       )
@@ -42,7 +99,7 @@ export class BasicRegisterEffect {
       ofType(fromBasicRegisterActions.basicRegisterStartRegisterNewProcess),
       exhaustMap((action) =>
         this.basicRegisterService.basicRegisterProcess(action.newProcess).pipe(
-          switchMap((action) => {
+          switchMap((result) => {
             this.toastService.presentToastSuccess();
             return [
               fromBasicRegisterActions.basicRegisterLoadResultsNewRegisterProcess(
@@ -69,7 +126,7 @@ export class BasicRegisterEffect {
     this.action$.pipe(
       ofType(fromBasicRegisterActions.basicRegisterNewRegisterProcessSucess),
       exhaustMap(() =>
-        from(this.router.navigate(["/process/recent-records"])).pipe(
+        from(this.router.navigate([this.path])).pipe(
           switchMap((result) =>
             result
               ? [
@@ -81,21 +138,6 @@ export class BasicRegisterEffect {
                   }),
                 ]
           )
-        )
-      )
-    )
-  );
-
-  loadMaterialEffect = createEffect(() =>
-    this.action$.pipe(
-      ofType(fromBasicRegisterActions.basicRegisterStartLoadMaterials),
-      exhaustMap((action) =>
-        this.rawMaterialService.getMaterials().pipe(
-          switchMap((materials) => [
-            fromBasicRegisterActions.basicRegisterLoadMaterials({
-              materials,
-            }),
-          ])
         )
       )
     )

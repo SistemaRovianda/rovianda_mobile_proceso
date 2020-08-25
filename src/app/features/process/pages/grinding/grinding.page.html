@@ -11,10 +11,26 @@
       </ion-col>
     </ion-row>
 
+    <ion-row class="row-button">
+      <ion-col size="3"
+        ><ion-button
+          *ngIf="isSelectedProcess"
+          class="reprocessing-btn"
+          (click)="reprocessing()"
+          >reproceso</ion-button
+        ></ion-col
+      >
+    </ion-row>
+
     <ion-row class="container container__row container__row--forms">
       <ion-col class="container container__column" size="12">
         <div class="container container__form">
-          <app-form-grinding #form></app-form-grinding>
+          <app-form-grinding
+            [products]="products$|async"
+            [materials]="materials$|async"
+            [lotsMeat]="lotsMeat$|async"
+            #form
+          ></app-form-grinding>
         </div>
       </ion-col>
     </ion-row>
@@ -24,14 +40,19 @@
     >
       <ion-col class="container container__column" size="12">
         <ion-button
-          [disabled]="form.form.invalid || isSelected"
+          [disabled]="form.form.invalid || isSelected || loading"
           class="container container_buttton"
           color="secondary"
           size="large"
           expand="block"
           (click)="form.onSubmit()"
-          >Guardar</ion-button
-        >
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+            <ion-spinner
+              *ngIf="loading"
+              name="crescent"
+            ></ion-spinner> </ion-grid
+        ></ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

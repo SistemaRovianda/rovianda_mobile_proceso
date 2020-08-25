@@ -3,7 +3,8 @@ import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import * as fromBasicRegisterActions from "../../store/basic-register/basic-register.actions";
-import { signOut } from 'src/app/features/landing/store/login/login.action';
+import { signOut } from "src/app/features/landing/store/login/login.action";
+import { recentRecordsLoadTypeRegister } from "../../store/recent-records/recent-records.actions";
 
 @Component({
   selector: "app-recent-records",
@@ -20,6 +21,13 @@ export class RecentRecordsPage implements OnInit {
   }
 
   onClick() {
-    this.router.navigate(["process/basic-registration"]);
+    this.router.navigate(["process/process-detail"]);
+    localStorage.setItem("processId", `-1`);
+    this.store.dispatch(
+      recentRecordsLoadTypeRegister({
+        isNewRegister: true,
+        path: "/process/recent-records",
+      })
+    );
   }
 }

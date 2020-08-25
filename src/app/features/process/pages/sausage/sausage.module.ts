@@ -6,7 +6,6 @@ import { IonicModule } from "@ionic/angular";
 
 import { SausagePage } from "./sausage.page";
 import { TitleHeaderModule } from "../../components/title-header/title-header.module";
-import { StepperModule } from "../../components/stepper/stepper.module";
 import { FormSausageModule } from "../../components/form-sausage/form-sausage.module";
 
 const COMMON_DECLARATIONS = [SausagePage];
@@ -17,7 +16,6 @@ const COMMON_IMPORTS = [
   IonicModule,
   FormsModule,
   ReactiveFormsModule,
-  StepperModule,
   FormSausageModule,
 ];
 

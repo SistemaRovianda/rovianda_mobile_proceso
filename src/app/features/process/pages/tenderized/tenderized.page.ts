@@ -8,9 +8,14 @@ import {
   SELECT_TENDERIZED_IS_LOADING,
   SELECT_TENDERIZED_IS_SELECTED,
 } from "../../store/tenderized/tenderized.selector";
-import { SELECT_PROCESS_DETAIL_PRODUCTS } from "../../store/process-detail/process-detail.selector";
+import {
+  SELECT_PROCESS_DETAIL_PRODUCTS,
+  SELECT_PROCESS_DETAIL_LOTS_MEAT,
+} from "../../store/process-detail/process-detail.selector";
 import { Observable } from "rxjs";
 import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
+import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
+import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-records/recent-records.selector";
 
 @Component({
   selector: "app-tenderized",
@@ -20,6 +25,10 @@ import { ProductCatalog } from "src/app/shared/models/product-catalog.interface"
 export class TenderizedPage implements OnInit {
   products$: Observable<ProductCatalog[]> = this.store.select(
     SELECT_PROCESS_DETAIL_PRODUCTS
+  );
+
+  lotsMeat$: Observable<ProcessLotMeat[]> = this.store.select(
+    SELECT_PROCESS_DETAIL_LOTS_MEAT
   );
   constructor(
     private alert: AlertService,
@@ -32,7 +41,12 @@ export class TenderizedPage implements OnInit {
 
   isSelected: boolean;
 
+  isSelectedProcess: boolean;
+
   ngOnInit() {
+    this.store
+      .select(SELECT_TENDERIZED_IS_SELECTED)
+      .subscribe((selected) => (this.isSelected = selected));
     this.store
       .select(SELECT_TENDERIZED_RESULT)
       .subscribe((tempResult) => (this.result = tempResult));
@@ -40,14 +54,14 @@ export class TenderizedPage implements OnInit {
       .select(SELECT_TENDERIZED_IS_LOADING)
       .subscribe((loading) => (this.loading = loading));
     this.store
-      .select(SELECT_TENDERIZED_IS_SELECTED)
-      .subscribe((selected) => (this.isSelected = selected));
+      .select(SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS)
+      .subscribe((selected) => (this.isSelectedProcess = selected));
   }
 
   onBackButton(form) {
     const buttons: any = [
       {
-        text: "Cancel",
+        text: "Cancelar",
         role: "cancel",
       },
       {
@@ -64,6 +78,7 @@ export class TenderizedPage implements OnInit {
     } else if (form.valid && !this.result) {
       this.alert.showAlert(
         "Informacion",
+        "",
         "No has guardado la información ingresada, ¿Seguro que quieres retroceder?",
         buttons
       );
@@ -74,5 +89,8 @@ export class TenderizedPage implements OnInit {
 
   redirectBack() {
     this.router.navigate([`/process/process-detail`]);
+  }
+  reprocessing() {
+    this.router.navigate([`/process/reprocessing`]);
   }
 }

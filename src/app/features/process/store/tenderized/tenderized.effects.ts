@@ -7,15 +7,24 @@ import { TenderizedService } from "src/app/shared/services/process-tenderized.se
 import * as fromTenderizedActions from "./tenderized.actions";
 import { ToastService } from "src/app/shared/services/toast.service";
 import { Router } from "@angular/router";
+import { AppState } from "src/app/shared/models/store.state.interface";
+import { Store } from "@ngrx/store";
+import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.selector";
 
 @Injectable()
 export class TenderizedEffects {
+  path: string;
   constructor(
     private action$: Actions,
     private tenderizedService: TenderizedService,
     private toast: ToastService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private _store: Store<AppState>
+  ) {
+    this._store
+      .select(SELECT_RECENT_RECORDS_PATH)
+      .subscribe((pathTemp) => (this.path = pathTemp));
+  }
 
   loadDataTenderized = createEffect(() =>
     this.action$.pipe(
@@ -82,7 +91,7 @@ export class TenderizedEffects {
     this.action$.pipe(
       ofType(fromTenderizedActions.tenderizedRegisterSuccess),
       exhaustMap(() =>
-        from(this.router.navigate(["/process/process-detail"])).pipe(
+        from(this.router.navigate([this.path])).pipe(
           switchMap((result) =>
             result
               ? [fromTenderizedActions.tenderizedRegisterFinish()]

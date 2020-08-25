@@ -7,6 +7,7 @@ import { GrindingPageInterface } from "./grinding-page.interface";
 import { TenderizedInterface } from "./tenderized-page.interface";
 import { ProcessDetail } from "./process-detail-page.interface";
 import { UserPageInterface } from "./user-page.interfac";
+import { ProcessReprocessing } from "./process-reprocessing.interface";
 
 export interface LoginState {
   loading: boolean;
@@ -29,7 +30,6 @@ export interface AppState {
   auth: AuthenticationUser;
   login: LoginState;
   recentRecords: RecentRecords;
-  steps: Stepper;
   sausage: SausageInterface;
   basicRegister: BasicRegister;
   conditioning: ConditioningInterface;
@@ -37,6 +37,7 @@ export interface AppState {
   tenderized: TenderizedInterface;
   processDetail: ProcessDetail;
   user: UserPageInterface;
+  reprocessing: ProcessReprocessing;
 }
 
 export interface SignIn {

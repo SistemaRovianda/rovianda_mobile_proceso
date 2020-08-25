@@ -5,6 +5,8 @@ export interface NewProcess {
   temperature: string;
   hourEntrance: string;
   dateIni: string;
+  processId: number;
+  productName?: string;
 }
 
 export interface LotProduct {

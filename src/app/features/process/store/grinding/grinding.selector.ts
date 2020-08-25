@@ -17,3 +17,8 @@ export const SELECT_GRINDING_IS_SELECTED = createSelector(
   SELECT_GRINDING,
   (state) => state.isSelected
 );
+
+export const SELECT_GRINDING_IS_LOADING = createSelector(
+  SELECT_GRINDING,
+  (state) => state.loading
+);

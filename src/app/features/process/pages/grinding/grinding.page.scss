@@ -22,6 +22,12 @@ $color-text-secondary: #b2b2b2;
       min-height: 700px;
     }
   }
+  .row-button {
+    height: 5%;
+    .reprocessing-btn {
+      --height: 20px;
+    }
+  }
 
   .title {
     font-size: 3.8vw;
@@ -32,7 +38,7 @@ $color-text-secondary: #b2b2b2;
   }
   &__row {
     &--forms {
-      height: 80%;
+      height: 75%;
       width: 100%;
 
       @include breakpoint-size(ms-extra-small) {

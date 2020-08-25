@@ -6,7 +6,6 @@ import { IonicModule } from "@ionic/angular";
 
 import { ConditioningPage } from "./conditioning.page";
 import { TitleHeaderModule } from "../../components/title-header/title-header.module";
-import { StepperModule } from "../../components/stepper/stepper.module";
 import { FormConditioningModule } from '../../components/form-conditioning/form-conditioning.module';
 
 const COMMON_DECLARATIONS = [ConditioningPage];
@@ -17,7 +16,6 @@ const COMMON_IMPORTS = [
   IonicModule,
   FormsModule,
   ReactiveFormsModule,
-  StepperModule,
   FormConditioningModule
 ];
 @NgModule({

@@ -1,0 +1,49 @@
+<app-title-header
+  titlePath="Regresar"
+  path="/process/process-detail"
+  (OnClickEvent)="onBackButton()"
+></app-title-header>
+<ion-content>
+  <ion-grid class="container container--all">
+    <ion-row>
+      <ion-col>
+        <h1 class="title">
+          Reproceso de {{currentSection.name.toLowerCase()}}
+        </h1>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="container container__row container__row--forms">
+      <ion-col class="container container__column" size="12">
+        <div class="container container__form">
+          <app-form-reprocessing
+            (onSubmit)="onSubmit($event)"
+            [listReprocessing]="listReprocessing$|async"
+            #form
+          ></app-form-reprocessing>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      class="container container__row container__row--buttons ion-justify-content-around"
+    >
+      <ion-col class="container container__column" size="12">
+        <ion-button
+          [disabled]="form.form.invalid || loading"
+          (click)="form.onSubmit()"
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
+            <ion-spinner
+              *ngIf="loading"
+              name="crescent"
+            ></ion-spinner> </ion-grid
+        ></ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

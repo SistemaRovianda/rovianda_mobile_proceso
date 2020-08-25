@@ -25,7 +25,10 @@ import { TenderizedResolver } from "src/app/shared/resolvers/tenderized.resolver
 import { BasicRegisterResolver } from "src/app/shared/resolvers/basic-register.resolver";
 import { UserResolver } from "src/app/shared/resolvers/users.resolver";
 import { ReportPage } from "./pages/report/report.page";
-import { ReportPageModule } from './pages/report/report.module';
+import { ReportPageModule } from "./pages/report/report.module";
+import { ReprocessingPage } from "./pages/reprocessing/reprocessing.page";
+import { ReprocessingPageModule } from "./pages/reprocessing/reprocessing.module";
+import { ReprocessingResolver } from "src/app/shared/resolvers/reprocessing.resolver";
 
 const routes: Routes = [
   {
@@ -91,6 +94,13 @@ const routes: Routes = [
         path: "report",
         component: ReportPage,
       },
+      {
+        path: "reprocessing",
+        component: ReprocessingPage,
+        resolve: {
+          reprocessing: ReprocessingResolver,
+        },
+      },
     ],
   },
 ];
@@ -106,7 +116,8 @@ const routes: Routes = [
     TenderizedPageModule,
     SausagePageModule,
     UserPageModule,
-    ReportPageModule
+    ReportPageModule,
+    ReprocessingPageModule,
   ],
   exports: [RouterModule],
   providers: [
@@ -118,6 +129,7 @@ const routes: Routes = [
     SausageResolver,
     BasicRegisterResolver,
     UserResolver,
+    ReprocessingResolver,
   ],
 })
 export class ProcessRoutingModule {}

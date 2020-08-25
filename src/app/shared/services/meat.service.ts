@@ -2,6 +2,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { API_ENDPOINT_PROVIDER } from "src/app/providers/tokens";
 import { LotMeatOutput } from "../models/Lot-meat-output.interface";
+import { Observable } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class MeatService {
@@ -11,12 +12,15 @@ export class MeatService {
     private http: HttpClient,
     @Inject(API_ENDPOINT_PROVIDER) private endpoint
   ) {
-    this.url = `${endpoint}/meat`;
+    this.url = `${endpoint}`;
   }
 
-  getLotsMeat(status: string, rawMaterialId: number) {
+  getLotsMeat(
+    status: string,
+    rawMaterialId: number
+  ): Observable<LotMeatOutput[]> {
     return this.http.get<LotMeatOutput[]>(
-      `${this.url}/lots/output?status=${status}&rawMaterialId=${rawMaterialId}`
+      `${this.url}/lote/meat/process?status=${status}&rawMaterialId=${rawMaterialId}`
     );
   }
 }

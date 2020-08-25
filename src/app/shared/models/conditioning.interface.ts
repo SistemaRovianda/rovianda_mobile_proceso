@@ -8,6 +8,7 @@ export interface Conditioning {
   product?: Product;
   productId?: number;
   date: string;
+  lotMeat: string;
 }
 
 export interface Product {

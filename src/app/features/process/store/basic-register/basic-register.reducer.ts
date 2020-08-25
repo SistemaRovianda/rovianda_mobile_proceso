@@ -6,14 +6,22 @@ import * as fromRecentRecordsActions from "../recent-records/recent-records.acti
 const STATE_STATE_BASIC_REGISTER: BasicRegister = {
   status: null,
   lots: [],
-  materials: [],
   result: false,
   error: null,
   loading: false,
+  currentProcess: null,
+  isSelected: false,
 };
 
 export const basicRegisterReducer = createReducer(
   STATE_STATE_BASIC_REGISTER,
+  on(
+    fromBasicRegisterActions.basicRegisterLoadData,
+    (state, { currentProcess }) => ({
+      ...state,
+      currentProcess,
+    })
+  ),
   on(
     fromBasicRegisterActions.basicRegisterLoadLotsOutputMeat,
     (state, { lots }) => ({ ...state, lots })
@@ -42,11 +50,19 @@ export const basicRegisterReducer = createReducer(
     fromRecentRecordsActions.recentRecordsLoadRecords,
     (state) => STATE_STATE_BASIC_REGISTER
   ),
+  on(fromBasicRegisterActions.basicRegisterRegisterDefrostProcess, (state) => ({
+    ...state,
+    loading: true,
+  })),
+  on(fromRecentRecordsActions.recentRecordsCreateNewProcess, (state) => ({
+    ...state,
+    loading: true,
+  })),
   on(
-    fromBasicRegisterActions.basicRegisterRegisterDefrostProcess,
-    (state) => ({
+    fromBasicRegisterActions.basiRegisterIsSelected,
+    (state, { isSelected }) => ({
       ...state,
-      loading: true,
+      isSelected,
     })
   )
 );

@@ -7,6 +7,7 @@ import { BasicRegisterEffect } from "src/app/features/process/store/basic-regist
 import { SausageEffects } from "src/app/features/process/store/sausage/sausage.effects";
 import { ProcessDetailEffect } from "src/app/features/process/store/process-detail/process-detail.effects";
 import { UsersEffects } from "src/app/features/process/store/user/user.effect";
+import { ReprocessingEffects } from 'src/app/features/process/store/reprocessing/reprocessing.effects';
 
 export const effects = [
   LoginEffects,
@@ -18,4 +19,5 @@ export const effects = [
   SausageEffects,
   ProcessDetailEffect,
   UsersEffects,
+  ReprocessingEffects
 ];

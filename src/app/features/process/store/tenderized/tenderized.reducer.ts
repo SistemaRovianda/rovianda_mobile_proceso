@@ -14,7 +14,7 @@ export const tenderizedReducer = createReducer(
   STATE_INITIAL_CONDITIONING,
   on(fromTenderizedActions.tenderizedLoadData, (state, { tenderized }) => ({
     ...state,
-    tenderized
+    tenderized,
   })),
   on(
     fromRecentRecordsActions.recentRecordsLoadRecordsSuccess,
@@ -30,7 +30,7 @@ export const tenderizedReducer = createReducer(
   })),
   on(fromTenderizedActions.tenderizedRegisterFailure, (state, { error }) => ({
     ...state,
-    error
+    error,
   })),
   on(fromTenderizedActions.tenderizedRegisterFinish, (state) => ({
     ...state,
@@ -39,5 +39,9 @@ export const tenderizedReducer = createReducer(
   on(fromTenderizedActions.tenderizedIsSelected, (state, { isSelected }) => ({
     ...state,
     isSelected,
+  })),
+  on(fromRecentRecordsActions.recentRecordsCreateNewProcess, (state) => ({
+    ...state,
+    loading: true,
   }))
 );

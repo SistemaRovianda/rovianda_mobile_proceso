@@ -40,5 +40,9 @@ export const grindingReducer = createReducer(
   on(fromGrindingActions.grindingIsSelected, (state, { isSelected }) => ({
     ...state,
     isSelected,
+  })),
+  on(fromRecentRecordsActions.recentRecordsCreateNewProcess, (state) => ({
+    ...state,
+    loading: true,
   }))
 );

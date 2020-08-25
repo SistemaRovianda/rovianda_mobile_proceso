@@ -16,9 +16,8 @@
       ></ion-col>
     </ion-row>
   </ion-grid>
-  <ion-row class="footer">
-    <ion-button [disabled]="loading"
-     (click)="closeProccess()"
+  <ion-row class="footer" *ngIf="!isNewRegister">
+    <ion-button [disabled]="loading" (click)="closeProccess()"
       ><ion-grid>
         <ion-row *ngIf="!loading"> <ion-col>Terminar</ion-col></ion-row>
         <ion-spinner *ngIf="loading" name="crescent"></ion-spinner> </ion-grid

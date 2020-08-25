@@ -63,6 +63,7 @@ export class UserPage implements OnInit {
     } else if (form.valid && !this.result) {
       this.alert.showAlert(
         "Informacion",
+        "",
         "No has guardado la información ingresada, ¿Seguro que quieres retroceder?",
         buttons
       );

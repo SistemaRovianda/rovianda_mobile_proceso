@@ -10,7 +10,16 @@ import {
 } from "../../store/conditioning/conditioning.selector";
 import { Observable } from "rxjs";
 import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
-import { SELECT_PROCESS_DETAIL_PRODUCTS } from "../../store/process-detail/process-detail.selector";
+import {
+  SELECT_PROCESS_DETAIL_PRODUCTS,
+  SELECT_PROCESS_DETAIL_MATERIALS,
+  SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA,
+  SELECT_PROCESS_DETAIL_LOTS_MEAT,
+} from "../../store/process-detail/process-detail.selector";
+import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
+import { RawMaterial } from "src/app/shared/models/raw-material.interface";
+import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-records/recent-records.selector";
+import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
 
 @Component({
   selector: "app-conditioning",
@@ -30,9 +39,19 @@ export class ConditioningPage implements OnInit {
 
   isSelected: boolean;
 
-  products$: Observable<ProductCatalog[]> = this.store.select(
-    SELECT_PROCESS_DETAIL_PRODUCTS
+  isSelectedProcess: boolean;
+
+  products$: Observable<ProductsRovianda[]> = this.store.select(
+    SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA
   );
+  materials$: Observable<RawMaterial[]> = this.store.select(
+    SELECT_PROCESS_DETAIL_MATERIALS
+  );
+
+  lotsMeat$: Observable<ProcessLotMeat[]> = this.store.select(
+    SELECT_PROCESS_DETAIL_LOTS_MEAT
+  );
+
   ngOnInit() {
     this.store
       .select(SELECT_CONDITIONING_RESULT)
@@ -43,12 +62,15 @@ export class ConditioningPage implements OnInit {
     this.store
       .select(SELECT_CONDITIONING_IS_SELECTED)
       .subscribe((selected) => (this.isSelected = selected));
+    this.store
+      .select(SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS)
+      .subscribe((selected) => (this.isSelectedProcess = selected));
   }
 
   onBackButton(form) {
     const buttons: any = [
       {
-        text: "Cancel",
+        text: "Cancelar",
         role: "cancel",
       },
       {
@@ -65,6 +87,7 @@ export class ConditioningPage implements OnInit {
     } else if (form.valid && !this.result) {
       this.alert.showAlert(
         "Informacion",
+        "",
         "No has guardado la información ingresada, ¿Seguro que quieres retroceder?",
         buttons
       );
@@ -74,23 +97,10 @@ export class ConditioningPage implements OnInit {
     }
   }
 
-  onNextButton(form) {
-    if (form.valid && !this.result) {
-      this.alert.showAlert(
-        "Informacion",
-        "Primero se tiene que guardar la información ingresada",
-        ["Aceptar"]
-      );
-    } else if (this.result || form.invalid) {
-      this.redirectNext();
-    }
-  }
-
   redirectBack() {
     this.router.navigate([`/process/process-detail`]);
   }
-
-  redirectNext() {
-    this.router.navigate([`/process/grinding`]);
+  reprocessing() {
+    this.router.navigate([`/process/reprocessing`]);
   }
 }

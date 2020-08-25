@@ -7,15 +7,24 @@ import { exhaustMap, switchMap, catchError } from "rxjs/operators";
 import { throwError, from, of } from "rxjs";
 import { Router } from "@angular/router";
 import { ToastService } from "src/app/shared/services/toast.service";
+import { Store } from "@ngrx/store";
+import { AppState } from "src/app/shared/models/store.state.interface";
+import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.selector";
 
 @Injectable()
 export class GrindingEffects {
+  path: string;
   constructor(
     private action$: Actions,
     private grindingService: GrindingService,
     private router: Router,
-    private toast: ToastService
-  ) {}
+    private toast: ToastService,
+    private _store: Store<AppState>
+  ) {
+    this._store
+      .select(SELECT_RECENT_RECORDS_PATH)
+      .subscribe((pathTemp) => (this.path = pathTemp));
+  }
 
   loadDataGrinding = createEffect(() =>
     this.action$.pipe(
@@ -66,7 +75,8 @@ export class GrindingEffects {
               return of(
                 fromGrindingActions.grindingRegisterFailure({
                   error: error.error.msg,
-                })
+                }),
+                fromGrindingActions.grindingRegisterFinish()
               );
             })
           )
@@ -78,7 +88,7 @@ export class GrindingEffects {
     this.action$.pipe(
       ofType(fromGrindingActions.grindingRegisterSuccess),
       exhaustMap(() =>
-        from(this.router.navigate(["/process/process-detail"])).pipe(
+        from(this.router.navigate([this.path])).pipe(
           switchMap((result) =>
             result
               ? [fromGrindingActions.grindingRegisterFinish()]

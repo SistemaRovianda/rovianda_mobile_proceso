@@ -10,7 +10,12 @@ import {
 } from "../../store/sausage/sausage.selector";
 import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
 import { Observable } from "rxjs";
-import { SELECT_PROCESS_DETAIL_PRODUCTS } from "../../store/process-detail/process-detail.selector";
+import {
+  SELECT_PROCESS_DETAIL_PRODUCTS,
+  SELECT_PROCESS_DETAIL_LOTS_MEAT,
+} from "../../store/process-detail/process-detail.selector";
+import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
+import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-records/recent-records.selector";
 
 @Component({
   selector: "app-sausage",
@@ -20,6 +25,9 @@ import { SELECT_PROCESS_DETAIL_PRODUCTS } from "../../store/process-detail/proce
 export class SausagePage implements OnInit {
   products$: Observable<ProductCatalog[]> = this.store.select(
     SELECT_PROCESS_DETAIL_PRODUCTS
+  );
+  lotsMeat$: Observable<ProcessLotMeat[]> = this.store.select(
+    SELECT_PROCESS_DETAIL_LOTS_MEAT
   );
 
   constructor(
@@ -34,6 +42,8 @@ export class SausagePage implements OnInit {
 
   isSelected: boolean;
 
+  isSelectedProcess: boolean;
+
   ngOnInit() {
     this.store
       .select(SELECT_SAUSAGE_RESULT)
@@ -44,53 +54,44 @@ export class SausagePage implements OnInit {
     this.store
       .select(SELECT_SAUSAGE_IS_SELECTED)
       .subscribe((selected) => (this.isSelected = selected));
+    this.store
+      .select(SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS)
+      .subscribe((selected) => (this.isSelectedProcess = selected));
   }
   onBackButton(form) {
     const buttons: any = [
       {
-        text: "Cancel",
+        text: "Cancelar",
         role: "cancel",
       },
       {
         text: "Aceptar",
         handler: () => {
-          form.reset();
+          form.form.reset();
           this.redirectBack();
         },
       },
     ];
-    if (form.valid && this.isSelected) {
-      form.reset();
+    if (form.fieldsRequireds && this.isSelected) {
+      form.form.reset();
       this.redirectBack();
-    } else if (form.valid && !this.result) {
+    } else if (form.fieldsRequireds && !this.result) {
       this.alert.showAlert(
         "Informacion",
+        "",
         "No has guardado la información ingresada, ¿Seguro que quieres retroceder?",
         buttons
       );
-    } else if (form.invalid) {
-      form.reset();
+    } else if (!form.fieldsRequireds) {
+      form.form.reset();
       this.redirectBack();
-    }
-  }
-
-  onNextButton(form) {
-    if (form.valid && !this.result) {
-      this.alert.showAlert(
-        "Informacion",
-        "Primero se tiene que guardar la información ingresada",
-        ["Aceptar"]
-      );
-    } else if (this.result || form.invalid) {
-      this.redirectNext();
     }
   }
 
   redirectBack() {
     this.router.navigate([`/process/process-detail`]);
   }
-
-  redirectNext() {
-    this.router.navigate([`/process/users`]);
+  reprocessing() {
+    this.router.navigate([`/process/reprocessing`]);
   }
 }

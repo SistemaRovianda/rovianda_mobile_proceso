@@ -1,7 +1,26 @@
 <form [formGroup]="form" class="form" (ngSubmit)="onSubmit()">
   <ion-row>
     <ion-col size="7">
-      <ion-item>
+      <ion-item *ngIf="!isSelected">
+        <ion-label position="floating">
+          Materia prima*
+        </ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar materia prima"
+          formControlName="rawMaterial"
+          [disabled]="materials.length == 0"
+        >
+          <ion-select-option
+            [value]="material.rawMaterial"
+            *ngFor="let material of materials"
+          >
+            {{ material.rawMaterial }}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="isSelected">
         <ion-label position="floating">Materia prima*</ion-label>
         <ion-input
           class="item-form"
@@ -17,8 +36,43 @@
             (form.controls.rawMaterial.touched ||
               form.controls.rawMaterial.dirty)
           "
-          >Ingrese un valor</ion-label
+          >Seleccione una materia prima</ion-label
         >
+      </div>
+    </ion-col>
+    <ion-col size="5">
+      <ion-item *ngIf="!isSelected">
+        <ion-label position="floating">Lote de carne</ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar lote"
+          formControlName="lotMeat"
+          [disabled]=" lotsMeat.length == 0"
+        >
+          <ion-select-option [value]="lotMeat.loteMeat" *ngFor="let lotMeat of  lotsMeat"
+            >{{ lotMeat.loteMeat}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="isSelected && !emptyProcess">
+        <ion-label position="floating">Lote de carne*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Producto"
+          formControlName="lotId"
+          disabled
+        ></ion-input>
+      </ion-item>
+      <div class="error">
+        <ion-label
+          *ngIf="
+            form.hasError('required', 'lotId') &&
+            (form.controls.lotId.touched || form.controls.lotId.dirty)
+          "
+        >
+          Ingrese un valor
+        </ion-label>
       </div>
     </ion-col>
   </ion-row>
@@ -78,7 +132,12 @@
           "
           >Ingrese un valor</ion-label
         >
-        <ion-label *ngIf="form.controls.weight.touched && form.controls.weight.errors?.isValidDecimal">
+        <ion-label
+          *ngIf="
+            form.controls.weight.touched &&
+            form.controls.weight.errors?.isValidDecimal
+          "
+        >
           Formato invalido
         </ion-label>
       </div>
@@ -121,7 +180,7 @@
           <ion-select-option
             [value]="product.id"
             *ngFor="let product of products"
-            >{{ product.productName }}</ion-select-option
+            >{{ product.name }}</ion-select-option
           >
         </ion-select>
       </ion-item>

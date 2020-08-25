@@ -8,8 +8,18 @@
   <ion-grid class="container container--all">
     <ion-row>
       <ion-col>
-        <h1 class="title">Datos de registro básico</h1>
+        <h1 class="title">Descongelamiento</h1>
       </ion-col>
+    </ion-row>
+    <ion-row class="row-button">
+      <ion-col size="3"
+        ><ion-button
+          *ngIf="isSelected"
+          (click)="reprocessing()"
+          class="reprocessing-btn"
+          >reproceso</ion-button
+        ></ion-col
+      >
     </ion-row>
     <ion-row class="container container__row container__row--forms">
       <ion-col class="container container__column" size="12">
@@ -29,7 +39,7 @@
     >
       <ion-col class="container container__column" size="12">
         <ion-button
-          *ngIf="!isSelected "
+          *ngIf="!isSelected ||form.emptyProcess"
           (click)="form.onSubmit(form.form)"
           class="container container_buttton"
           color="secondary"
@@ -44,7 +54,7 @@
             ></ion-spinner> </ion-grid
         ></ion-button>
         <ion-button
-          *ngIf="isSelected"
+          *ngIf="isSelected && !form.emptyProcess"
           (click)="form.onSubmitDefrost()"
           class="container container_buttton"
           color="secondary"

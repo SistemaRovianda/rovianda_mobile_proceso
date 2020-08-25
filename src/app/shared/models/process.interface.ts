@@ -10,4 +10,5 @@ export class Process {
   end_date: string;
   entrance_hour: string;
   output_hour: string;
+  createAt: string;
 }

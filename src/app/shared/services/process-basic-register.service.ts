@@ -30,6 +30,11 @@ export class BasicRegisterService {
   }
 
   basicRegisterDefrost(processId, data: Defrost): Observable<any> {
-    return this.http.patch<any>(`${this.url}/defrost/${processId}`, {...data});
+    return this.http.patch<any>(`${this.url}/defrost/${processId}`, {
+      ...data,
+    });
+  }
+  getDefrostData(processId): Observable<any> {
+    return this.http.get<any>(`${this.url}/${processId}`);
   }
 }

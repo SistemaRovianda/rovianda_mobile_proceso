@@ -85,9 +85,7 @@
       },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-file-transfer": {},
-      "cordova-plugin-file-opener2": {
-        "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+      "cordova-plugin-file-opener2": {}
     },
     "platforms": [
       "android"

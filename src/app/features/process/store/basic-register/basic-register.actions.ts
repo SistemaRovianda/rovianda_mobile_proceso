@@ -1,10 +1,17 @@
 import { createAction, props } from "@ngrx/store";
 import { LotMeatOutput } from "src/app/shared/models/Lot-meat-output.interface";
 import { NewProcess } from "src/app/shared/models/new-process.interface";
-import { RawMaterial } from "src/app/shared/models/rawMaterial.interface";
+import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
 import { Defrost } from "src/app/shared/models/defrost.interface";
+import { Process } from "src/app/shared/models/process.interface";
+
+const BASIC_REGISTER_SEARCH_INFORMATION = "[BASIC REGISTER] Search Information";
+
+const BASIC_REGISTER_LOAD_DATA = "[BASIC REGISTER] Load Data";
 
 const BASIC_REGISTER_SELECT_MATERIAL = "[BASIC REGISTER] Select Material";
+
+const BASIC_REGISTER_IS_SELECTED = "[BASIC REGISTER] Is Selected";
 
 const BASIC_REGISTER_LOAD_LOTS_OUTPUT_MEAT =
   "[BASIC REGISTER] Load Lots Output Meat";
@@ -34,10 +41,27 @@ const BASIC_REGISTER_REGISTER_DEFROST_PROCESS =
 
 const BASIC_REGISTER_REGISTER_DEFROST_PROCESS_SUCCESS =
   "[BASIC REGISTER] REgister Defrost Process Success";
-/*
 
+const BASIC_REGISTER_NEW_PROCESS_SUCCESS =
+  "[BASIC REGISTER] New Process Success";
 
-const BASIC_REGISTER_LOAD_RESULTS_NEW_REGISTER_PROCESS = "[BASIC REGISTER] Load Results New Register Process";*/
+const BASIC_REGISTER_START_REGISTER_DEFROST_AFTER_REGISTER_PROCESS =
+  "[BASIC REGISTER] Start Register Defrost After Register Process";
+
+export const basicRegisterSearchInformation = createAction(
+  BASIC_REGISTER_SEARCH_INFORMATION,
+  props<{ processId: number }>()
+);
+
+export const basicRegisterLoadData = createAction(
+  BASIC_REGISTER_LOAD_DATA,
+  props<{ currentProcess: Process }>()
+);
+
+export const basiRegisterIsSelected = createAction(
+  BASIC_REGISTER_IS_SELECTED,
+  props<{ isSelected: boolean }>()
+);
 
 export const basicRegisterSelectMaterial = createAction(
   BASIC_REGISTER_SELECT_MATERIAL,
@@ -78,7 +102,7 @@ export const basicRegisterStartLoadMaterials = createAction(
 
 export const basicRegisterLoadMaterials = createAction(
   BASIC_REGISTER_LOAD_MATERIALS,
-  props<{ materials: RawMaterial[] }>()
+  props<{ materials: ProductsRovianda[] }>()
 );
 
 export const basicRegisterRegisterDefrostProcess = createAction(
@@ -88,4 +112,12 @@ export const basicRegisterRegisterDefrostProcess = createAction(
 
 export const basicRegisterRegisterDefrostProcessSuccess = createAction(
   BASIC_REGISTER_REGISTER_DEFROST_PROCESS_SUCCESS
+);
+
+export const basicRegisterNewProcessSuccess = createAction(
+  BASIC_REGISTER_NEW_PROCESS_SUCCESS
+);
+
+export const basicRegisterStartRegisterDefrostAfterRegisterProcess = createAction(
+  BASIC_REGISTER_START_REGISTER_DEFROST_AFTER_REGISTER_PROCESS
 );

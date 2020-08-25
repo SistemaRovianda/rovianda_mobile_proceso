@@ -2,11 +2,6 @@ import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
-import { stepperNextStep } from "../../store/stepper/stepper.action";
-import {
-  SELECT_USER_FULL_NAME,
-  SELECT_USER_JOB,
-} from "src/app/features/landing/store/authentication/authentication.selector";
 import { UserInterface } from "src/app/shared/models/user.interface";
 import {
   SELECT_USER_DATA,
@@ -83,6 +78,7 @@ export class FormUsersComponent implements OnInit {
     if (this.form.valid) {
       this.alert.showAlert(
         "Informacion",
+        "",
         "Una vez guardada la información no podrá ser modificada, ¿Deseas guardar la información?",
         buttons
       );

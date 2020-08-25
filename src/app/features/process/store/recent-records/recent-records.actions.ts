@@ -1,4 +1,4 @@
-import { createAction, props } from "@ngrx/store";
+import { createAction, props, createSelector } from "@ngrx/store";
 import { Process } from "src/app/shared/models/process.interface";
 
 const RECENT_RECORDS_START_LOAD = "[RECENT RECORDS] Start Load";
@@ -12,6 +12,13 @@ const RECENT_RECORDS_LOAD_FAILURE = "[RECENT RECORDS] Load Records Failure";
 
 const RECENT_RECORDS_LOAD_SELECT_PROCESS =
   "[RECENT RECORDS] Load Select Process";
+
+const RECENT_RECORDS_LOAD_TYPE_REGISTER = "[RECENT RECORDS] Load Type Register";
+
+const RECENT_RECORDS_CREATE_NEW_PROCESS = "[RECENT RECORDS] Create New Process";
+
+const RECENT_RECORDS_CREATE_NEW_PROCESS_SUCCESS =
+  "[RECENT RECORDS] Create New Process Success";
 
 export const recentRecordsStartLoad = createAction(
   RECENT_RECORDS_START_LOAD,
@@ -35,4 +42,17 @@ export const recentRecordsLoadFailure = createAction(
 export const recentRecordsLoadSelectProcess = createAction(
   RECENT_RECORDS_LOAD_SELECT_PROCESS,
   props<{ processSelected: Process }>()
+);
+
+export const recentRecordsLoadTypeRegister = createAction(
+  RECENT_RECORDS_LOAD_TYPE_REGISTER,
+  props<{ isNewRegister: boolean; path: string }>()
+);
+
+export const recentRecordsCreateNewProcess = createAction(
+  RECENT_RECORDS_CREATE_NEW_PROCESS
+);
+
+export const recentRecordsCreateProcessSuccess = createAction(
+  RECENT_RECORDS_CREATE_NEW_PROCESS_SUCCESS
 );

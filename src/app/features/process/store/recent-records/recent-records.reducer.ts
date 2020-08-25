@@ -8,6 +8,9 @@ const STATE_INITIAL_RECENT_RECORDS: RecentRecords = {
   error: null,
   processSelected: null,
   isSelected: false,
+  isNewRegister: false,
+  newRegisterProcessSuccess: false,
+  path: "/process/process-detail",
 };
 
 export const recentRecordsReducer = createReducer(
@@ -28,6 +31,8 @@ export const recentRecordsReducer = createReducer(
     ...state,
     processSelected: null,
     isSelected: false,
+    newRegisterProcessSuccess: false,
+    path: "/process/process-detail",
   })),
   on(
     fromBasicRegisterActions.basicRegisterRegisterDefrostProcess,
@@ -39,5 +44,17 @@ export const recentRecordsReducer = createReducer(
         output_hour: defrost.hourExit,
       },
     })
-  )
+  ),
+  on(
+    fromRecentRecordsActions.recentRecordsLoadTypeRegister,
+    (state, { isNewRegister, path }) => ({
+      ...state,
+      isNewRegister,
+      path,
+    })
+  ),
+  on(fromRecentRecordsActions.recentRecordsCreateProcessSuccess, (state) => ({
+    ...state,
+    newRegisterProcessSuccess: true,
+  }))
 );

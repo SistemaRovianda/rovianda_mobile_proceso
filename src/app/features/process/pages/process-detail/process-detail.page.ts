@@ -5,6 +5,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { SELECT_PROCESS_DETAIL_IS_LOADING } from "../../store/process-detail/process-detail.selector";
 import { processDetailStartCloseProcess } from "../../store/process-detail/process-detail.actions";
+import { SELECT_RECENT_RECORDS_IS_NEW_REGISTER } from "../../store/recent-records/recent-records.selector";
 
 @Component({
   selector: "app-process-detail",
@@ -14,32 +15,36 @@ import { processDetailStartCloseProcess } from "../../store/process-detail/proce
 export class ProcessDetailPage implements OnInit {
   options: MenuButton[];
 
+  isNewRegister: boolean;
+
   loading: boolean;
   constructor(private router: Router, private store: Store<AppState>) {
     this.options = [
       {
-        name: "Datos de \n registro básico",
+        name: "Descongelamiento",
         path: "/process/basic-registration",
-      },
-      {
-        name: "Molienda",
-        path: "/process/grinding",
-      },
-      {
-        name: "Inyección/tenderizado",
-        path: "/process/tenderized",
+        section: "DESCONGELAMIENTO",
       },
       {
         name: "Acondicionamiento",
         path: "/process/conditioning",
+        section: "ACONDICIONAMIENTO",
       },
+      {
+        name: "Molienda",
+        path: "/process/grinding",
+        section: "MOLIENDA",
+      },
+      {
+        name: "Inyección/tenderizado",
+        path: "/process/tenderized",
+        section: "INJECCIONTENDERIZADO",
+      },
+
       {
         name: "Embutido",
         path: "/process/sausage",
-      },
-      {
-        name: "Usuarios",
-        path: "/process/users",
+        section: "EMBUTIDO",
       },
     ];
   }
@@ -48,6 +53,18 @@ export class ProcessDetailPage implements OnInit {
     this.store
       .select(SELECT_PROCESS_DETAIL_IS_LOADING)
       .subscribe((loading) => (this.loading = loading));
+    this.store
+      .select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER)
+      .subscribe((isNew) => {
+        this.isNewRegister = isNew;
+        if (!isNew) {
+          this.options.push({
+            name: "Usuarios",
+            path: "/process/users",
+            section: "users",
+          });
+        }
+      });
   }
 
   onBackButton() {

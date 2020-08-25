@@ -1,0 +1,62 @@
+<form [formGroup]="form" class="form" (ngSubmit)="onSubmit()">
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">
+          Lote de reproceso*
+        </ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar lote de reproceso"
+          formControlName="loteReprocessing"
+          (ionChange)="selectReprocessing()"
+          [disabled]="listReprocessing.length == 0"
+        >
+          <ion-select-option
+            [value]="option"
+            *ngFor="let option of listReprocessing"
+          >
+            {{ option.loteReprocessing }}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size="5">
+      <ion-item class="item-datetime">
+        <ion-label position="floating">Fecha de reproceso*</ion-label>
+        <ion-datetime
+          displayFormat="MM/DD/YYYY"
+          class="item-form"
+          placeholder="Fecha de reproceso"
+          formControlName="date"
+          [disabled]="true"
+        ></ion-datetime>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="7">
+      <ion-item>
+        <ion-label position="floating">Alergeno*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Alergeno"
+          formControlName="allergens"
+          [disabled]="true"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="5">
+      <ion-item>
+        <ion-label position="floating">Lote de proceso*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Lote de proceso"
+          formControlName="loteProcess"
+          [disabled]="true"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</form>

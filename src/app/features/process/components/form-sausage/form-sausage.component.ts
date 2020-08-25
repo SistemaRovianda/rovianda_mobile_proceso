@@ -2,7 +2,6 @@ import { Component, OnInit, EventEmitter, Output, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { Store } from "@ngrx/store";
-import { stepperNextStep } from "../../store/stepper/stepper.action";
 import { Sausage } from "src/app/shared/models/sausage.interface";
 import {
   SELECT_SAUSAGE_DATA,
@@ -16,6 +15,13 @@ import {
 } from "../../store/sausage/sausage.actions";
 import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
+import { recentRecordsCreateNewProcess } from "../../store/recent-records/recent-records.actions";
+import {
+  SELECT_RECENT_RECORDS_IS_NEW_REGISTER,
+  SELECT_RECENT_RECORDS_PROCESS_SUCCESS,
+} from "../../store/recent-records/recent-records.selector";
+import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
+import { SELECT_PROCESS_DETAIL_SECTION } from "../../store/process-detail/process-detail.selector";
 
 @Component({
   selector: "app-form-sausage",
@@ -29,6 +35,8 @@ export class FormSausageComponent implements OnInit {
 
   @Input() products: ProductCatalog[];
 
+  @Input() lotsMeat: ProcessLotMeat[];
+
   @Output("onSubmit") submit = new EventEmitter();
 
   minDate = new Date().toISOString();
@@ -40,6 +48,10 @@ export class FormSausageComponent implements OnInit {
   optionalMedium = false;
 
   optionalFinal = false;
+
+  isNewRegister: boolean;
+
+  section: string;
 
   constructor(
     private fb: FormBuilder,
@@ -56,11 +68,11 @@ export class FormSausageComponent implements OnInit {
       weightMedium: ["", [decimalValidator]],
       hour3: [""],
       weightFinal: ["", [decimalValidator]],
+      loteMeat: ["", Validators.required],
     });
   }
 
   ngOnInit() {
-    this.form.valueChanges.subscribe((_) => this.checkValues());
     this.store.select(SELECT_SAUSAGE_DATA).subscribe((tempSausage) => {
       if (tempSausage != null) {
         this.sausage = tempSausage;
@@ -70,11 +82,21 @@ export class FormSausageComponent implements OnInit {
     this.store
       .select(SELECT_SAUSAGE_IS_SELECTED)
       .subscribe((selected) => (this.isSelected = selected));
+    this.store
+      .select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER)
+      .subscribe((isNew) => (this.isNewRegister = isNew));
+    this.store
+      .select(SELECT_RECENT_RECORDS_PROCESS_SUCCESS)
+      .subscribe((success) => {
+        if (success && this.section === "EMBUTIDO") {
+          this.registerSausage();
+        }
+      });
+    this.store
+      .select(SELECT_PROCESS_DETAIL_SECTION)
+      .subscribe((section) => (this.section = section.section));
   }
 
-  checkValues() {
-    this.store.dispatch(stepperNextStep({ num: 4, step: !this.form.invalid }));
-  }
   onSubmit() {
     const buttons: any = [
       {
@@ -84,26 +106,22 @@ export class FormSausageComponent implements OnInit {
       {
         text: "Aceptar",
         handler: () => {
-          this.registerSausage();
+          this.isNewRegister
+            ? this.store.dispatch(recentRecordsCreateNewProcess())
+            : this.registerSausage();
         },
       },
     ];
-
-    if (
-      this.form.valid &&
-      (this.hour2.value == "" ||
-        this.hour3.value == "" ||
-        this.weightMedium.value == "" ||
-        this.weightFinal.value == "")
-    ) {
-      this.alert.showAlert(
-        "Infomacion",
-        "Los campos opcionales también deberán ser guardados más adelante para poder cerrar el proceso",
-        buttons
-      );
-    } else {
-      this.registerSausage();
-    }
+    this.alert.showAlert(
+      "Infomacion",
+      `${
+        this.isNewRegister
+          ? "Para registrar esta sección se creará un nuevo proceso"
+          : ""
+      }`,
+      `Los campos opcionales también deberán ser guardados más adelante para poder cerrar el proceso.`,
+      buttons
+    );
   }
 
   onSubmitDate() {

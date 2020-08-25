@@ -6,21 +6,26 @@ import {
 } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "../models/store.state.interface";
-import { SELECT_RECENT_RECORDS_PROCESS_SELECTED } from "src/app/features/process/store/recent-records/recent-records.selector";
-import { Process } from "../models/process.interface";
+import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "src/app/features/process/store/recent-records/recent-records.selector";
 import * as fromGrindingActions from "../../features/process/store/grinding/grinding.actions";
 
 @Injectable()
 export class GrindingResolver implements Resolve<boolean> {
-  constructor(private store: Store<AppState>) {}
+  isSelected: boolean;
+  constructor(private store: Store<AppState>) {
+    this.store
+      .select(SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS)
+      .subscribe((selected) => (this.isSelected = selected));
+  }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    this.store.dispatch(
-      fromGrindingActions.grindingSearchInformation({
-        processId: +localStorage.getItem("processId"),
-      })
-    );
-
+    if (this.isSelected) {
+      this.store.dispatch(
+        fromGrindingActions.grindingSearchInformation({
+          processId: +localStorage.getItem("processId"),
+        })
+      );
+    }
     return true;
   }
 }

@@ -1,8 +1,7 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
-import { stepperNextStep } from "../../store/stepper/stepper.action";
 import { Grinding } from "src/app/shared/models/grinding.interface";
 import {
   SELECT_GRINDING_DATA,
@@ -12,6 +11,15 @@ import { AlertService } from "src/app/shared/services/alert.service";
 import * as moment from "moment";
 import { grindingRegister } from "../../store/grinding/grinding.actions";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
+import {
+  SELECT_RECENT_RECORDS_IS_NEW_REGISTER,
+  SELECT_RECENT_RECORDS_PROCESS_SUCCESS,
+} from "../../store/recent-records/recent-records.selector";
+import { recentRecordsCreateNewProcess } from "../../store/recent-records/recent-records.actions";
+import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
+import { RawMaterial } from "src/app/shared/models/raw-material.interface";
+import { SELECT_PROCESS_DETAIL_SECTION } from "../../store/process-detail/process-detail.selector";
+import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
 
 @Component({
   selector: "app-form-grinding",
@@ -25,11 +33,21 @@ export class FormGrindingComponent implements OnInit {
 
   isSelected: boolean;
 
+  @Input() products: RawMaterial[];
+
+  @Input() materials: ProductsRovianda[];
+
   @Output("onSubmit") submit = new EventEmitter();
 
   minDate = new Date().toISOString();
 
   maxDate = new Date().getFullYear() + 5;
+
+  isNewRegister: boolean;
+
+  section: string;
+
+  @Input() lotsMeat: ProcessLotMeat[];
 
   constructor(
     private fb: FormBuilder,
@@ -39,13 +57,14 @@ export class FormGrindingComponent implements OnInit {
     this.form = fb.group({
       rawMaterial: ["", Validators.required],
       process: ["", Validators.required],
-      weight: ["", [Validators.required, /*/decimalValidator/*/]],
+      weight: ["", [Validators.required, decimalValidator]],
       date: [this.minDate, Validators.required],
+      productId: ["", [Validators.required]],
+      loteMeat: ["", []],
     });
   }
 
   ngOnInit() {
-    this.form.valueChanges.subscribe((_) => this.checkValues());
     this.store.select(SELECT_GRINDING_DATA).subscribe((tempGrinding) => {
       if (tempGrinding != null) {
         this.grinding = tempGrinding;
@@ -55,10 +74,24 @@ export class FormGrindingComponent implements OnInit {
     this.store
       .select(SELECT_GRINDING_IS_SELECTED)
       .subscribe((selected) => (this.isSelected = selected));
-  }
-
-  checkValues() {
-    this.store.dispatch(stepperNextStep({ num: 1, step: !this.form.invalid }));
+    this.store
+      .select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER)
+      .subscribe((isNew) => {
+        this.isNewRegister = isNew;
+        if (isNew) {
+          this.form.get("loteMeat").setValidators([Validators.required]);
+        }
+      });
+    this.store
+      .select(SELECT_RECENT_RECORDS_PROCESS_SUCCESS)
+      .subscribe((success) => {
+        if (success && this.section === "MOLIENDA") {
+          this.registerGrinding();
+        }
+      });
+    this.store
+      .select(SELECT_PROCESS_DETAIL_SECTION)
+      .subscribe((section) => (this.section = this.section = section.section));
   }
 
   onSubmit() {
@@ -70,13 +103,20 @@ export class FormGrindingComponent implements OnInit {
       {
         text: "Aceptar",
         handler: () => {
-          this.registerGrinding();
+          this.isNewRegister
+            ? this.store.dispatch(recentRecordsCreateNewProcess())
+            : this.registerGrinding();
         },
       },
     ];
     if (this.form.valid) {
       this.alert.showAlert(
         "Informacion",
+        `${
+          this.isNewRegister
+            ? "Para registrar esta sección se creará un nuevo proceso"
+            : ""
+        }`,
         "Una vez guardada la información no podrá ser modificada, ¿Deseas guardar la información?",
         buttons
       );
@@ -93,6 +133,6 @@ export class FormGrindingComponent implements OnInit {
   updateForm() {
     const { ...values } = this.grinding;
 
-    this.form.patchValue({ ...values });
+    this.form.patchValue({ productId: this.grinding.nameProduct, ...values });
   }
 }

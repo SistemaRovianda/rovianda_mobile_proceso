@@ -29,19 +29,8 @@ export class ConditioningService {
     conditioning: Conditioning,
     processId: number
   ): Observable<any> {
-    let newConditioning: Conditioning = {
-      bone: conditioning.bone,
-      clean: conditioning.clean,
-      date: conditioning.date,
-      healthing: conditioning.healthing,
-      productId: conditioning.productId,
-      rawMaterial: conditioning.rawMaterial,
-      temperature: conditioning.temperature,
-      weight: conditioning.weight,
-    };
-    return this.http.post<any>(
-      `${this.url}/conditioning/${processId}`,
-      newConditioning
-    );
+    return this.http.post<any>(`${this.url}/conditioning/${processId}`, {
+      ...conditioning,
+    });
   }
 }

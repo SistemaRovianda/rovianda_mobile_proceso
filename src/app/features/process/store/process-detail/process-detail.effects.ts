@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ProductsCatalogService } from "src/app/shared/services/products-catalog.service";
+import { ProductsCatalogService } from "src/app/shared/services/products-rovianda-catalog.service";
 import { createEffect, Actions, ofType } from "@ngrx/effects";
 import * as fromProcessDetailActions from "./process-detail.actions";
 import { exhaustMap, switchMap, catchError } from "rxjs/operators";
@@ -8,6 +8,10 @@ import { of } from "rxjs/internal/observable/of";
 import { ToastService } from "src/app/shared/services/toast.service";
 import { Router } from "@angular/router";
 import { from } from "rxjs";
+import { RawMaterialService } from "src/app/shared/services/raw-material.service";
+import { ProductsRoviandaService } from "src/app/shared/services/products-rovianda.service";
+import { create } from "domain";
+import { LotMeatService } from "src/app/shared/services/lot-meat.service";
 
 @Injectable()
 export class ProcessDetailEffect {
@@ -17,7 +21,10 @@ export class ProcessDetailEffect {
     private actions$: Actions,
     private processService: ProcessService,
     private toast: ToastService,
-    private router: Router
+    private router: Router,
+    private rawMaterialService: RawMaterialService,
+    private productsRoviandaService: ProductsRoviandaService,
+    private lotsMeatProcessService: LotMeatService
   ) {}
 
   loadProductsEffect = createEffect(() =>
@@ -77,6 +84,55 @@ export class ProcessDetailEffect {
           )
         );
       })
+    )
+  );
+
+  loadMaterialEffect = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromProcessDetailActions.processDetailStartLoadMaterials),
+      exhaustMap((action) =>
+        this.rawMaterialService.getMaterials().pipe(
+          switchMap((materials) => [
+            fromProcessDetailActions.processDetailLoadMaterials({
+              materials,
+            }),
+          ])
+        )
+      )
+    )
+  );
+
+  loadProductsRovianda = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromProcessDetailActions.processDetailStartLoadProductsRovianda),
+      exhaustMap((action) =>
+        this.productsRoviandaService.getAllProductsRovianda().pipe(
+          switchMap((productsRovianda) => [
+            fromProcessDetailActions.processDetailLoadProductsRovianda({
+              productsRovianda: productsRovianda.filter(
+                (product) => product.status === true
+              ),
+            }),
+          ])
+        )
+      )
+    )
+  );
+
+  loadLotsMeatProcess = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromProcessDetailActions.processDetailStartLoadLotsMeatProcess),
+      exhaustMap((action) =>
+        this.lotsMeatProcessService
+          .getLotsMeatProcess()
+          .pipe(
+            switchMap((lotsMeatProcess) => [
+              fromProcessDetailActions.processDetailLoadLotsMeatProcess({
+                lotsMeatProcess,
+              }),
+            ])
+          )
+      )
     )
   );
 }

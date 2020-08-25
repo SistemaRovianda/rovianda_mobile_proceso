@@ -6,7 +6,6 @@ import { IonicModule } from "@ionic/angular";
 
 import { GrindingPage } from "./grinding.page";
 import { TitleHeaderModule } from "../../components/title-header/title-header.module";
-import { StepperModule } from "../../components/stepper/stepper.module";
 import { FormGrindingModule } from "../../components/form-grinding/form-grinding.module";
 
 const COMMON_DECLARATIONS = [GrindingPage];
@@ -17,7 +16,6 @@ const COMMON_IMPORTS = [
   IonicModule,
   FormsModule,
   ReactiveFormsModule,
-  StepperModule,
   FormGrindingModule,
 ];
 

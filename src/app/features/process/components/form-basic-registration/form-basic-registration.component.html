@@ -2,24 +2,24 @@
   <ion-grid>
     <ion-row>
       <ion-col size="7">
-        <ion-item *ngIf="!isSelected">
-          <ion-label position="floating">Producto*</ion-label>
+        <ion-item *ngIf="!isSelected || emptyProcess">
+          <ion-label position="floating">Materia Prima*</ion-label>
           <ion-select
             class="item-form"
             interface="action-sheet"
-            placeholder="Seleccionar producto"
+            placeholder="Seleccionar materia prima"
             formControlName="productId"
             (ionChange)="selectMaterial()"
             [disabled]="materials.length == 0"
           >
             <ion-select-option
-              [value]="material.rawMaterialId"
+              [value]="material"
               *ngFor="let material of materials"
               >{{ material.rawMaterial }}</ion-select-option
             >
           </ion-select>
         </ion-item>
-        <ion-item *ngIf="isSelected">
+        <ion-item *ngIf="isSelected && !emptyProcess">
           <ion-label position="floating">Producto*</ion-label>
           <ion-input
             class="item-form"
@@ -40,7 +40,7 @@
         </div>
       </ion-col>
       <ion-col size="5">
-        <ion-item *ngIf="!isSelected">
+        <ion-item *ngIf="!isSelected || emptyProcess">
           <ion-label position="floating">Lote de carne*</ion-label>
           <ion-select
             class="item-form"
@@ -54,7 +54,7 @@
             >
           </ion-select>
         </ion-item>
-        <ion-item *ngIf="isSelected">
+        <ion-item *ngIf="isSelected && !emptyProcess">
           <ion-label position="floating">Lote de carne*</ion-label>
           <ion-input
             class="item-form"
@@ -83,7 +83,7 @@
             class="item-form"
             placeholder="Ingresar peso en Kg"
             formControlName="weight"
-            [disabled]="isSelected"
+            [disabled]="isSelected && !emptyProcess"
             type="number"
           ></ion-input>
         </ion-item>
@@ -96,7 +96,12 @@
           >
             Ingrese un valor
           </ion-label>
-          <ion-label *ngIf="form.controls.weight.touched && form.controls.weight.errors?.isValidDecimal">
+          <ion-label
+            *ngIf="
+              form.controls.weight.touched &&
+              form.controls.weight.errors?.isValidDecimal
+            "
+          >
             Formato invalido
           </ion-label>
         </div>
@@ -109,7 +114,7 @@
             placeholder="Ingresar temperatura"
             formControlName="temperature"
             type="number"
-            [disabled]="isSelected"
+            [disabled]="isSelected && !emptyProcess"
             pattern="\d+"
           ></ion-input>
         </ion-item>
@@ -134,7 +139,7 @@
             class="item-form"
             displayFormat="HH:mm"
             formControlName="hourEntrance"
-            [disabled]="isSelected"
+            [disabled]="isSelected && !emptyProcess"
           ></ion-datetime>
         </ion-item>
         <div class="error">
@@ -156,7 +161,7 @@
             displayFormat="HH:mm"
             class="item-form"
             formControlName="hourExit"
-            [disabled]="!isSelected || datesRegistered"
+            [disabled]="!isSelected || datesRegistered || emptyProcess"
           ></ion-datetime>
         </ion-item>
         <div class="error">
@@ -182,7 +187,7 @@
             formControlName="dateIni"
             [min]="minDate"
             [max]="maxDate"
-            [disabled]="isSelected"
+            [disabled]="isSelected && !emptyProcess"
           ></ion-datetime>
         </ion-item>
         <div class="error">
@@ -204,7 +209,7 @@
             display-timezone="utc"
             class="item-form"
             formControlName="dateFinal"
-            [disabled]="!isSelected || datesRegistered"
+            [disabled]="!isSelected || datesRegistered || emptyProcess"
             [min]="dateIni"
             [max]="maxDate"
           ></ion-datetime>

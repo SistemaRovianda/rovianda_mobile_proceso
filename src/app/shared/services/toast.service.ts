@@ -32,4 +32,13 @@ export class ToastService {
     });
     toast.present();
   }
+
+  async presentToastSuccessCustom(message: string) {
+    const toast = await this.toastCtrl.create({
+      message: `${message}`,
+      duration: 2000,
+      color: "success",
+    });
+    toast.present();
+  }
 }

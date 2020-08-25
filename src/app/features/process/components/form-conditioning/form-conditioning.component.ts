@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
-import { stepperNextStep } from "../../store/stepper/stepper.action";
 import { Conditioning } from "src/app/shared/models/conditioning.interface";
 import {
   SELECT_CONDITIONING_DATA,
@@ -11,8 +10,17 @@ import {
 import { AlertService } from "src/app/shared/services/alert.service";
 import { conditioningRegister } from "../../store/conditioning/conditioning.actions";
 import * as moment from "moment";
-import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
+import { recentRecordsCreateNewProcess } from "../../store/recent-records/recent-records.actions";
+import {
+  SELECT_RECENT_RECORDS_IS_NEW_REGISTER,
+  SELECT_RECENT_RECORDS_PROCESS_SUCCESS,
+} from "../../store/recent-records/recent-records.selector";
+import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
+import { RawMaterial } from "src/app/shared/models/raw-material.interface";
+import { SELECT_PROCESS_DETAIL_SECTION } from "../../store/process-detail/process-detail.selector";
+import { SELECT_BASIC_REGISTER_LOTS } from "../../store/basic-register/basic-register.select";
+import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
 
 @Component({
   selector: "app-form-conditioning",
@@ -24,7 +32,9 @@ export class FormConditioningComponent implements OnInit {
 
   form: FormGroup;
 
-  @Input() products: ProductCatalog[];
+  @Input() materials: RawMaterial[];
+
+  @Input() products: ProductsRovianda[];
 
   @Output("onSubmit") submit = new EventEmitter();
 
@@ -33,6 +43,12 @@ export class FormConditioningComponent implements OnInit {
   maxDate = new Date().getFullYear() + 5;
 
   isSelected: boolean;
+
+  isNewRegister: boolean;
+
+  section: string;
+
+  @Input() lotsMeat: ProcessLotMeat[];
 
   constructor(
     private fb: FormBuilder,
@@ -48,11 +64,11 @@ export class FormConditioningComponent implements OnInit {
       temperature: ["", Validators.required],
       productId: ["", Validators.required],
       date: [this.minDate, Validators.required],
+      lotMeat: [""],
     });
   }
 
   ngOnInit() {
-    this.form.valueChanges.subscribe((_) => this.checkValues());
     this.store
       .select(SELECT_CONDITIONING_DATA)
       .subscribe((tempConditioning) => {
@@ -64,28 +80,44 @@ export class FormConditioningComponent implements OnInit {
     this.store
       .select(SELECT_CONDITIONING_IS_SELECTED)
       .subscribe((selected) => (this.isSelected = selected));
-  }
-
-  checkValues() {
-    this.store.dispatch(stepperNextStep({ num: 1, step: !this.form.invalid }));
+    this.store
+      .select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER)
+      .subscribe((isNew) => (this.isNewRegister = isNew));
+    this.store
+      .select(SELECT_RECENT_RECORDS_PROCESS_SUCCESS)
+      .subscribe((success) => {
+        if (success && this.section === "ACONDICIONAMIENTO") {
+          this.registerConditioning();
+        }
+      });
+    this.store
+      .select(SELECT_PROCESS_DETAIL_SECTION)
+      .subscribe((section) => (this.section = this.section = section.section));
   }
 
   onSubmit() {
     const buttons: any = [
       {
-        text: "Cancel",
+        text: "Cancelar",
         role: "cancel",
       },
       {
         text: "Aceptar",
         handler: () => {
-          this.registerConditioning();
+          this.isNewRegister
+            ? this.store.dispatch(recentRecordsCreateNewProcess())
+            : this.registerConditioning();
         },
       },
     ];
     if (this.form.valid) {
       this.alert.showAlert(
         "Informacion",
+        `${
+          this.isNewRegister
+            ? "Para registrar esta sección se creará un nuevo proceso"
+            : ""
+        }`,
         "Una vez guardada la información no podrá ser modificada, ¿Deseas guardar la información?",
         buttons
       );
@@ -124,5 +156,13 @@ export class FormConditioningComponent implements OnInit {
 
   get isRequiredOnly() {
     return this.bone.value || this.clean.value || this.healthing.value;
+  }
+
+  get rawMaterial() {
+    return this.form.get("rawMaterial");
+  }
+
+  get lotId() {
+    return this.form.get("lotId");
   }
 }

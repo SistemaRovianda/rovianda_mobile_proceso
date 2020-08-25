@@ -44,5 +44,9 @@ export const sausageReducer = createReducer(
   on(fromSausageActions.sausageStartRegisterDateAndWeigth, (state) => ({
     ...state,
     loading: true,
+  })),
+  on(fromRecentRecordsActions.recentRecordsCreateNewProcess, (state) => ({
+    ...state,
+    loading: true,
   }))
 );

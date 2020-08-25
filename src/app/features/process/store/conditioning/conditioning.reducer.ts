@@ -40,5 +40,9 @@ export const conditioningReducer = createReducer(
   on(
     fromConditioningActions.conditioningIsSelected,
     (state, { isSelected }) => ({ ...state, isSelected })
-  )
+  ),
+  on(fromRecentRecordsActions.recentRecordsCreateNewProcess, (state) => ({
+    ...state,
+    loading: true,
+  }))
 );
