@@ -10,7 +10,7 @@
             placeholder="Seleccionar materia prima"
             formControlName="productId"
             (ionChange)="selectMaterial()"
-            [disabled]="materials.length == 0"
+            
           >
             <ion-select-option
               [value]="material"
@@ -47,7 +47,7 @@
             interface="action-sheet"
             placeholder="Seleccionar lote"
             formControlName="lotId"
-            [disabled]="lots.length == 0"
+          
           >
             <ion-select-option [value]="lot" *ngFor="let lot of lots"
               >{{ lot.lotId }}: {{ lot.quantity }}</ion-select-option

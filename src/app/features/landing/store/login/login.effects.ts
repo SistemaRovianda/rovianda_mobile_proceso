@@ -7,6 +7,7 @@ import * as fromAuthenticationUser from "../authentication/authentication.action
 import { exhaustMap, switchMap, catchError, tap } from "rxjs/operators";
 import { of, from } from "rxjs";
 import { Storage } from "@ionic/storage";
+import { clearUser } from '../authentication/authentication.action';
 
 @Injectable()
 export class LoginEffects {
@@ -134,7 +135,7 @@ export class LoginEffects {
       ofType(fromLoginActions.signOut),
       exhaustMap((action) =>
         this.authService.signOut().pipe(
-          switchMap((aciton) => [fromAuthenticationUser.clearUser()]),
+          switchMap((aciton) => [clearUser()]),
           catchError((error) => of(fromLoginActions.signInFailure({ error })))
         )
       )

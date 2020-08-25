@@ -11,9 +11,10 @@
           placeholder="Seleccionar materia prima"
           formControlName="rawMaterial"
           [disabled]="materials.length == 0"
+        
         >
           <ion-select-option
-            [value]="material.rawMaterial"
+            [value]="material.rawMaterialId"
             *ngFor="let material of materials"
           >
             {{ material.rawMaterial }}</ion-select-option
@@ -48,9 +49,10 @@
           interface="action-sheet"
           placeholder="Seleccionar lote"
           formControlName="lotMeat"
-          [disabled]=" lotsMeat.length == 0"
+          
+          
         >
-          <ion-select-option [value]="lotMeat.loteMeat" *ngFor="let lotMeat of  lotsMeat"
+          <ion-select-option   *ngFor="let lotMeat of  lotsMeat" [value]="lotMeat.loteMeat"
             >{{ lotMeat.loteMeat}}</ion-select-option
           >
         </ion-select>
@@ -59,7 +61,7 @@
         <ion-label position="floating">Lote de carne*</ion-label>
         <ion-input
           class="item-form"
-          placeholder="Producto"
+          placeholder="{{lotsMeat.length?lotsMeat[0].loteMeat:'Producto'}}"
           formControlName="lotId"
           disabled
         ></ion-input>

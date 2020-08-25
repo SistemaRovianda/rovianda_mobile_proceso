@@ -36,7 +36,7 @@ export class ProcessDetailPage implements OnInit {
         section: "MOLIENDA",
       },
       {
-        name: "Inyección/tenderizado",
+        name: "Inyección/tenderizado/\ninmersión",
         path: "/process/tenderized",
         section: "INJECCIONTENDERIZADO",
       },

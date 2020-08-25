@@ -8,7 +8,7 @@ import { sausageReducer } from "src/app/features/process/store/sausage/sausage.r
 import { conditioningReducer } from "src/app/features/process/store/conditioning/conditioning.reducer";
 import { grindingReducer } from "src/app/features/process/store/grinding/grinding.reducer";
 import { tenderizedReducer } from "src/app/features/process/store/tenderized/tenderized.reducer";
-import { processDetailReducer } from "src/app/features/process/store/process-detail/process-detail.reducer";
+import { processDetailReducer, processMetadataReducer } from "src/app/features/process/store/process-detail/process-detail.reducer";
 import { userReducer } from "src/app/features/process/store/user/user.reducer";
 import { reprocessingReducer } from "src/app/features/process/store/reprocessing/reprocessing.reducer";
 
@@ -24,5 +24,6 @@ export const reducers: ActionReducerMap<AppState> = {
   processDetail: processDetailReducer,
   user: userReducer,
   reprocessing: reprocessingReducer,
+  processMetadata:processMetadataReducer
 };
 export const metaReducers: MetaReducer<AppState>[] = [];

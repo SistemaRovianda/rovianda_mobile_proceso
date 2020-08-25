@@ -6,6 +6,7 @@ import {
 } from "src/app/providers/tokens";
 import { Process } from "../models/process.interface";
 import { Observable } from "rxjs";
+import { ProcessMetadata } from 'src/app/features/process/store/process-detail/process-detail.reducer';
 
 @Injectable({
   providedIn: "root",
@@ -30,5 +31,9 @@ export class ProcessService {
       `${this.url}/${localStorage.getItem("processId")}`,
       {}
     );
+  }
+
+  getProcessDetails(processId:number){
+    return this.http.get<ProcessMetadata>(`${this.url}/${processId}`);
   }
 }

@@ -12,6 +12,9 @@ import { RawMaterialService } from "src/app/shared/services/raw-material.service
 import { ProductsRoviandaService } from "src/app/shared/services/products-rovianda.service";
 import { create } from "domain";
 import { LotMeatService } from "src/app/shared/services/lot-meat.service";
+import { Process } from 'src/app/shared/models/process.interface';
+import { getProcessDetails } from './process-detail.actions';
+import { ProcessMetadata } from './process-detail.reducer';
 
 @Injectable()
 export class ProcessDetailEffect {
@@ -135,4 +138,12 @@ export class ProcessDetailEffect {
       )
     )
   );
+
+  getProcessDetailsEffect = createEffect(()=>
+  this.actions$.pipe(
+    ofType(getProcessDetails),
+    exhaustMap((action)=>this.processService.getProcessDetails(+localStorage.getItem("processId")).pipe(
+      switchMap((process:ProcessMetadata)=>[fromProcessDetailActions.setProcessDetails({process})])
+    ))
+  ))
 }

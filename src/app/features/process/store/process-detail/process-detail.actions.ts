@@ -4,6 +4,8 @@ import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interfa
 import { RawMaterial } from "src/app/shared/models/raw-material.interface";
 import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
 import { MenuButton } from "src/app/shared/models/menu-button.interface";
+import { Process } from 'src/app/shared/models/process.interface';
+import { ProcessMetadata } from './process-detail.reducer';
 
 const PROCESS_DETAIL_START_LOAD_PRODUCTS =
   "[PROCESS DETAIL] Start Load Products";
@@ -98,3 +100,6 @@ export const processDetailLoadSection = createAction(
   PROCESS_DETAIL_LOAD_SECTION,
   props<{ section: MenuButton }>()
 );
+
+export const getProcessDetails = createAction("[PROCESS], getting process details");
+export const setProcessDetails = createAction("[PROCESS], setting process details",props<{process:ProcessMetadata}>());

@@ -2,6 +2,8 @@ import { createReducer, on } from "@ngrx/store";
 import { ProcessDetail } from "src/app/shared/models/process-detail-page.interface";
 import * as fromProcessDetailActions from "./process-detail.actions";
 import * as fromRecentRecordsActions from "../recent-records/recent-records.actions";
+import { Process } from 'src/app/shared/models/process.interface';
+import { setProcessDetails } from './process-detail.actions';
 
 const STATE_PROCESS_DETAIL_INITIAL: ProcessDetail = {
   products: [],
@@ -12,6 +14,7 @@ const STATE_PROCESS_DETAIL_INITIAL: ProcessDetail = {
   lotsMeatProcess: [],
   section: { name: "", path: "", section: "" },
 };
+
 
 export const processDetailReducer = createReducer(
   STATE_PROCESS_DETAIL_INITIAL,
@@ -52,3 +55,11 @@ export const processDetailReducer = createReducer(
     (state, { section }) => ({ ...state, section })
   )
 );
+
+export interface ProcessMetadata{
+  loteInterno:string;
+  
+}
+const initValueProcessMetadata:ProcessMetadata =null;
+export const processMetadataReducer = createReducer<ProcessMetadata>(initValueProcessMetadata,
+  on(setProcessDetails,(state,{process})=>({...process})));

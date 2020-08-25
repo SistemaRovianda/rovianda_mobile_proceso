@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { Store } from "@ngrx/store";
+import { Store, select } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { Conditioning } from "src/app/shared/models/conditioning.interface";
 import {
@@ -18,9 +18,15 @@ import {
 } from "../../store/recent-records/recent-records.selector";
 import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
 import { RawMaterial } from "src/app/shared/models/raw-material.interface";
-import { SELECT_PROCESS_DETAIL_SECTION } from "../../store/process-detail/process-detail.selector";
+import { SELECT_PROCESS_DETAIL_SECTION, SELECT_PROCESS_METADATA, SELECT_PROCESS_DETAIL_LOTS_MEAT, SELECT_PROCESS_DETAIL_MATERIALS } from "../../store/process-detail/process-detail.selector";
 import { SELECT_BASIC_REGISTER_LOTS } from "../../store/basic-register/basic-register.select";
 import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
+import { LotMeatOutput } from 'src/app/shared/models/Lot-meat-output.interface';
+import { basicRegisterSelectMaterial } from '../../store/basic-register/basic-register.actions';
+import { getProcessDetails } from '../../store/process-detail/process-detail.actions';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Process } from 'src/app/shared/models/process.interface';
+import { ProcessMetadata } from '../../store/process-detail/process-detail.reducer';
 
 @Component({
   selector: "app-form-conditioning",
@@ -32,7 +38,7 @@ export class FormConditioningComponent implements OnInit {
 
   form: FormGroup;
 
-  @Input() materials: RawMaterial[];
+  materials: RawMaterial[];
 
   @Input() products: ProductsRovianda[];
 
@@ -48,8 +54,10 @@ export class FormConditioningComponent implements OnInit {
 
   section: string;
 
-  @Input() lotsMeat: ProcessLotMeat[];
+  lotsMeat: ProcessLotMeat[]=[];
 
+  processId:string;
+  
   constructor(
     private fb: FormBuilder,
     private store: Store<AppState>,
@@ -69,6 +77,32 @@ export class FormConditioningComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.store.select(
+      SELECT_PROCESS_DETAIL_MATERIALS
+    ).subscribe((materials)=>{
+      this.materials = materials;
+    })
+    
+    if(localStorage.getItem("processId")!=null && +localStorage.getItem("processId")!=-1){
+          
+        this.store.pipe(select(SELECT_PROCESS_METADATA)).subscribe((process:ProcessMetadata)=>{
+          console.log("PROCESS CONDICIONAMIENTO",process);
+          if(process!=null && process.loteInterno!=""){
+          this.lotsMeat = [
+            {
+              loteMeat:process.loteInterno,
+              productId:0
+            }
+          ];
+        }else {
+          this.store.dispatch(getProcessDetails());
+        }
+        })
+    }else{
+      this.store.select(
+        SELECT_PROCESS_DETAIL_LOTS_MEAT
+      ).subscribe((lots) => (this.lotsMeat = lots));
+    }
     this.store
       .select(SELECT_CONDITIONING_DATA)
       .subscribe((tempConditioning) => {
@@ -165,4 +199,6 @@ export class FormConditioningComponent implements OnInit {
   get lotId() {
     return this.form.get("lotId");
   }
+  
+
 }

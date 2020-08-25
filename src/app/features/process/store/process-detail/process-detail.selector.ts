@@ -33,3 +33,6 @@ export const SELECT_PROCESS_DETAIL_SECTION = createSelector(
   SELECT_PROCESS_DETAIL,
   (state) => state.section
 );
+
+const PROCESS_METADATA =(state:AppState)=>state.processMetadata;
+export const SELECT_PROCESS_METADATA =createSelector(PROCESS_METADATA,(state)=>state);

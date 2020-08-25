@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { Store } from "@ngrx/store";
+import { Store, select } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { Tenderized } from "src/app/shared/models/tenderized.interface";
 import {
@@ -18,7 +18,9 @@ import {
   SELECT_RECENT_RECORDS_PROCESS_SUCCESS,
 } from "../../store/recent-records/recent-records.selector";
 import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
-import { SELECT_PROCESS_DETAIL_SECTION } from "../../store/process-detail/process-detail.selector";
+import { SELECT_PROCESS_DETAIL_SECTION, SELECT_PROCESS_METADATA, SELECT_PROCESS_DETAIL_LOTS_MEAT } from "../../store/process-detail/process-detail.selector";
+import { ProcessMetadata } from '../../store/process-detail/process-detail.reducer';
+import { getProcessDetails } from '../../store/process-detail/process-detail.actions';
 
 @Component({
   selector: "app-form-tenderized",
@@ -40,7 +42,7 @@ export class FormTenderizedComponent implements OnInit {
 
   @Input() products: ProductCatalog[];
 
-  @Input() lotsMeat: ProcessLotMeat[];
+  @Input() lotsMeat: ProcessLotMeat[]=[];
 
   isNewRegister: boolean;
 
@@ -63,6 +65,30 @@ export class FormTenderizedComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+    if(localStorage.getItem("processId")!=null && +localStorage.getItem("processId")!=-1){
+        
+      this.store.pipe(select(SELECT_PROCESS_METADATA)).subscribe((process:ProcessMetadata)=>{
+        console.log("PROCESS TENDERIZADO",process);
+        console.log("PROCESS TENDERIZADO",this.lotsMeat);
+        if(process!=null && process.loteInterno!=""){
+        this.lotsMeat = [
+          {
+            loteMeat:process.loteInterno,
+            productId:0
+          }
+        ];
+      }else{
+        this.store.dispatch(getProcessDetails());
+      }
+      console.log("PROCESS TENDERIZADO",this.lotsMeat);
+      })
+  }else{
+    this.store.select(
+      SELECT_PROCESS_DETAIL_LOTS_MEAT
+    ).subscribe((lots) => (this.lotsMeat = lots));
+  }
+
     this.store.select(SELECT_TENDERIZED_DATA).subscribe((tempTenderized) => {
       if (tempTenderized != null) {
         this.tenderized = tempTenderized;

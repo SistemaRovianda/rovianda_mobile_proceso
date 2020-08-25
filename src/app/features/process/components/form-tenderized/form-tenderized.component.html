@@ -182,7 +182,8 @@
           interface="action-sheet"
           placeholder="Seleccionar lote carne"
           formControlName="loteMeat"
-          [disabled]="lotsMeat.length == 0"
+          
+          
         >
           <ion-select-option
             [value]="lotMeat.loteMeat"
@@ -195,7 +196,7 @@
         <ion-label position="floating">Lote de carne*</ion-label>
         <ion-input
           class="item-form"
-          placeholder="Selecionar lote de carne"
+          placeholder="{{lotsMeat.length?lotsMeat[0].loteMeat:'Producto'}}"
           formControlName="loteMeat"
           disabled
         ></ion-input>

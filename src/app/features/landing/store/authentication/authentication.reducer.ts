@@ -25,7 +25,6 @@ export const authenticationReducer = createReducer<AuthenticationUser>(
     currentToken,
   })),
   on(clearUser, (state) => ({
-    ...state,
     ...AUTHENTICATION_USER_INIT,
   }))
 );

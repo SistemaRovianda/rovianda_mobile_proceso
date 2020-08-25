@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { Store } from "@ngrx/store";
+import { Store, select } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { Grinding } from "src/app/shared/models/grinding.interface";
 import {
@@ -18,8 +18,10 @@ import {
 import { recentRecordsCreateNewProcess } from "../../store/recent-records/recent-records.actions";
 import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
 import { RawMaterial } from "src/app/shared/models/raw-material.interface";
-import { SELECT_PROCESS_DETAIL_SECTION } from "../../store/process-detail/process-detail.selector";
+import { SELECT_PROCESS_DETAIL_SECTION, SELECT_PROCESS_DETAIL_LOTS_MEAT, SELECT_PROCESS_METADATA } from "../../store/process-detail/process-detail.selector";
 import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
+import { getProcessDetails } from '../../store/process-detail/process-detail.actions';
+import { ProcessMetadata } from '../../store/process-detail/process-detail.reducer';
 
 @Component({
   selector: "app-form-grinding",
@@ -47,7 +49,7 @@ export class FormGrindingComponent implements OnInit {
 
   section: string;
 
-  @Input() lotsMeat: ProcessLotMeat[];
+  @Input() lotsMeat: ProcessLotMeat[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -65,6 +67,29 @@ export class FormGrindingComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+    if(localStorage.getItem("processId")!=null && +localStorage.getItem("processId")!=-1){
+      
+      this.store.pipe(select(SELECT_PROCESS_METADATA)).subscribe((process:ProcessMetadata)=>{
+        console.log("PROCESS MOLIENDA",process);
+        console.log("PROCESS MOLIENDA",this.lotsMeat);
+        if(process!=null && process.loteInterno!=""){
+        this.lotsMeat = [
+          {
+            loteMeat:process.loteInterno,
+            productId:0
+          }
+        ];
+      }else{
+        this.store.dispatch(getProcessDetails());
+      }
+      console.log("PROCESS MOLIENDA",this.lotsMeat);
+      })
+  }else{
+    this.store.select(
+      SELECT_PROCESS_DETAIL_LOTS_MEAT
+    ).subscribe((lots) => (this.lotsMeat = lots));
+  }
     this.store.select(SELECT_GRINDING_DATA).subscribe((tempGrinding) => {
       if (tempGrinding != null) {
         this.grinding = tempGrinding;
