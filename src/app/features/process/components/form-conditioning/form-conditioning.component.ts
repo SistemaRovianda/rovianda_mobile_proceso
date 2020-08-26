@@ -54,7 +54,7 @@ export class FormConditioningComponent implements OnInit {
 
   section: string;
 
-  lotsMeat: ProcessLotMeat[]=[];
+  lotsMeat: LotMeatOutput[]=[];
 
   processId:string;
   
@@ -91,8 +91,9 @@ export class FormConditioningComponent implements OnInit {
           if(process!=null && process.loteInterno!=""){
           this.lotsMeat = [
             {
-              loteMeat:process.loteInterno,
-              productId:0
+              lotId:+process.loteInterno,
+              quantity:"",
+              outputId:0
             }
           ];
         }else {
@@ -100,9 +101,9 @@ export class FormConditioningComponent implements OnInit {
         }
         })
     }else{
-      this.store.select(
-        SELECT_PROCESS_DETAIL_LOTS_MEAT
-      ).subscribe((lots) => (this.lotsMeat = lots));
+      this.store
+      .select(SELECT_BASIC_REGISTER_LOTS)
+      .subscribe((lots) => (this.lotsMeat = lots));
     }
     this.store
       .select(SELECT_CONDITIONING_DATA)
@@ -201,5 +202,15 @@ export class FormConditioningComponent implements OnInit {
     return this.form.get("lotId");
   }
   
-
+  selectMaterial() {
+    
+      this.lotId.setValue("");
+      this.store.dispatch(
+        basicRegisterSelectMaterial({
+          status: "USED",
+          rawMaterialId: this.rawMaterial.value,
+        })
+      );
+    
+  }
 }

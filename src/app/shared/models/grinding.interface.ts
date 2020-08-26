@@ -5,4 +5,5 @@ export interface Grinding {
   date: string;
   productId: string;
   nameProduct?: string;
+  lotMeat?:string;
 }
