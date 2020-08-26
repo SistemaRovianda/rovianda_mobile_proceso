@@ -73,6 +73,7 @@ export class FormConditioningComponent implements OnInit {
       productId: ["", Validators.required],
       date: [this.minDate, Validators.required],
       lotMeat: [""],
+      lotId:[""]
     });
   }
 
