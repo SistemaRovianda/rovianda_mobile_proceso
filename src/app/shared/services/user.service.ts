@@ -15,6 +15,6 @@ export class UserService {
   }
 
   getAllUser() {
-    return this.http.get<UserInterface[]>(`${this.url}`);
+    return this.http.get<UserInterface[]>(`${this.url}/rol/QUALITY`);
   }
 }
