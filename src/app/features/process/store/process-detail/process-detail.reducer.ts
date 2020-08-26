@@ -58,7 +58,7 @@ export const processDetailReducer = createReducer(
 
 export interface ProcessMetadata{
   loteInterno:string;
-  
+  outputLotRecordId:number;
 }
 const initValueProcessMetadata:ProcessMetadata =null;
 export const processMetadataReducer = createReducer<ProcessMetadata>(initValueProcessMetadata,

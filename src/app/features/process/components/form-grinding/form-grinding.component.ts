@@ -72,20 +72,14 @@ export class FormGrindingComponent implements OnInit {
   ngOnInit() {
     
     if(localStorage.getItem("processId")!=null && +localStorage.getItem("processId")!=-1){
-      
+      this.store.dispatch(getProcessDetails());  
       this.store.pipe(select(SELECT_PROCESS_METADATA)).subscribe((process:ProcessMetadata)=>{
         console.log("PROCESS MOLIENDA",process);
         console.log("PROCESS MOLIENDA",this.lotsMeat);
         if(process!=null && process.loteInterno!=""){
-          this.lotsMeat = [
-            {
-              lotId:+process.loteInterno,
-              quantity:"",
-              outputId:0
-            }
-          ];
-      }else{
-        this.store.dispatch(getProcessDetails());
+          this.store
+          .select(SELECT_BASIC_REGISTER_LOTS)
+          .subscribe((lots) => (this.lotsMeat = lots.filter((x)=>x.outputId==process.outputLotRecordId)));    
       }
       console.log("PROCESS MOLIENDA",this.lotsMeat);
       })
