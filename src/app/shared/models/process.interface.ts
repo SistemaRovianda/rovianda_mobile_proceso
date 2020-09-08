@@ -1,5 +1,6 @@
 export class Process {
   id: number;
+  processId?:number;
   productName: string;
   loteInterno: string;
   date: string;

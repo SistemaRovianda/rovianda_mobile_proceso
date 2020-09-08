@@ -26,7 +26,8 @@ export class RawRecentRecordComponent implements OnInit {
         processSelected: this.checkProcess() ? this.process : null,
       })
     );
-    localStorage.setItem("processId", `${this.process.id}`);
+    console.log("this.process",JSON.stringify(this.process));
+    localStorage.setItem("processId", `${this.process.processId}`);
     this.store.dispatch(
       recentRecordsLoadTypeRegister({
         isNewRegister: false,
