@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AppState } from "src/app/shared/models/store.state.interface";
-import { Store } from "@ngrx/store";
+import { Store, select } from "@ngrx/store";
 import { AlertService } from "src/app/shared/services/alert.service";
 import * as moment from "moment";
 import { LotMeatOutput } from "src/app/shared/models/Lot-meat-output.interface";
@@ -15,15 +15,18 @@ import {
 } from "../../store/recent-records/recent-records.selector";
 import { Process } from "src/app/shared/models/process.interface";
 import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
-import { basicRegisterSelectMaterial } from "../../store/basic-register/basic-register.actions";
+import { basicRegisterSelectMaterial, basicRegisterSearchInformation } from "../../store/basic-register/basic-register.actions";
 import {
   SELECT_BASIC_REGISTER_LOTS,
   SELECT_BASIC_REGISTER_RESULT,
+  SELECT_CURRENT_PROCESS,
 } from "../../store/basic-register/basic-register.select";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 import { recentRecordsCreateNewProcess } from "../../store/recent-records/recent-records.actions";
 import { RawMaterial } from "src/app/shared/models/raw-material.interface";
-import { SELECT_PROCESS_DETAIL_SECTION } from "../../store/process-detail/process-detail.selector";
+import { SELECT_PROCESS_DETAIL_SECTION, SELECT_PROCESS_METADATA } from "../../store/process-detail/process-detail.selector";
+import { getProcessDetails } from '../../store/process-detail/process-detail.actions';
+import { ProcessMetadata } from '../../store/process-detail/process-detail.reducer';
 
 @Component({
   selector: "app-form-basic-registration",
@@ -79,16 +82,20 @@ export class FormBasicRegistrationComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.store.dispatch(basicRegisterSearchInformation({processId:+localStorage.getItem("processId")}));
     this.store
-      .select(SELECT_RECENT_RECORDS_PROCESS_SELECTED)
+      .select(SELECT_CURRENT_PROCESS)
       .subscribe((tempProcess) => {
+        console.log("TEMP PROCESS",tempProcess);
         if (tempProcess != null) {
           this.process = tempProcess;
           this.datesRegistered =
-            this.process.end_date !== "" && this.process.output_hour !== "";
+            this.process.endDate !== "" && this.process.outputHour !== "";
           this.updateForm();
           this.emptyProcess = false;
         } else {
+          console.log("siempre nulo");
+          
           this.emptyProcess = true;
         }
       });
@@ -114,7 +121,10 @@ export class FormBasicRegistrationComponent implements OnInit {
     this.store
       .select(SELECT_PROCESS_DETAIL_SECTION)
       .subscribe((section) => (this.section = section.section));
-  }
+      
+    }
+    
+  
 
   selectMaterial() {
     if (!this.onBack) {
@@ -162,7 +172,7 @@ export class FormBasicRegistrationComponent implements OnInit {
         hourExit,
         dateFin: moment(dateFinal).format("YYYY-MM-DD"),
       },
-      processId: this.process.processId,
+      processId: this.process.id,
     };
     this.defrost.emit(payload);
   }
@@ -199,20 +209,21 @@ export class FormBasicRegistrationComponent implements OnInit {
     const {
       productName,
       weigth,
-      entrance_hour,
-      output_hour,
-      start_date,
-      end_date,
+      entranceHour,
+      outputHour,
+      startDate,
+      endDate,
       ...values
     } = this.process;
 
     this.form.patchValue({
-      productId: productName,
+      productId: this.process.rawMaterialName,
       weight: weigth,
-      hourEntrance: entrance_hour,
-      hourExit: output_hour,
-      dateIni: start_date,
-      dateFinal: end_date,
+      hourEntrance: entranceHour,
+      hourExit: outputHour,
+      dateIni: startDate,
+      dateFinal: endDate,
+      lotId: this.process.loteInterno,
       ...values,
     });
   }

@@ -26,7 +26,7 @@ export class RawRecentRecordComponent implements OnInit {
         processSelected: this.checkProcess() ? this.process : null,
       })
     );
-    localStorage.setItem("processId", `${this.process.processId}`);
+    localStorage.setItem("processId", `${this.process.id}`);
     this.store.dispatch(
       recentRecordsLoadTypeRegister({
         isNewRegister: false,
@@ -38,11 +38,11 @@ export class RawRecentRecordComponent implements OnInit {
 
   checkProcess() {
     return (
-      this.process.start_date !== "" &&
-      this.process.entrance_hour !== "" &&
+      this.process.startDate !== "" &&
+      this.process.entranceHour !== "" &&
       this.process.productName !== "" &&
       this.process.weigth > 0 &&
-      this.process.lotId !== "" &&
+      this.process.loteInterno !== "" &&
       this.process.temperature > 0
     );
   }

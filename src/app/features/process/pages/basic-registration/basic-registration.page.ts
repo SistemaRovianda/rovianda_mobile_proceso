@@ -13,6 +13,7 @@ import { AlertService } from "src/app/shared/services/alert.service";
 import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-records/recent-records.selector";
 import { SELECT_PROCESS_DETAIL_MATERIALS } from "../../store/process-detail/process-detail.selector";
 import { RawMaterial } from "src/app/shared/models/raw-material.interface";
+import { recentRecordsLoadSelectProcess } from '../../store/recent-records/recent-records.actions';
 
 @Component({
   selector: "app-basic-registration",
@@ -60,6 +61,7 @@ export class BasicRegistrationPage implements OnInit {
         newProcess,
       })
     );
+    
   }
 
   onDefrost(defrost) {

@@ -22,3 +22,7 @@ export const SELECT_BASIC_REGISTER_IS_LOADING = createSelector(
   SELECT_BASIC_REGISTER,
   (state) => state.loading
 );
+
+export const SELECT_CURRENT_PROCESS = createSelector(
+  SELECT_BASIC_REGISTER,(state)=>state.currentProcess
+);

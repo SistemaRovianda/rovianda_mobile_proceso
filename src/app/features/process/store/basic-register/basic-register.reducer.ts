@@ -17,10 +17,13 @@ export const basicRegisterReducer = createReducer(
   STATE_STATE_BASIC_REGISTER,
   on(
     fromBasicRegisterActions.basicRegisterLoadData,
-    (state, { currentProcess }) => ({
+    (state, { currentProcess }) => {
+      console.log("CURRENT PROCEESS",currentProcess);
+     return ({
       ...state,
-      currentProcess,
+      currentProcess
     })
+  }
   ),
   on(
     fromBasicRegisterActions.basicRegisterLoadLotsOutputMeat,

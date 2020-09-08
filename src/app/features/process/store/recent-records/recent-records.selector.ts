@@ -20,7 +20,7 @@ export const SELECT_RECENT_RECORDS_PROCESS_SELECTED = createSelector(
 
 export const SELECT_RECENT_RECORDS_PROCESS_PROCESS_ID = createSelector(
   SELECT_RECENT_RECORDS,
-  (state) => state.processSelected.processId
+  (state) => state.processSelected.id
 );
 
 export const SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS = createSelector(

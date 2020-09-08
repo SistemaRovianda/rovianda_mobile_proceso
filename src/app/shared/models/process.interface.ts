@@ -1,14 +1,15 @@
 export class Process {
-  processId: number;
+  id: number;
   productName: string;
-  lotId: string;
+  loteInterno: string;
   date: string;
   currentProccess: string;
   weigth: number;
   temperature: number;
-  start_date: string;
-  end_date: string;
-  entrance_hour: string;
-  output_hour: string;
+  startDate: string;
+  endDate: string;
+  entranceHour: string;
+  outputHour: string;
   createAt: string;
+  rawMaterialName?:string;
 }

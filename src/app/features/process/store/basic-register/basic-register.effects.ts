@@ -32,16 +32,22 @@ export class BasicRegisterEffect {
       exhaustMap((action) =>
         this.basicRegisterService.getDefrostData(action.processId).pipe(
           switchMap((currentProcess) =>
-            currentProcess.currentProccess === "Descongelamiento"
-              ? [
+            {
+            if(currentProcess.currentProcess == "Descongelamiento"){
+              
+               return [
                   fromBasicRegisterActions.basicRegisterLoadData({
-                    currentProcess,
+                    currentProcess
                   }),
                   fromBasicRegisterActions.basiRegisterIsSelected({
                     isSelected: true,
                   }),
                 ]
-              : [
+              
+
+              }else{ 
+                
+                return [
                   fromBasicRegisterActions.basicRegisterLoadData({
                     currentProcess: null,
                   }),
@@ -49,6 +55,8 @@ export class BasicRegisterEffect {
                     isSelected: false,
                   }),
                 ]
+              }
+            }
           ),
           catchError((error) => {
             return of(

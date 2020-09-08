@@ -32,7 +32,7 @@ export class FormReprocessingComponent implements OnInit {
       .select(SELECT_RECENT_RECORDS_PROCESS_SELECTED)
       .subscribe((selected) => {
         if (selected !== null) {
-          this.loteProcess.setValue(selected.lotId);
+          this.loteProcess.setValue(selected.loteInterno);
         }
       });
   }

@@ -59,7 +59,17 @@ export const processDetailReducer = createReducer(
 export interface ProcessMetadata{
   loteInterno:string;
   outputLotRecordId:number;
+  createAt:string;
+  currentProces:string;
+  temperature:string;
+  weigth:number;
+  entranceHour:string;
+  outputHour:string;
+  startDate:string;
+  endDate:string;
+  rawMaterialName:string;
 }
 const initValueProcessMetadata:ProcessMetadata =null;
 export const processMetadataReducer = createReducer<ProcessMetadata>(initValueProcessMetadata,
-  on(setProcessDetails,(state,{process})=>({...process})));
+  on(setProcessDetails,(state,{process})=>({...process}))
+  );
