@@ -8,6 +8,7 @@ import { SausageEffects } from "src/app/features/process/store/sausage/sausage.e
 import { ProcessDetailEffect } from "src/app/features/process/store/process-detail/process-detail.effects";
 import { UsersEffects } from "src/app/features/process/store/user/user.effect";
 import { ReprocessingEffects } from 'src/app/features/process/store/reprocessing/reprocessing.effects';
+import { FormulationEffects } from 'src/app/features/process/store/formulation/formulation.effects';
 
 export const effects = [
   LoginEffects,
@@ -19,5 +20,6 @@ export const effects = [
   SausageEffects,
   ProcessDetailEffect,
   UsersEffects,
-  ReprocessingEffects
+  ReprocessingEffects,
+  FormulationEffects
 ];

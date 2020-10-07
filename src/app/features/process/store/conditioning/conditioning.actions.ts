@@ -1,5 +1,7 @@
 import { createAction, props } from "@ngrx/store";
+import { ConditioningItem } from 'src/app/shared/models/conditioning-page.interface';
 import { Conditioning } from "src/app/shared/models/conditioning.interface";
+import { FormulationPending } from 'src/app/shared/models/formulations.interface';
 
 const CONDITIONING_SEARCH_INFORMATION = "[CONDITIONING] Search Information";
 
@@ -16,6 +18,9 @@ const CONDITIONING_REGISTER_FAILURE = "[CONDITIONING] Register Failure";
 const CONDITIONING_REGISTER_FINISH = "[CONDITIONING] Register Finish";
 
 const CONDITIONING_IS_SELECTED = "[CONDITIONING] Is Selected";
+const CONDITIONING_GETTIN_FORMULATIONS = "[CONDITIONING] Getting formulations of productRovianda";
+const CONDITIONING_SETTIN_FORMULATIONS = "[CONDITIONING] Setting formulations of productRovianda";
+const CONDITIONING_REGISTER_TO_SYSTEM ="[CONDITIONING] Registing Conditioning to system";
 
 export const conditioningSearchInformation = createAction(
   CONDITIONING_SEARCH_INFORMATION,
@@ -29,7 +34,7 @@ export const conditioningLoadData = createAction(
 
 export const conditioningRegister = createAction(
   CONDITIONING_REGISTER,
-  props<Conditioning>()
+  props<ConditioningItem>()
 );
 
 export const conditioningRegisterResults = createAction(
@@ -53,4 +58,20 @@ export const conditioningRegisterFinish = createAction(
 export const conditioningIsSelected = createAction(
   CONDITIONING_IS_SELECTED,
   props<{ isSelected: boolean }>()
+);
+
+
+export const getFormulationsByProductRovianda = createAction(
+  CONDITIONING_GETTIN_FORMULATIONS,
+  props<{productRoviandaId:number}>()
+)
+
+export const setFormulationsByProductRovianda = createAction(
+  CONDITIONING_SETTIN_FORMULATIONS,
+  props<{formulations:Array<FormulationPending>}>()
+)
+
+export const registerConditioning = createAction(
+  CONDITIONING_REGISTER_TO_SYSTEM,
+  props<{formulationId:number,conditioning:Array<ConditioningItem>}>()
 );

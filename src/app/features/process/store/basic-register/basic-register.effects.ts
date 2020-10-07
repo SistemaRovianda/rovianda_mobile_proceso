@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { MeatService } from "src/app/shared/services/meat.service";
+import { FormulationService } from "src/app/shared/services/formulation.service";
 import * as fromBasicRegisterActions from "./basic-register.actions";
 import * as fromRecentRecordsActions from "../recent-records/recent-records.actions";
 import { exhaustMap, switchMap, catchError, tap } from "rxjs/operators";
@@ -17,7 +17,7 @@ export class BasicRegisterEffect {
   path: string;
   constructor(
     private action$: Actions,
-    private meatService: MeatService,
+    private formulationService: FormulationService,
     private basicRegisterService: BasicRegisterService,
     private router: Router,
     private toastService: ToastService,
@@ -72,18 +72,18 @@ export class BasicRegisterEffect {
 
   loadLotsMeatEffect = createEffect(() =>
     this.action$.pipe(
-      ofType(fromBasicRegisterActions.basicRegisterSelectMaterial),
+      ofType(fromBasicRegisterActions.basicRegisterSelectFormulations),
       exhaustMap((action) =>
-        this.meatService.getLotsMeat(action.status, action.rawMaterialId).pipe(
-          switchMap((lots) => {
-            lots.length === 0
+        this.formulationService.getFormulationsByProductRoviandaId(action.productRoviandaId).pipe(
+          switchMap((formulations) => {
+            formulations.length === 0
               ? this.toastService.presentToastMessageWarning(
                   "Materia prima sin lotes disponibles"
                 )
               : this.toastService.presentToastSuccessCustom("Lotes obtenidos");
             return [
-              fromBasicRegisterActions.basicRegisterLoadLotsOutputMeat({
-                lots,
+              fromBasicRegisterActions.basicRegisterLoadFormulations({
+                formulations,
               }),
             ];
           }),

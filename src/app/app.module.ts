@@ -26,6 +26,7 @@ import {
   FileTransferObject,
 } from "@ionic-native/file-transfer/ngx";
 import { FileOpener } from "@ionic-native/file-opener/ngx";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
@@ -49,6 +50,7 @@ import { FileOpener } from "@ionic-native/file-opener/ngx";
     }),
     HttpClientModule,
     AppProvidersModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     AuthGuard,

@@ -8,8 +8,8 @@ import { TenderizedInterface } from "./tenderized-page.interface";
 import { ProcessDetail } from "./process-detail-page.interface";
 import { UserPageInterface } from "./user-page.interfac";
 import { ProcessReprocessing } from "./process-reprocessing.interface";
-import { Process } from './process.interface';
 import { ProcessMetadata } from 'src/app/features/process/store/process-detail/process-detail.reducer';
+import { FormulationDetails } from './formulations.interface';
 
 export interface LoginState {
   loading: boolean;
@@ -41,6 +41,7 @@ export interface AppState {
   user: UserPageInterface;
   reprocessing: ProcessReprocessing;
   processMetadata: ProcessMetadata;
+  formulationDetails:FormulationDetails
 }
 
 export interface SignIn {

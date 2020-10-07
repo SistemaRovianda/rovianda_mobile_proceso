@@ -90,20 +90,7 @@ export class ProcessDetailEffect {
     )
   );
 
-  loadMaterialEffect = createEffect(() =>
-    this.actions$.pipe(
-      ofType(fromProcessDetailActions.processDetailStartLoadMaterials),
-      exhaustMap((action) =>
-        this.rawMaterialService.getMaterials().pipe(
-          switchMap((materials) => [
-            fromProcessDetailActions.processDetailLoadMaterials({
-              materials,
-            }),
-          ])
-        )
-      )
-    )
-  );
+ 
 
   loadProductsRovianda = createEffect(() =>
     this.actions$.pipe(
@@ -122,22 +109,22 @@ export class ProcessDetailEffect {
     )
   );
 
-  loadLotsMeatProcess = createEffect(() =>
-    this.actions$.pipe(
-      ofType(fromProcessDetailActions.processDetailStartLoadLotsMeatProcess),
-      exhaustMap((action) =>
-        this.lotsMeatProcessService
-          .getLotsMeatProcess()
-          .pipe(
-            switchMap((lotsMeatProcess) => [
-              fromProcessDetailActions.processDetailLoadLotsMeatProcess({
-                lotsMeatProcess,
-              }),
-            ])
-          )
-      )
-    )
-  );
+  // loadLotsMeatProcess = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(fromProcessDetailActions.processDetailStartLoadLotsMeatProcess),
+  //     exhaustMap((action) =>
+  //       this.lotsMeatProcessService
+  //         .getLotsMeatProcess()
+  //         .pipe(
+  //           switchMap((lotsMeatProcess) => [
+  //             fromProcessDetailActions.processDetailLoadLotsMeatProcess({
+  //               lotsMeatProcess,
+  //             }),
+  //           ])
+  //         )
+  //     )
+  //   )
+  // );
 
   getProcessDetailsEffect = createEffect(()=>
   this.actions$.pipe(

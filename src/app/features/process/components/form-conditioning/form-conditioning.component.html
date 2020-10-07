@@ -1,23 +1,23 @@
-<form [formGroup]="form" class="form" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" class="form" (ngSubmit)="onSubmit()"  flex layout="column" style="overflow: auto; height: 100%;">
   <ion-row>
     <ion-col size="7">
       <ion-item *ngIf="!isSelected">
         <ion-label position="floating">
-          Materia prima*
+          Productos Rovianda*
         </ion-label>
         <ion-select
           class="item-form"
           interface="action-sheet"
-          placeholder="Seleccionar materia prima"
-          formControlName="rawMaterial"
-          [disabled]="materials.length == 0"
-          (ionChange)="selectMaterial()"
+          placeholder="Seleccionar el producto a procesar"
+          formControlName="productRovianda"
+          [disabled]="productsRovianda.length == 0"
+          (ionChange)="selectProductRovianda()"
         >
           <ion-select-option
-            [value]="material.rawMaterialId"
-            *ngFor="let material of materials"
+            [value]="productRovianda.id"
+            *ngFor="let productRovianda of productsRovianda"
           >
-            {{ material.rawMaterial }}</ion-select-option
+            {{ productRovianda.name }}</ion-select-option
           >
         </ion-select>
       </ion-item>
@@ -43,23 +43,24 @@
     </ion-col>
     <ion-col size="5">
       <ion-item *ngIf="!isSelected">
-        <ion-label position="floating">Lote de carne</ion-label>
+        <ion-label position="floating">Formulaciones</ion-label>
         <ion-select
           class="item-form"
           interface="action-sheet"
-          placeholder="Seleccionar lote"
-          formControlName="lotMeat"
+          placeholder="Seleccionar formulacion"
+          formControlName="formulationId"
+          (ionChange)="selectFormulationId()"
         >
-          <ion-select-option   *ngFor="let lotMeat of  lotsMeat" [value]="lotMeat.outputId"
-            >{{ lotMeat.lotId}}:{{lotMeat.quantity}}</ion-select-option
+          <ion-select-option   *ngFor="let formulation of  formulations" [value]="formulation.formulationId"
+            >{{ formulation.lotDay}}</ion-select-option
           >
         </ion-select>
       </ion-item>
-      <ion-item *ngIf="isSelected && !emptyProcess">
+      <!-- <ion-item *ngIf="isSelected && !emptyProcess">
         <ion-label position="floating">Lote de carne*</ion-label>
         <ion-input
           class="item-form"
-          placeholder="{{lotsMeat.length?lotsMeat[0].lotId:'Producto'}}"
+          placeholder="{{formulations.length?formulations[0].lotDay:'Producto'}}"
           formControlName="lotId"
           disabled
         ></ion-input>
@@ -73,8 +74,26 @@
         >
           Ingrese un valor
         </ion-label>
-      </div>
+      </div> -->
     </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-item *ngIf="!isSelected">
+        <ion-label position="floating">Lotes de carne en esta formulación</ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar lote"
+          formControlName="defrostId"
+        >
+          <ion-select-option   *ngFor="let defrost of  formulation.defrosts" [value]="defrost.defrostFormulationId"
+            >{{ defrost.lotMeat}}-{{defrost.defrost.dateEnd}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-col>
+
   </ion-row>
   <ion-row>
     <ion-col size="12">
@@ -167,7 +186,7 @@
     </ion-col>
   </ion-row>
   <ion-row>
-    <ion-col size="7">
+    <!-- <ion-col size="7">
       <ion-item *ngIf="!isSelected">
         <ion-label position="floating">Producto*</ion-label>
         <ion-select
@@ -201,8 +220,8 @@
           "
           >Ingrese un valor</ion-label
         >
-      </div>
-    </ion-col>
+      </div> 
+    </ion-col> -->
     <ion-col size="5">
       <ion-item class="item-datetime">
         <ion-label position="floating">Fecha*</ion-label>
@@ -226,4 +245,30 @@
       </div>
     </ion-col>
   </ion-row>
+  <ion-row>
+    <ul style="list-style: none;">
+      <li *ngFor="let conditioning of conditioningArr; let index=index" (click)="removeOfConditioningArr(index)">
+          {{conditioning.lotId}}-{{conditioning.weight}} <br>
+          deshuesar:{{conditioning.bone?'SI':'NO'}} limpieza: {{conditioning.clean?'SI':'NO'}} <br>
+          curacion: {{conditioning.healting?'SI':'NO'}}
+      </li>
+    </ul>
+  </ion-row>
+  <ion-row
+      class="container container__row container__row--buttons ion-justify-content-around"
+    >
+      <ion-col class="container container__column" size="12">
+        <ion-button
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          (click)="addItem()"
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Agregar Lote</ion-col></ion-row>
+             </ion-grid>
+          </ion-button>
+      </ion-col>
+    </ion-row>
+    
 </form>

@@ -8,9 +8,9 @@ export const SELECT_BASIC_REGISTER_STATE = createSelector(
   (state) => state.status
 );
 
-export const SELECT_BASIC_REGISTER_LOTS = createSelector(
+export const SELECT_BASIC_FORMULATIONS = createSelector(
   SELECT_BASIC_REGISTER,
-  (state) => state.lots
+  (state) => state.formulations
 );
 
 export const SELECT_BASIC_REGISTER_RESULT = createSelector(

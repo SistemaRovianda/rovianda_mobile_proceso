@@ -22,9 +22,11 @@ import { SELECT_PROCESS_DETAIL_SECTION, SELECT_PROCESS_DETAIL_LOTS_MEAT, SELECT_
 import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
 import { getProcessDetails } from '../../store/process-detail/process-detail.actions';
 import { ProcessMetadata } from '../../store/process-detail/process-detail.reducer';
-import { basicRegisterSelectMaterial } from '../../store/basic-register/basic-register.actions';
+//import { basicRegisterSelectMaterial } from '../../store/basic-register/basic-register.actions';
 import { LotMeatOutput } from 'src/app/shared/models/Lot-meat-output.interface';
-import { SELECT_BASIC_REGISTER_LOTS } from '../../store/basic-register/basic-register.select';
+import { SELECT_BASIC_FORMULATIONS } from '../../store/basic-register/basic-register.select';
+import { FormulationPending } from 'src/app/shared/models/formulations.interface';
+//import { SELECT_BASIC_REGISTER_LOTS } from '../../store/basic-register/basic-register.select';
 
 @Component({
   selector: "app-form-grinding",
@@ -52,7 +54,7 @@ export class FormGrindingComponent implements OnInit {
 
   section: string;
 
-  @Input() lotsMeat: LotMeatOutput[]=[];
+  @Input() formulations: FormulationPending[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -75,18 +77,18 @@ export class FormGrindingComponent implements OnInit {
       this.store.dispatch(getProcessDetails());  
       this.store.pipe(select(SELECT_PROCESS_METADATA)).subscribe((process:ProcessMetadata)=>{
         console.log("PROCESS MOLIENDA",process);
-        console.log("PROCESS MOLIENDA",this.lotsMeat);
+        console.log("PROCESS MOLIENDA",this.formulations);
         if(process!=null && process.loteInterno!=""){
           this.store
-          .select(SELECT_BASIC_REGISTER_LOTS)
-          .subscribe((lots) => (this.lotsMeat = lots.filter((x)=>x.outputId==process.outputLotRecordId)));    
+          .select(SELECT_BASIC_FORMULATIONS)
+          .subscribe((lots) => {this.formulations = lots});    
       }
-      console.log("PROCESS MOLIENDA",this.lotsMeat);
+      console.log("PROCESS MOLIENDA",this.formulations);
       })
   }else{
     this.store
-      .select(SELECT_BASIC_REGISTER_LOTS)
-      .subscribe((lots) => (this.lotsMeat = lots));
+      .select(SELECT_BASIC_FORMULATIONS)
+      .subscribe((lots) => (this.formulations = lots));
   }
     this.store.select(SELECT_GRINDING_DATA).subscribe((tempGrinding) => {
       if (tempGrinding != null) {
@@ -162,12 +164,12 @@ export class FormGrindingComponent implements OnInit {
 
   selectMaterial() {
     
-    this.store.dispatch(
-      basicRegisterSelectMaterial({
-        status: "USED",
-        rawMaterialId: this.form.get("rawMaterial").value,
-      })
-    );
+    // this.store.dispatch(
+    //   basicRegisterSelectMaterial({
+    //     status: "USED",
+    //     rawMaterialId: this.form.get("rawMaterial").value,
+    //   })
+    // );
   
 }
 }

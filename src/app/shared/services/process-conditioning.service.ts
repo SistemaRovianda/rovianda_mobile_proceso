@@ -6,6 +6,7 @@ import {
 } from "src/app/providers/tokens";
 import { Observable, observable } from "rxjs";
 import { Conditioning } from "../models/conditioning.interface";
+import { ConditioningItem } from '../models/conditioning-page.interface';
 
 @Injectable({
   providedIn: "root",
@@ -26,11 +27,9 @@ export class ConditioningService {
   }
 
   registerConditioning(
-    conditioning: Conditioning,
-    processId: number
+    conditioning: Array<ConditioningItem>,
+    formulationId: number
   ): Observable<any> {
-    return this.http.post<any>(`${this.url}/conditioning/${processId}`, {
-      ...conditioning,
-    });
+    return this.http.post<any>(`${this.url}/conditioning/${formulationId}`, conditioning);
   }
 }

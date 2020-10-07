@@ -153,7 +153,7 @@
           formControlName="loteMeat"
           
         >
-        <ion-select-option   *ngFor="let lotMeat of  lotsMeat" [value]="lotMeat.outputId"
+        <ion-select-option   *ngFor="let lotMeat of  formulations" [value]="lotMeat.outputId"
         >{{ lotMeat.lotId}}:{{lotMeat.quantity}}</ion-select-option
       >
           >

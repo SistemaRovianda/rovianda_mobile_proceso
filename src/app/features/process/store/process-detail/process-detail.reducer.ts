@@ -9,7 +9,7 @@ const STATE_PROCESS_DETAIL_INITIAL: ProcessDetail = {
   products: [],
   error: null,
   loading: false,
-  materials: [],
+  formulations:[],
   productsRovianda: [],
   lotsMeatProcess: [],
   section: { name: "", path: "", section: "" },
@@ -37,10 +37,6 @@ export const processDetailReducer = createReducer(
   on(
     fromRecentRecordsActions.recentRecordsLoadRecordsSuccess,
     (state) => STATE_PROCESS_DETAIL_INITIAL
-  ),
-  on(
-    fromProcessDetailActions.processDetailLoadMaterials,
-    (state, { materials }) => ({ ...state, materials })
   ),
   on(
     fromProcessDetailActions.processDetailLoadProductsRovianda,

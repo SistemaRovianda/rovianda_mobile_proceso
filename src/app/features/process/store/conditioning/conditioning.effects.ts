@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ConditioningService } from "src/app/shared/services/process-conditioning.service";
 import * as fromConditioningActions from "./conditioning.actions";
-import { exhaustMap, switchMap, catchError } from "rxjs/operators";
+import { exhaustMap, switchMap, catchError, tap } from "rxjs/operators";
 import { throwError, of, from } from "rxjs";
 import { AlertService } from "src/app/shared/services/alert.service";
 import { ToastService } from "src/app/shared/services/toast.service";
@@ -10,13 +10,16 @@ import { Router } from "@angular/router";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { Store } from "@ngrx/store";
 import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.selector";
+import { conditioningRegisterSuccess, getFormulationsByProductRovianda, registerConditioning } from './conditioning.actions';
+import { FormulationService } from 'src/app/shared/services/formulation.service';
 
 @Injectable()
 export class ConditioningEffects {
   path: string;
   constructor(
     private action$: Actions,
-    private conditioningService: ConditioningService,
+    private formulationService: FormulationService,
+    private conditioningService:ConditioningService,
     private toast: ToastService,
     private router: Router,
     private _store: Store<AppState>
@@ -68,7 +71,7 @@ export class ConditioningEffects {
       exhaustMap((conditioning) =>
         this.conditioningService
           .registerConditioning(
-            conditioning,
+            [conditioning],
             +localStorage.getItem("processId")
           )
           .pipe(
@@ -117,4 +120,25 @@ export class ConditioningEffects {
       )
     )
   );
+
+  getFormulationsByProductRovianda$= createEffect(()=>
+      this.action$.pipe(
+        ofType(getFormulationsByProductRovianda),
+        exhaustMap((action)=>this.formulationService.getFormulationsByProductRoviandaId(action.productRoviandaId).pipe(
+          switchMap((formulations)=>[fromConditioningActions.setFormulationsByProductRovianda({formulations})])
+        ))
+      )
+  )
+
+  registeringNewConditioning = createEffect(()=>
+    this.action$.pipe(
+      ofType(registerConditioning),
+      exhaustMap((action)=>this.conditioningService.registerConditioning(action.conditioning,action.formulationId).pipe(
+        switchMap(()=>{
+          return [conditioningRegisterSuccess()];
+        }
+      )))
+    ))
+
+
 }

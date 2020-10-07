@@ -8,7 +8,6 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../models/store.state.interface";
 import {
   processDetailStartLoadProducts,
-  processDetailStartLoadMaterials,
   processDetailStartLoadProductsRovianda,
   processDetailStartLoadLotsMeatProcess,
 } from "src/app/features/process/store/process-detail/process-detail.actions";
@@ -20,7 +19,7 @@ export class ProcessDetailResolver implements Resolve<boolean> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     this.store.dispatch(processDetailStartLoadProducts());
-    this.store.dispatch(processDetailStartLoadMaterials());
+    //this.store.dispatch(processDetailStartLoadMaterials());
     this.store.dispatch(processDetailStartLoadProductsRovianda());
     this.store.dispatch(processDetailStartLoadLotsMeatProcess());
     return true;

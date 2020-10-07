@@ -11,7 +11,7 @@ import * as fromBasicRegisterActions from "../../store/basic-register/basic-regi
 import { Router } from "@angular/router";
 import { AlertService } from "src/app/shared/services/alert.service";
 import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-records/recent-records.selector";
-import { SELECT_PROCESS_DETAIL_MATERIALS } from "../../store/process-detail/process-detail.selector";
+//import { SELECT_PROCESS_DETAIL_MATERIALS } from "../../store/process-detail/process-detail.selector";
 import { RawMaterial } from "src/app/shared/models/raw-material.interface";
 import { recentRecordsLoadSelectProcess } from '../../store/recent-records/recent-records.actions';
 
@@ -21,9 +21,9 @@ import { recentRecordsLoadSelectProcess } from '../../store/recent-records/recen
   styleUrls: ["./basic-registration.page.scss"],
 })
 export class BasicRegistrationPage implements OnInit {
-  materials$: Observable<RawMaterial[]> = this.store.select(
-    SELECT_PROCESS_DETAIL_MATERIALS
-  );
+  // materials$: Observable<RawMaterial[]> = this.store.select(
+  //   SELECT_PROCESS_DETAIL_MATERIALS
+  // );
 
   title = "Informativo";
 

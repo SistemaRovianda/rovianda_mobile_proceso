@@ -2,10 +2,10 @@ import { BasicRegister } from "src/app/shared/models/basic-register.interface";
 import { createReducer, on } from "@ngrx/store";
 import * as fromBasicRegisterActions from "./basic-register.actions";
 import * as fromRecentRecordsActions from "../recent-records/recent-records.actions";
-
+import {FormulationPending} from "../../../../shared/models/formulations.interface";
 const STATE_STATE_BASIC_REGISTER: BasicRegister = {
   status: null,
-  lots: [],
+  formulations:[],
   result: false,
   error: null,
   loading: false,
@@ -26,8 +26,8 @@ export const basicRegisterReducer = createReducer(
   }
   ),
   on(
-    fromBasicRegisterActions.basicRegisterLoadLotsOutputMeat,
-    (state, { lots }) => ({ ...state, lots })
+    fromBasicRegisterActions.basicRegisterLoadFormulations,
+    (state, { formulations }) => ({ ...state, formulations })
   ),
   on(
     fromBasicRegisterActions.basicRegisterLoadMaterials,

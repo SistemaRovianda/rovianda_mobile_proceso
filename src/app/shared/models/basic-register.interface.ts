@@ -1,10 +1,10 @@
-import { LotMeatOutput } from "./Lot-meat-output.interface";
-import { ProductsRovianda } from "./produts-rovianda.interface";
+
+import { FormulationPending } from './formulations.interface';
 import { Process } from "./process.interface";
 
 export interface BasicRegister {
   status: string;
-  lots: LotMeatOutput[];
+  formulations: FormulationPending[];
   result: boolean;
   loading: boolean;
   error: string;

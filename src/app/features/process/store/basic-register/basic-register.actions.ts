@@ -4,17 +4,18 @@ import { NewProcess } from "src/app/shared/models/new-process.interface";
 import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
 import { Defrost } from "src/app/shared/models/defrost.interface";
 import { Process } from "src/app/shared/models/process.interface";
+import { FormulationPending } from 'src/app/shared/models/formulations.interface';
 
 const BASIC_REGISTER_SEARCH_INFORMATION = "[BASIC REGISTER] Search Information";
 
 const BASIC_REGISTER_LOAD_DATA = "[BASIC REGISTER] Load Data";
 
-const BASIC_REGISTER_SELECT_MATERIAL = "[BASIC REGISTER] Select Material";
+const BASIC_REGISTER_SELECT_FORMULATIONS = "[BASIC REGISTER] Select Formulations";
 
 const BASIC_REGISTER_IS_SELECTED = "[BASIC REGISTER] Is Selected";
 
-const BASIC_REGISTER_LOAD_LOTS_OUTPUT_MEAT =
-  "[BASIC REGISTER] Load Lots Output Meat";
+const BASIC_REGISTER_LOAD_FORMULATIONS =
+  "[BASIC REGISTER] Load Formulations";
 
 const BASIC_REGISTER_START_REGISTER_NEW_PROCESS =
   "[BASIC REGISTER] Start Register New Process";
@@ -63,14 +64,14 @@ export const basiRegisterIsSelected = createAction(
   props<{ isSelected: boolean }>()
 );
 
-export const basicRegisterSelectMaterial = createAction(
-  BASIC_REGISTER_SELECT_MATERIAL,
-  props<{ status: string; rawMaterialId: number }>()
+export const basicRegisterSelectFormulations = createAction(
+  BASIC_REGISTER_SELECT_FORMULATIONS,
+  props<{ productRoviandaId:number }>()
 );
 
-export const basicRegisterLoadLotsOutputMeat = createAction(
-  BASIC_REGISTER_LOAD_LOTS_OUTPUT_MEAT,
-  props<{ lots: LotMeatOutput[] }>()
+export const basicRegisterLoadFormulations = createAction(
+  BASIC_REGISTER_LOAD_FORMULATIONS,
+  props<{ formulations: FormulationPending[] }>()
 );
 
 export const basicRegisterStartRegisterNewProcess = createAction(

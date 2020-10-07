@@ -12,7 +12,7 @@ import { Observable } from "rxjs";
 import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
 import {
   SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA,
-  SELECT_PROCESS_DETAIL_MATERIALS,
+  //SELECT_PROCESS_DETAIL_MATERIALS,
   SELECT_PROCESS_DETAIL_LOTS_MEAT,
 } from "../../store/process-detail/process-detail.selector";
 import { RawMaterial } from "src/app/shared/models/raw-material.interface";
@@ -43,9 +43,9 @@ export class GrindingPage implements OnInit {
     SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA
   );
 
-  materials$: Observable<RawMaterial[]> = this.store.select(
-    SELECT_PROCESS_DETAIL_MATERIALS
-  );
+  // materials$: Observable<RawMaterial[]> = this.store.select(
+  //   SELECT_PROCESS_DETAIL_MATERIALS
+  // );
 
   lotsMeat$: Observable<ProcessLotMeat[]> = this.store.select(
     SELECT_PROCESS_DETAIL_LOTS_MEAT

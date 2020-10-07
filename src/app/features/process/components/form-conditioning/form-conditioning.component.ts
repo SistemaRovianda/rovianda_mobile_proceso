@@ -5,10 +5,12 @@ import { AppState } from "src/app/shared/models/store.state.interface";
 import { Conditioning } from "src/app/shared/models/conditioning.interface";
 import {
   SELECT_CONDITIONING_DATA,
+  SELECT_CONDITIONING_FORMULATIONS,
+  SELECT_CONDITIONING_IS_LOADING,
   SELECT_CONDITIONING_IS_SELECTED,
 } from "../../store/conditioning/conditioning.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
-import { conditioningRegister } from "../../store/conditioning/conditioning.actions";
+import { conditioningRegister, getFormulationsByProductRovianda, registerConditioning } from "../../store/conditioning/conditioning.actions";
 import * as moment from "moment";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 import { recentRecordsCreateNewProcess } from "../../store/recent-records/recent-records.actions";
@@ -18,15 +20,24 @@ import {
 } from "../../store/recent-records/recent-records.selector";
 import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
 import { RawMaterial } from "src/app/shared/models/raw-material.interface";
-import { SELECT_PROCESS_DETAIL_SECTION, SELECT_PROCESS_METADATA, SELECT_PROCESS_DETAIL_LOTS_MEAT, SELECT_PROCESS_DETAIL_MATERIALS } from "../../store/process-detail/process-detail.selector";
-import { SELECT_BASIC_REGISTER_LOTS } from "../../store/basic-register/basic-register.select";
+import { SELECT_PROCESS_DETAIL_SECTION, SELECT_PROCESS_METADATA, SELECT_FORMULATIONS_PENDING, SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA } from "../../store/process-detail/process-detail.selector";
+import { SELECT_BASIC_FORMULATIONS } from "../../store/basic-register/basic-register.select";
 import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
 import { LotMeatOutput } from 'src/app/shared/models/Lot-meat-output.interface';
-import { basicRegisterSelectMaterial } from '../../store/basic-register/basic-register.actions';
+
 import { getProcessDetails } from '../../store/process-detail/process-detail.actions';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Process } from 'src/app/shared/models/process.interface';
 import { ProcessMetadata } from '../../store/process-detail/process-detail.reducer';
+import { FormulationDetails, FormulationPending } from 'src/app/shared/models/formulations.interface';
+import { getFormulationDetails, setFormulationDetails } from '../../store/formulation/formulation.actions';
+import { GET_FORMULATION_DETAILS } from '../../store/formulation/formulation.selectors';
+import { MatDialog } from '@angular/material';
+import { ModalFormulationDetailsComponent } from '../modal-formulation-details/modal-formulation-details.component';
+import { ConditioningItem } from 'src/app/shared/models/conditioning-page.interface';
+import { Router } from '@angular/router';
+
+
 
 @Component({
   selector: "app-form-conditioning",
@@ -38,7 +49,7 @@ export class FormConditioningComponent implements OnInit {
 
   form: FormGroup;
 
-  materials: RawMaterial[];
+  productsRovianda: ProductsRovianda[];
 
   @Input() products: ProductsRovianda[];
 
@@ -54,34 +65,49 @@ export class FormConditioningComponent implements OnInit {
 
   section: string;
 
-  lotsMeat: LotMeatOutput[]=[];
+  formulations: FormulationPending[]=[];
 
   processId:string;
-  
+  formulation:FormulationDetails;
+
+  conditioningArr:ConditioningItem[]=[];
+
   constructor(
     private fb: FormBuilder,
     private store: Store<AppState>,
-    private alert: AlertService
+    private alert: AlertService,
+    private dialog:MatDialog,
+    private route:Router
   ) {
     this.form = fb.group({
-      rawMaterial: ["", Validators.required],
+      productRovianda: ["", Validators.required],
       bone: [false, Validators.required],
       clean: [false, Validators.required],
       healthing: [false, Validators.required],
       weight: ["", [Validators.required, decimalValidator]],
       temperature: ["", Validators.required],
-      productId: ["", Validators.required],
       date: [this.minDate, Validators.required],
-      lotMeat: [""],
-      lotId:[""]
+      formulationId: [0,Validators.required],
+      defrostId:["",[Validators.required]]
     });
   }
-
+  isLoading=false;
   ngOnInit() {
     this.store.select(
-      SELECT_PROCESS_DETAIL_MATERIALS
-    ).subscribe((materials)=>{
-      this.materials = materials;
+      SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA
+    ).subscribe((productsRovianda)=>{
+      this.productsRovianda = productsRovianda;
+    })
+
+    this.store.select(SELECT_CONDITIONING_IS_LOADING).subscribe((status)=>{
+      if(this.isLoading==false && status==true){
+        this.isLoading=true;
+      }else if (this.isLoading==true && status==false){
+        this.store.dispatch(setFormulationDetails({
+          formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null}
+        }));
+        this.route.navigateByUrl("/process/recent-records")
+      }
     })
     
     if(localStorage.getItem("processId")!=null && +localStorage.getItem("processId")!=-1){
@@ -90,15 +116,15 @@ export class FormConditioningComponent implements OnInit {
           console.log("PROCESS CONDICIONAMIENTO",process);
           if(process!=null && process.loteInterno!=""){
             this.store
-      .select(SELECT_BASIC_REGISTER_LOTS)
-      .subscribe((lots) => (this.lotsMeat = lots.filter((x)=>x.outputId==process.outputLotRecordId)));
+      .select(SELECT_CONDITIONING_FORMULATIONS)
+      .subscribe((lots) => (this.formulations = lots));
           
         }
         })
     }else{
       this.store
-      .select(SELECT_BASIC_REGISTER_LOTS)
-      .subscribe((lots) => (this.lotsMeat = lots));
+      .select(SELECT_CONDITIONING_FORMULATIONS)
+      .subscribe((lots) => (this.formulations = lots));
     }
     this.store
       .select(SELECT_CONDITIONING_DATA)
@@ -108,6 +134,21 @@ export class FormConditioningComponent implements OnInit {
           this.updateForm();
         }
       });
+    this.store.select(GET_FORMULATION_DETAILS).subscribe((details)=>{
+      this.formulation=details;
+      if(this.formulation.id!=null){
+        const dialogRef = this.dialog.open(ModalFormulationDetailsComponent, {
+          width: '500px',
+          height:"50%",
+          data: this.formulation
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+          console.log('The dialog was closed');
+          
+        });
+      }
+    })
     this.store
       .select(SELECT_CONDITIONING_IS_SELECTED)
       .subscribe((selected) => (this.isSelected = selected));
@@ -127,6 +168,7 @@ export class FormConditioningComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log("isNew",this.isNewRegister);
     const buttons: any = [
       {
         text: "Cancelar",
@@ -136,12 +178,12 @@ export class FormConditioningComponent implements OnInit {
         text: "Aceptar",
         handler: () => {
           this.isNewRegister
-            ? this.store.dispatch(recentRecordsCreateNewProcess())
+            ? this.store.dispatch(registerConditioning({formulationId:this.formulationId.value,conditioning:this.conditioningArr}))
             : this.registerConditioning();
         },
       },
     ];
-    if (this.form.valid) {
+    if (this.conditioningArr.length) {
       this.alert.showAlert(
         "Informacion",
         `${
@@ -189,23 +231,84 @@ export class FormConditioningComponent implements OnInit {
     return this.bone.value || this.clean.value || this.healthing.value;
   }
 
-  get rawMaterial() {
-    return this.form.get("rawMaterial");
+  get productRovianda() {
+    return this.form.get("productRovianda");
   }
 
   get lotId() {
     return this.form.get("lotId");
   }
-  
-  selectMaterial() {
-    
-      this.lotId.setValue("");
+
+  get formulationId(){
+    return this.form.get("formulationId");
+  }
+
+  get defrostId(){
+    return this.form.get('defrostId');
+  }
+
+  selectFormulationId(){
+    console.log("llamando");
+    this.store.dispatch(
+      getFormulationDetails({formulationId:this.formulationId.value})
+    );
+  }
+
+  selectProductRovianda() {
+    console.log("se selecciono un producto de rovianda",this.productRovianda.value);
+
+      
       this.store.dispatch(
-        basicRegisterSelectMaterial({
-          status: "USED",
-          rawMaterialId: this.rawMaterial.value,
+        getFormulationsByProductRovianda({
+          productRoviandaId: this.productRovianda.value,
         })
       );
     
+  }
+
+  addItem(){
+    console.log(this.form.valid,this.form.value);
+    if(this.form.valid){
+        let has=this.conditioningArr.filter(x=>x.defrostId==this.form.get('defrostId').value);
+        if(!has.length){
+          console.log("agregando");
+          let lotString = "";
+          console.log("defrostId",this.defrostId.value);
+          for(let defrost of this.formulation.defrosts){
+            console.log(defrost);
+            if(defrost.defrostFormulationId==+this.defrostId.value){
+              lotString=defrost.lotMeat;
+              console.log("coincide");
+            }else{
+              console.log("no coincide");
+            }
+          }
+          
+          let conditioningItemToAdd:ConditioningItem={
+            bone: this.bone.value,
+            clean: this.clean.value,
+            date: this.form.get('date').value,
+            defrostId: this.defrostId.value,
+            healthing: this.healthing.value,
+            temperature: this.form.get('temperature').value,
+            weight: this.form.get('weight').value,
+            lotId: lotString
+          };
+          this.bone.setValue(false);
+          this.clean.setValue(false);
+          this.form.get('date').reset();
+          this.healthing.setValue(false);
+          this.form.get('weight').reset();
+          this.form.get('temperature').reset();
+          this.conditioningArr.push(conditioningItemToAdd);
+        }else{
+          console.log("Ya esta");
+        }
+    }
+  }
+
+  removeOfConditioningArr(index:number){
+    console.log("index",index);
+    this.conditioningArr.splice(index,1);
   }
 }

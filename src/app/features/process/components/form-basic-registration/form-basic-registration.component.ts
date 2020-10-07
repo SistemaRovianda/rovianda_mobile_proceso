@@ -15,9 +15,9 @@ import {
 } from "../../store/recent-records/recent-records.selector";
 import { Process } from "src/app/shared/models/process.interface";
 import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
-import { basicRegisterSelectMaterial, basicRegisterSearchInformation } from "../../store/basic-register/basic-register.actions";
+import {  basicRegisterSearchInformation } from "../../store/basic-register/basic-register.actions";
 import {
-  SELECT_BASIC_REGISTER_LOTS,
+  
   SELECT_BASIC_REGISTER_RESULT,
   SELECT_CURRENT_PROCESS,
 } from "../../store/basic-register/basic-register.select";
@@ -99,9 +99,7 @@ export class FormBasicRegistrationComponent implements OnInit {
           this.emptyProcess = true;
         }
       });
-    this.store
-      .select(SELECT_BASIC_REGISTER_LOTS)
-      .subscribe((lots) => (this.lots = lots));
+    
     this.store
       .select(SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS)
       .subscribe((selected) => (this.isSelected = selected));
@@ -126,17 +124,17 @@ export class FormBasicRegistrationComponent implements OnInit {
     
   
 
-  selectMaterial() {
-    if (!this.onBack) {
-      this.lotId.setValue("");
-      this.store.dispatch(
-        basicRegisterSelectMaterial({
-          status: "USED",
-          rawMaterialId: this.productId.value.rawMaterialId,
-        })
-      );
-    }
-  }
+  // selectMaterial() {
+  //   if (!this.onBack) {
+  //     this.lotId.setValue("");
+  //     this.store.dispatch(
+  //       basicRegisterSelectMaterial({
+  //         status: "USED",
+  //         rawMaterialId: this.productId.value.rawMaterialId,
+  //       })
+  //     );
+  //   }
+  // }
 
   onSubmit() {
     const buttons: any = [

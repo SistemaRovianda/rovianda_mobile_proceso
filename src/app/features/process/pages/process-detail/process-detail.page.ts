@@ -20,11 +20,11 @@ export class ProcessDetailPage implements OnInit {
   loading: boolean;
   constructor(private router: Router, private store: Store<AppState>) {
     this.options = [
-      {
-        name: "Descongelamiento",
-        path: "/process/basic-registration",
-        section: "DESCONGELAMIENTO",
-      },
+      // {
+      //   name: "Descongelamiento",
+      //   path: "/process/basic-registration",
+      //   section: "DESCONGELAMIENTO",
+      // },
       {
         name: "Acondicionamiento",
         path: "/process/conditioning",

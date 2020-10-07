@@ -15,7 +15,7 @@ export class LotMeatService {
     this.url = `${endpoint}/process/lote/meat`;
   }
 
-  getLotsMeatProcess(): Observable<ProcessLotMeat[]> {
-    return this.http.get<ProcessLotMeat[]>(`${this.url}`);
-  }
+  // getLotsMeatProcess(): Observable<ProcessLotMeat[]> {
+  //   return this.http.get<ProcessLotMeat[]>(`${this.url}`);
+  // }
 }

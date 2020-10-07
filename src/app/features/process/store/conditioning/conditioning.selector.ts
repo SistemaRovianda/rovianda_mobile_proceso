@@ -22,3 +22,8 @@ export const SELECT_CONDITIONING_IS_SELECTED = createSelector(
   SELECT_CONDITIONING,
   (state) => state.isSelected
 );
+
+export const SELECT_CONDITIONING_FORMULATIONS = createSelector(
+  SELECT_CONDITIONING,
+  (state)=>state.formulations
+)

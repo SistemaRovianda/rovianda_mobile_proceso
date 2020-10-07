@@ -14,9 +14,9 @@ export const SELECT_PROCESS_DETAIL_IS_LOADING = createSelector(
   (state) => state.loading
 );
 
-export const SELECT_PROCESS_DETAIL_MATERIALS = createSelector(
+export const SELECT_FORMULATIONS_PENDING = createSelector(
   SELECT_PROCESS_DETAIL,
-  (state) => state.materials
+  (state) => state.formulations
 );
 
 export const SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA = createSelector(

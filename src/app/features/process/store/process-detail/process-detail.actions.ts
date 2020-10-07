@@ -7,6 +7,7 @@ import { MenuButton } from "src/app/shared/models/menu-button.interface";
 import { Process } from 'src/app/shared/models/process.interface';
 import { ProcessMetadata } from './process-detail.reducer';
 
+
 const PROCESS_DETAIL_START_LOAD_PRODUCTS =
   "[PROCESS DETAIL] Start Load Products";
 
@@ -30,10 +31,10 @@ const PROCESS_DETAIL_CLOSE_PROCESS_FINISH =
 const PROCESS_DETAIL_CLOSE_PROCESS_FAILURE =
   "[PROCESS DETAIL] Close Process Failure";
 
-const PROCESS_DETAIL_START_LOAD_MATERIALS =
-  "[PROCESS DETAIL] Start Load Materials";
+const PROCESS_DETAIL_START_LOAD_FORMULATIONS =
+  "[PROCESS DETAIL] Start Load Formulations";
 
-const PROCESS_DETAIL_LOAD_MATERIALS = "[PROCESS DETAIL] Load Materials";
+const PROCESS_DETAIL_LOAD_FORMULATIONS = "[PROCESS DETAIL] Load Formulations";
 
 const PROCESS_DETAIL_START_LOAD_LOTS_MEAT_PROCESS =
   "[PROCESS DETAIL] Start Load Lots Meat Process";
@@ -78,14 +79,6 @@ export const processDetailCloseProcessFailure = createAction(
   props<{ error: string }>()
 );
 
-export const processDetailStartLoadMaterials = createAction(
-  PROCESS_DETAIL_START_LOAD_MATERIALS
-);
-
-export const processDetailLoadMaterials = createAction(
-  PROCESS_DETAIL_LOAD_MATERIALS,
-  props<{ materials: RawMaterial[] }>()
-);
 
 export const processDetailStartLoadLotsMeatProcess = createAction(
   PROCESS_DETAIL_START_LOAD_LOTS_MEAT_PROCESS
