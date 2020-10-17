@@ -1,9 +1,9 @@
-import { Conditioning } from "./conditioning.interface";
+import { Conditioning, ConditioningOfProcess } from "./conditioning.interface";
 import { FormulationPending } from './formulations.interface';
 
 export interface ConditioningInterface {
   error: string;
-  conditioning: Conditioning;
+  conditionings: Array<ConditioningOfProcess>;
   result: boolean;
   isSelected: boolean;
   loading: boolean;

@@ -5,7 +5,7 @@ import * as fromRecentRecordsActions from "../../store/recent-records/recent-rec
 import { conditioningRegisterSuccess, registerConditioning, setFormulationsByProductRovianda } from './conditioning.actions';
 
 const STATE_INITIAL_CONDITIONING: ConditioningInterface = {
-  conditioning: null,
+  conditionings: null,
   error: null,
   result: false,
   isSelected: false,
@@ -19,7 +19,7 @@ export const conditioningReducer = createReducer(
   on(conditioningRegisterSuccess,(state)=>({...state,loading:false})),
   on(
     fromConditioningActions.conditioningLoadData,
-    (state, { conditioning }) => ({ ...state, conditioning })
+    (state, { conditionings }) => ({ ...state, conditionings })
   ),
   on(
     fromRecentRecordsActions.recentRecordsLoadRecordsSuccess,

@@ -34,11 +34,11 @@ export class ConditioningEffects {
       ofType(fromConditioningActions.conditioningSearchInformation),
       exhaustMap((action) =>
         this.conditioningService.getDataConditioning(action.processId).pipe(
-          switchMap((conditioning) =>
-            Object.keys(conditioning).length > 0
+          switchMap((conditionings) =>
+            conditionings.length > 0
               ? [
                   fromConditioningActions.conditioningLoadData({
-                    conditioning,
+                    conditionings,
                   }),
                   fromConditioningActions.conditioningIsSelected({
                     isSelected: true,
@@ -46,7 +46,7 @@ export class ConditioningEffects {
                 ]
               : [
                   fromConditioningActions.conditioningLoadData({
-                    conditioning: null,
+                    conditionings: null,
                   }),
                   fromConditioningActions.conditioningIsSelected({
                     isSelected: false,
@@ -125,7 +125,12 @@ export class ConditioningEffects {
       this.action$.pipe(
         ofType(getFormulationsByProductRovianda),
         exhaustMap((action)=>this.formulationService.getFormulationsByProductRoviandaId(action.productRoviandaId).pipe(
-          switchMap((formulations)=>[fromConditioningActions.setFormulationsByProductRovianda({formulations})])
+          switchMap((formulations)=>{
+            if(!formulations.length){
+                this.toast.presentToastMessageWarning("No existen formulaciones para este producto")
+            }
+           return [fromConditioningActions.setFormulationsByProductRovianda({formulations})]
+          })
         ))
       )
   )

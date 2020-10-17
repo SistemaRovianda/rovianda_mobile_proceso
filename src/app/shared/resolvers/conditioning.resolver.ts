@@ -21,13 +21,7 @@ export class ConditioningResolver implements Resolve<boolean> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (this.isSelected) {
-      this.store.dispatch(
-        conditioningSearchInformation({
-          processId: +localStorage.getItem("processId"),
-        })
-      );
-    }
+   
     return true;
   }
 }

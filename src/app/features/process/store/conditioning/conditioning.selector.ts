@@ -5,7 +5,7 @@ const SELECT_CONDITIONING = (state: AppState) => state.conditioning;
 
 export const SELECT_CONDITIONING_DATA = createSelector(
   SELECT_CONDITIONING,
-  (state) => state.conditioning
+  (state) => state.conditionings
 );
 
 export const SELECT_CONDITIONING_RESULT = createSelector(

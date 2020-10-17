@@ -4,8 +4,8 @@ import {
   API_ENDPOINT_PROVIDER,
   API_ENDPOINT_PROVIDER_MOCKUP,
 } from "src/app/providers/tokens";
-import { Observable, observable } from "rxjs";
-import { Conditioning } from "../models/conditioning.interface";
+import { Observable } from "rxjs";
+import {  ConditioningOfProcess } from "../models/conditioning.interface";
 import { ConditioningItem } from '../models/conditioning-page.interface';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class ConditioningService {
   }
 
   getDataConditioning(processId): Observable<any> {
-    return this.http.get<any>(`${this.url}/conditioning/${processId}`);
+    return this.http.get<Array<ConditioningOfProcess>>(`${this.url}/conditioning/${processId}`);
   }
 
   registerConditioning(

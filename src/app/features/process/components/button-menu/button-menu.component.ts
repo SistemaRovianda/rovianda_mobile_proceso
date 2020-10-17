@@ -12,7 +12,7 @@ import { processDetailLoadSection } from "../../store/process-detail/process-det
 })
 export class ButtonMenuComponent implements OnInit {
   @Input() menuOption: MenuButton;
-  @Output("onClick") submit = new EventEmitter();
+  //@Output("onClick") submit = new EventEmitter();
 
   constructor(private router: Router, private store: Store<AppState>) {}
 
@@ -20,6 +20,6 @@ export class ButtonMenuComponent implements OnInit {
 
   onClick() {
     this.router.navigate([`${this.menuOption.path}`]);
-    this.store.dispatch(processDetailLoadSection({ section: this.menuOption }));
+    //this.store.dispatch(processDetailLoadSection({ section: this.menuOption }));
   }
 }

@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { ConditioningItem } from 'src/app/shared/models/conditioning-page.interface';
-import { Conditioning } from "src/app/shared/models/conditioning.interface";
+import {  ConditioningOfProcess } from "src/app/shared/models/conditioning.interface";
 import { FormulationPending } from 'src/app/shared/models/formulations.interface';
 
 const CONDITIONING_SEARCH_INFORMATION = "[CONDITIONING] Search Information";
@@ -29,7 +29,7 @@ export const conditioningSearchInformation = createAction(
 
 export const conditioningLoadData = createAction(
   CONDITIONING_LOAD_DATA,
-  props<{ conditioning: Conditioning }>()
+  props<{ conditionings: Array<ConditioningOfProcess> }>()
 );
 
 export const conditioningRegister = createAction(

@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Store, select } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
-import { Conditioning } from "src/app/shared/models/conditioning.interface";
+import { Conditioning, ConditioningOfProcess } from "src/app/shared/models/conditioning.interface";
 import {
   SELECT_CONDITIONING_DATA,
   SELECT_CONDITIONING_FORMULATIONS,
@@ -10,7 +10,7 @@ import {
   SELECT_CONDITIONING_IS_SELECTED,
 } from "../../store/conditioning/conditioning.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
-import { conditioningRegister, getFormulationsByProductRovianda, registerConditioning } from "../../store/conditioning/conditioning.actions";
+import { conditioningRegister, conditioningSearchInformation, getFormulationsByProductRovianda, registerConditioning } from "../../store/conditioning/conditioning.actions";
 import * as moment from "moment";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 import { recentRecordsCreateNewProcess } from "../../store/recent-records/recent-records.actions";
@@ -29,13 +29,14 @@ import { getProcessDetails } from '../../store/process-detail/process-detail.act
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Process } from 'src/app/shared/models/process.interface';
 import { ProcessMetadata } from '../../store/process-detail/process-detail.reducer';
-import { FormulationDetails, FormulationPending } from 'src/app/shared/models/formulations.interface';
+import { FormulationDefrost, FormulationDetails, FormulationPending } from 'src/app/shared/models/formulations.interface';
 import { getFormulationDetails, setFormulationDetails } from '../../store/formulation/formulation.actions';
 import { GET_FORMULATION_DETAILS } from '../../store/formulation/formulation.selectors';
 import { MatDialog } from '@angular/material';
 import { ModalFormulationDetailsComponent } from '../modal-formulation-details/modal-formulation-details.component';
 import { ConditioningItem } from 'src/app/shared/models/conditioning-page.interface';
 import { Router } from '@angular/router';
+import { from, Observable, of } from 'rxjs';
 
 
 
@@ -49,9 +50,9 @@ export class FormConditioningComponent implements OnInit {
 
   form: FormGroup;
 
-  productsRovianda: ProductsRovianda[];
+  
 
-  @Input() products: ProductsRovianda[];
+  productsRovianda$: Observable<ProductsRovianda[]>=from([[]]);
 
   @Output("onSubmit") submit = new EventEmitter();
 
@@ -59,17 +60,17 @@ export class FormConditioningComponent implements OnInit {
 
   maxDate = new Date().getFullYear() + 5;
 
-  isSelected: boolean;
+  isSelected: boolean=false;
 
-  isNewRegister: boolean;
+  isNewRegister: boolean=true;
 
   section: string;
 
-  formulations: FormulationPending[]=[];
-
+  formulations: Observable<FormulationPending[]>=from([[]]);
+  conditioningsSaved:ConditioningOfProcess[]=[];
   processId:string;
-  formulation:FormulationDetails;
-
+  formulation:FormulationDetails={date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null}
+  defrostOfFormulation:FormulationDefrost[]=[];
   conditioningArr:ConditioningItem[]=[];
 
   constructor(
@@ -90,53 +91,29 @@ export class FormConditioningComponent implements OnInit {
       formulationId: [0,Validators.required],
       defrostId:["",[Validators.required]]
     });
-  }
-  isLoading=false;
-  ngOnInit() {
-    this.store.select(
-      SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA
-    ).subscribe((productsRovianda)=>{
-      this.productsRovianda = productsRovianda;
-    })
-
-    this.store.select(SELECT_CONDITIONING_IS_LOADING).subscribe((status)=>{
-      if(this.isLoading==false && status==true){
-        this.isLoading=true;
-      }else if (this.isLoading==true && status==false){
-        this.store.dispatch(setFormulationDetails({
-          formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null}
-        }));
-        this.route.navigateByUrl("/process/recent-records")
-      }
-    })
-    
-    if(localStorage.getItem("processId")!=null && +localStorage.getItem("processId")!=-1){
-      this.store.dispatch(getProcessDetails());
-        this.store.pipe(select(SELECT_PROCESS_METADATA)).subscribe((process:ProcessMetadata)=>{
-          console.log("PROCESS CONDICIONAMIENTO",process);
-          if(process!=null && process.loteInterno!=""){
-            this.store
-      .select(SELECT_CONDITIONING_FORMULATIONS)
-      .subscribe((lots) => (this.formulations = lots));
-          
-        }
-        })
-    }else{
-      this.store
-      .select(SELECT_CONDITIONING_FORMULATIONS)
-      .subscribe((lots) => (this.formulations = lots));
-    }
-    this.store
-      .select(SELECT_CONDITIONING_DATA)
-      .subscribe((tempConditioning) => {
-        if (tempConditioning != null) {
-          this.conditioning = tempConditioning;
-          this.updateForm();
+    this.store.select(SELECT_CONDITIONING_DATA).subscribe((conditionings)=>{
+      if(conditionings!=null){
+      this.conditioningsSaved = conditionings;
+      this.conditioningArr=conditionings.map((x)=>{
+        return {
+          bone:x.bone,
+          clean:x.clean,
+          date:x.date,
+          defrostId:0,
+          healthing: x.healthing,
+          lotId: x.lotId,
+          temperature: x.temperature,
+          weight: x.weight
         }
       });
+      }
+    });
+
     this.store.select(GET_FORMULATION_DETAILS).subscribe((details)=>{
       this.formulation=details;
-      if(this.formulation.id!=null){
+      this.defrostOfFormulation=this.formulation.defrosts;
+      this.conditioningArr=[];
+      if(this.formulation.id!=null && this.isNewRegister){
         const dialogRef = this.dialog.open(ModalFormulationDetailsComponent, {
           width: '500px',
           height:"50%",
@@ -149,26 +126,83 @@ export class FormConditioningComponent implements OnInit {
         });
       }
     })
-    this.store
-      .select(SELECT_CONDITIONING_IS_SELECTED)
-      .subscribe((selected) => (this.isSelected = selected));
-    this.store
-      .select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER)
-      .subscribe((isNew) => (this.isNewRegister = isNew));
-    this.store
-      .select(SELECT_RECENT_RECORDS_PROCESS_SUCCESS)
-      .subscribe((success) => {
-        if (success && this.section === "ACONDICIONAMIENTO") {
-          this.registerConditioning();
-        }
-      });
-    this.store
-      .select(SELECT_PROCESS_DETAIL_SECTION)
-      .subscribe((section) => (this.section = this.section = section.section));
+  }
+  isLoading=false;
+  ngOnInit() {
+   
+    this.store.select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER).subscribe((isNewRegister)=>{
+      if(!isNewRegister){
+        this.isNewRegister = isNewRegister;
+        this.store.dispatch(conditioningSearchInformation({processId:+localStorage.getItem("processId")}));
+        this.productsRovianda$=from([[{code:"12",name: "asd",id:1,status:true}]]);
+        
+      }else{
+        this.productsRovianda$=this.store.select( // en caso de no existir se asigna al arreglo varios productos de rovianda para su registro
+          SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA
+        );
+        this.formulations=this.store.select(SELECT_CONDITIONING_FORMULATIONS);
+      }
+    });
+   
+    //console.log("LOCAL STORE ",localStorage.getItem("processId"));
+
+    // this.store.select(SELECT_CONDITIONING_IS_LOADING).subscribe((status)=>{
+    //   if(this.isLoading==false && status==true){
+    //     this.isLoading=true;
+    //   }else if (this.isLoading==true && status==false){
+    //     this.store.dispatch(setFormulationDetails({
+    //       formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null}
+    //     }));
+    //     this.route.navigateByUrl("/process/recent-records")
+    //   }
+    // })
+    
+    // if(localStorage.getItem("processId")!=null && +localStorage.getItem("processId")!=-1){
+    //   this.store.dispatch(getProcessDetails());
+    //     this.store.pipe(select(SELECT_PROCESS_METADATA)).subscribe((process:ProcessMetadata)=>{
+    //       console.log("PROCESS CONDICIONAMIENTO",process);
+    //       if(process!=null && process.loteInterno!=""){
+    //         this.store
+    //   .select(SELECT_CONDITIONING_FORMULATIONS)
+    //   .subscribe((lots) => (this.formulations = lots));
+          
+    //     }
+    //     })
+    // }else{
+    //   this.store
+    //   .select(SELECT_CONDITIONING_FORMULATIONS)
+    //   .subscribe((lots) => (this.formulations = lots));
+    // }
+    // this.store
+    //   .select(SELECT_CONDITIONING_DATA)
+    //   .subscribe((tempConditioning) => {
+    //     if (tempConditioning != null) {
+    //       this.conditioning = tempConditioning;
+    //       this.updateForm();
+    //     }
+    //   });
+    
+    // this.store
+    //   .select(SELECT_CONDITIONING_IS_SELECTED)
+    //   .subscribe((selected) => (this.isSelected = selected));
+    // this.store
+    //   .select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER)
+    //   .subscribe((isNew) => (this.isNewRegister = isNew));
+    // this.store
+    //   .select(SELECT_RECENT_RECORDS_PROCESS_SUCCESS)
+    //   .subscribe((success) => {
+    //     if (success && this.section === "ACONDICIONAMIENTO") {
+    //       this.registerConditioning();
+    //     }
+    //   });
+    // this.store
+    //   .select(SELECT_PROCESS_DETAIL_SECTION)
+    //   .subscribe((section) => (this.section = this.section = section.section));
   }
 
   onSubmit() {
     console.log("isNew",this.isNewRegister);
+    if(this.isNewRegister ){
     const buttons: any = [
       {
         text: "Cancelar",
@@ -196,8 +230,10 @@ export class FormConditioningComponent implements OnInit {
       );
     }
   }
+  }
 
   registerConditioning() {
+    console.log("Registering conditioning");
     const { date, ...values } = this.form.value;
 
     this.store.dispatch(
@@ -247,30 +283,29 @@ export class FormConditioningComponent implements OnInit {
     return this.form.get('defrostId');
   }
 
-  selectFormulationId(){
+  selectFormulationId(){ // una vez seleccionado la formulacion, se obtienen los lotes de carne de esa formulacion para su tratamiento individual
     console.log("llamando");
     this.store.dispatch(
       getFormulationDetails({formulationId:this.formulationId.value})
     );
   }
 
-  selectProductRovianda() {
+  selectProductRovianda() { // al seleccionar el producto de rovianda se buscan todos las formulaciones de ese mismo producto
     console.log("se selecciono un producto de rovianda",this.productRovianda.value);
-
-      
       this.store.dispatch(
         getFormulationsByProductRovianda({
           productRoviandaId: this.productRovianda.value,
         })
       );
-    
   }
 
-  addItem(){
+  addItem(){ // metod que busca que el lote de enfriamiento no este ya en los registros de condicionamiento a guardar, en caso de no estarlo, procede a guardarlo
     console.log(this.form.valid,this.form.value);
     if(this.form.valid){
+
         let has=this.conditioningArr.filter(x=>x.defrostId==this.form.get('defrostId').value);
         if(!has.length){
+          this.defrostOfFormulation=this.defrostOfFormulation.filter(x=>x.defrostFormulationId!=this.form.get('defrostId').value);
           console.log("agregando");
           let lotString = "";
           console.log("defrostId",this.defrostId.value);
@@ -307,8 +342,8 @@ export class FormConditioningComponent implements OnInit {
     }
   }
 
-  removeOfConditioningArr(index:number){
-    console.log("index",index);
+  removeOfConditioningArr(index:number){ // metodo que elimina los registros de lotes a condicionamiento
     this.conditioningArr.splice(index,1);
+    this.defrostOfFormulation=this.formulation.defrosts.filter(x=>!this.conditioningArr.map(x=>x.defrostId).includes(x.defrostFormulationId));
   }
 }

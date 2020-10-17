@@ -44,15 +44,15 @@ export class BasicRegistrationPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.store
-      .select(SELECT_BASIC_REGISTER_RESULT)
-      .subscribe((tempResult) => (this.result = tempResult));
-    this.store
-      .select(SELECT_BASIC_REGISTER_IS_LOADING)
-      .subscribe((loading) => (this.loading = loading));
-    this.store
-      .select(SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS)
-      .subscribe((selected) => (this.isSelected = selected));
+    // this.store
+    //   .select(SELECT_BASIC_REGISTER_RESULT)
+    //   .subscribe((tempResult) => (this.result = tempResult));
+    // this.store
+    //   .select(SELECT_BASIC_REGISTER_IS_LOADING)
+    //   .subscribe((loading) => (this.loading = loading));
+    // this.store
+    //   .select(SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS)
+    //   .subscribe((selected) => (this.isSelected = selected));
   }
 
   onSubmit(newProcess: NewProcess) {

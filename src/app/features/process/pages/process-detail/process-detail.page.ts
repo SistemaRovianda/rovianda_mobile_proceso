@@ -50,9 +50,9 @@ export class ProcessDetailPage implements OnInit {
   }
 
   ngOnInit() {
-    this.store
-      .select(SELECT_PROCESS_DETAIL_IS_LOADING)
-      .subscribe((loading) => (this.loading = loading));
+    // this.store
+    //   .select(SELECT_PROCESS_DETAIL_IS_LOADING)
+    //   .subscribe((loading) => (this.loading = loading));
     this.store
       .select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER)
       .subscribe((isNew) => {
