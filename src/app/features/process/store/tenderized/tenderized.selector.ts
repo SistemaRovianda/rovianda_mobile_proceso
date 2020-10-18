@@ -22,3 +22,8 @@ export const SELECT_TENDERIZED_IS_SELECTED = createSelector(
   SELECT_TENDERIZED,
   (state) => state.isSelected
 );
+
+export const GET_FORMULATIONS_PENDING_TENDERIZED = createSelector(
+  SELECT_TENDERIZED,
+  (state)=>state.formulations
+);

@@ -52,16 +52,7 @@ export class ConditioningPage implements OnInit {
   // );
     isNewRegister:boolean = true;
   ngOnInit() {
-    this.store.select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER).subscribe((isNewRegister)=>{
-      if(!isNewRegister){
-        this.isNewRegister = isNewRegister;
-        this.productsRovianda$=from([[{code:"12",name: "asd",id:1,status:true}]]);
-      }else{
-        this.productsRovianda$=this.store.select( // en caso de no existir se asigna al arreglo varios productos de rovianda para su registro
-          SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA
-        );
-      }
-    });
+   
     // this.store
     //   .select(SELECT_CONDITIONING_RESULT)
     //   .subscribe((tempResult) => (this.result = tempResult));

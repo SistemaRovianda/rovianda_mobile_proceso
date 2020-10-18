@@ -23,13 +23,7 @@ import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-re
   styleUrls: ["./tenderized.page.scss"],
 })
 export class TenderizedPage implements OnInit {
-  products$: Observable<ProductCatalog[]> = this.store.select(
-    SELECT_PROCESS_DETAIL_PRODUCTS
-  );
-
-  lotsMeat$: Observable<ProcessLotMeat[]> = this.store.select(
-    SELECT_PROCESS_DETAIL_LOTS_MEAT
-  );
+  
   constructor(
     private alert: AlertService,
     private router: Router,
@@ -44,18 +38,7 @@ export class TenderizedPage implements OnInit {
   isSelectedProcess: boolean;
 
   ngOnInit() {
-    this.store
-      .select(SELECT_TENDERIZED_IS_SELECTED)
-      .subscribe((selected) => (this.isSelected = selected));
-    this.store
-      .select(SELECT_TENDERIZED_RESULT)
-      .subscribe((tempResult) => (this.result = tempResult));
-    this.store
-      .select(SELECT_TENDERIZED_IS_LOADING)
-      .subscribe((loading) => (this.loading = loading));
-    this.store
-      .select(SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS)
-      .subscribe((selected) => (this.isSelectedProcess = selected));
+   
   }
 
   onBackButton(form) {

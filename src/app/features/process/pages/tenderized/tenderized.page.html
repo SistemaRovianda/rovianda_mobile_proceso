@@ -26,8 +26,7 @@
       <ion-col class="container container__column" size="12">
         <div class="container container__form">
           <app-form-tenderized
-            [products]="products$|async"
-            [lotsMeat]="lotsMeat$|async"
+            
             #form
           ></app-form-tenderized>
         </div>
@@ -38,7 +37,7 @@
     >
       <ion-col class="container container__column" size="12">
         <ion-button
-          [disabled]="form.form.invalid || loading || isSelected"
+          [disabled]="!form.isNewRegister"
           class="container container_buttton"
           color="secondary"
           size="large"

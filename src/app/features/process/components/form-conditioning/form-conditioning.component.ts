@@ -144,60 +144,6 @@ export class FormConditioningComponent implements OnInit {
       }
     });
    
-    //console.log("LOCAL STORE ",localStorage.getItem("processId"));
-
-    // this.store.select(SELECT_CONDITIONING_IS_LOADING).subscribe((status)=>{
-    //   if(this.isLoading==false && status==true){
-    //     this.isLoading=true;
-    //   }else if (this.isLoading==true && status==false){
-    //     this.store.dispatch(setFormulationDetails({
-    //       formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null}
-    //     }));
-    //     this.route.navigateByUrl("/process/recent-records")
-    //   }
-    // })
-    
-    // if(localStorage.getItem("processId")!=null && +localStorage.getItem("processId")!=-1){
-    //   this.store.dispatch(getProcessDetails());
-    //     this.store.pipe(select(SELECT_PROCESS_METADATA)).subscribe((process:ProcessMetadata)=>{
-    //       console.log("PROCESS CONDICIONAMIENTO",process);
-    //       if(process!=null && process.loteInterno!=""){
-    //         this.store
-    //   .select(SELECT_CONDITIONING_FORMULATIONS)
-    //   .subscribe((lots) => (this.formulations = lots));
-          
-    //     }
-    //     })
-    // }else{
-    //   this.store
-    //   .select(SELECT_CONDITIONING_FORMULATIONS)
-    //   .subscribe((lots) => (this.formulations = lots));
-    // }
-    // this.store
-    //   .select(SELECT_CONDITIONING_DATA)
-    //   .subscribe((tempConditioning) => {
-    //     if (tempConditioning != null) {
-    //       this.conditioning = tempConditioning;
-    //       this.updateForm();
-    //     }
-    //   });
-    
-    // this.store
-    //   .select(SELECT_CONDITIONING_IS_SELECTED)
-    //   .subscribe((selected) => (this.isSelected = selected));
-    // this.store
-    //   .select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER)
-    //   .subscribe((isNew) => (this.isNewRegister = isNew));
-    // this.store
-    //   .select(SELECT_RECENT_RECORDS_PROCESS_SUCCESS)
-    //   .subscribe((success) => {
-    //     if (success && this.section === "ACONDICIONAMIENTO") {
-    //       this.registerConditioning();
-    //     }
-    //   });
-    // this.store
-    //   .select(SELECT_PROCESS_DETAIL_SECTION)
-    //   .subscribe((section) => (this.section = this.section = section.section));
   }
 
   onSubmit() {

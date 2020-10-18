@@ -2,12 +2,14 @@ import { createReducer, on } from "@ngrx/store";
 import { TenderizedInterface } from "src/app/shared/models/tenderized-page.interface";
 import * as fromRecentRecordsActions from "../../store/recent-records/recent-records.actions";
 import * as fromTenderizedActions from "./tenderized.actions";
+import { setFormulationsByProductRovianda } from './tenderized.actions';
 const STATE_INITIAL_CONDITIONING: TenderizedInterface = {
   tenderized: null,
   result: false,
   error: null,
   isSelected: false,
   loading: false,
+  formulations:[]
 };
 
 export const tenderizedReducer = createReducer(
@@ -24,6 +26,7 @@ export const tenderizedReducer = createReducer(
     ...state,
     loading: true,
   })),
+  on(setFormulationsByProductRovianda,(state,{formulations})=>({...state,formulations})),
   on(fromTenderizedActions.tenderizedRegisterResults, (state, { result }) => ({
     ...state,
     result,

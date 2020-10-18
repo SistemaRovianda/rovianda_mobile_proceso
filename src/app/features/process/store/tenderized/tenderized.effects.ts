@@ -10,6 +10,8 @@ import { Router } from "@angular/router";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { Store } from "@ngrx/store";
 import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.selector";
+import { getFormulationsByProductRovianda, setFormulationsByProductRovianda } from './tenderized.actions';
+import { FormulationService } from 'src/app/shared/services/formulation.service';
 
 @Injectable()
 export class TenderizedEffects {
@@ -17,6 +19,7 @@ export class TenderizedEffects {
   constructor(
     private action$: Actions,
     private tenderizedService: TenderizedService,
+    private formulationService:FormulationService,
     private toast: ToastService,
     private router: Router,
     private _store: Store<AppState>
@@ -25,6 +28,23 @@ export class TenderizedEffects {
       .select(SELECT_RECENT_RECORDS_PATH)
       .subscribe((pathTemp) => (this.path = pathTemp));
   }
+
+  gettingFormulationsByProductRovianda = createEffect(()=>
+    this.action$.pipe(
+      ofType(getFormulationsByProductRovianda),
+      exhaustMap((action)=>
+        this.formulationService.getFormulationsByProductRoviandaId(action.productRoviandaId).pipe(
+          switchMap((formulations)=>{
+            if(!formulations.length){
+              this.toast.presentToastMessageWarning("No existen formulaciones pendientes para este tipo de producto");
+            }
+          return [setFormulationsByProductRovianda({formulations})]
+          }),
+          catchError(()=>[])
+        )
+      )
+    )
+  )
 
   loadDataTenderized = createEffect(() =>
     this.action$.pipe(
@@ -56,9 +76,9 @@ export class TenderizedEffects {
   registerTenderized = createEffect(() =>
     this.action$.pipe(
       ofType(fromTenderizedActions.tenderizedRegister),
-      exhaustMap((tenderized) =>
+      exhaustMap((action) =>
         this.tenderizedService
-          .registerTenderized(tenderized, +localStorage.getItem("processId"))
+          .registerTenderized(action.tenderizedItems, action.formulationId)
           .pipe(
             switchMap((action) => {
               this.toast.presentToastSuccess();

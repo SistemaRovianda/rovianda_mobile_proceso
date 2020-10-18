@@ -1,19 +1,19 @@
-<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()" flex layout="column" style="overflow: auto; height: 100%;">
   <ion-row>
     <ion-col size="6">
-      <ion-item *ngIf="!isSelected">
+      <ion-item *ngIf="isNewRegister">
         <ion-label position="floating">Producto*</ion-label>
         <ion-select
           class="item-form"
           interface="action-sheet"
           placeholder="Seleccionar producto"
           formControlName="productId"
-          [disabled]="isSelected"
+          (ionChange)="selectProductRovianda()"
         >
           <ion-select-option
             [value]="product.id"
-            *ngFor="let product of products"
-            >{{ product.productName }}</ion-select-option
+            *ngFor="let product of productsRovianda | async"
+            >{{ product.name }}</ion-select-option
           >
         </ion-select>
       </ion-item>
@@ -37,6 +37,44 @@
         </ion-label>
       </div>
     </ion-col>
+    <ion-col size="6">
+      <ion-item *ngIf="isNewRegister">
+        <ion-label position="floating">Formulacion*</ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar una formulacion"
+          formControlName="formulationId"
+          (ionChange)="selectFormulationId()"
+        >
+          <ion-select-option
+            [value]="formulation.formulationId"
+            *ngFor="let formulation of formulations | async"
+            >{{ formulation.lotDay }}-{{formulation.productName}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-item *ngIf="isNewRegister && formulation && defrostOfFormulation.length">
+        <ion-label position="floating">Lotes de carne en esta formulación</ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar lote"
+          formControlName="defrostId"
+        >
+          <ion-select-option   *ngFor="let defrost of  defrostOfFormulation" [value]="defrost.defrostFormulationId"
+            >{{ defrost.lotMeat}}-{{defrost.defrost.dateEnd}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-col>
+
+  </ion-row>
+  <ion-row>
     <ion-col size="6">
       <ion-item>
         <ion-label position="floating">Temperatura*</ion-label>
@@ -62,8 +100,6 @@
         </ion-label>
       </div>
     </ion-col>
-  </ion-row>
-  <ion-row>
     <ion-col size="6">
       <ion-item>
         <ion-label position="floating">Peso(Kg)*</ion-label>
@@ -94,6 +130,9 @@
         </ion-label>
       </div>
     </ion-col>
+  </ion-row>
+  <ion-row>
+    
     <ion-col size="6">
       <ion-item>
         <ion-label position="floating">Peso (Kg) salmuera*</ion-label>
@@ -125,8 +164,6 @@
         </ion-label>
       </div>
     </ion-col>
-  </ion-row>
-  <ion-row>
     <ion-col size="6">
       <ion-item>
         <ion-label position="floating">% de inyección*</ion-label>
@@ -149,6 +186,9 @@
         </ion-label>
       </div>
     </ion-col>
+  </ion-row>
+  <ion-row>
+    
     <ion-col size="6">
       <ion-item class="item-datetime">
         <ion-label position="floating">Fecha*</ion-label>
@@ -174,33 +214,31 @@
     </ion-col>
   </ion-row>
   <ion-row>
-    <ion-col size="6">
-      <ion-item *ngIf="!isSelected">
-        <ion-label position="floating">Lote de carne*</ion-label>
-        <ion-select
-          class="item-form"
-          interface="action-sheet"
-          placeholder="Seleccionar lote carne"
-          formControlName="loteMeat"
-          
-          
-        >
-          <ion-select-option
-            [value]="lotMeat.loteMeat"
-            *ngFor="let lotMeat of lotsMeat"
-            >{{ lotMeat.loteMeat }}</ion-select-option
-          >
-        </ion-select>
-      </ion-item>
-      <ion-item *ngIf="isSelected">
-        <ion-label position="floating">Lote de carne*</ion-label>
-        <ion-input
-          class="item-form"
-          placeholder="{{lotsMeat.length?lotsMeat[0].loteMeat:'Producto'}}"
-          formControlName="loteMeat"
-          disabled
-        ></ion-input>
-      </ion-item>
-    </ion-col>
+    <ul style="list-style: none;">
+      <li *ngFor="let tenderized of tenderizedArr; let index=index" (click)="(isNewRegister)?removeOfTenderizedArr(index):null">
+          Lote: {{tenderized.lotId}}<br>
+          Peso: {{tenderized.weight}} <br>
+          Peso Salmuera: {{tenderized.weightSalmuera}} <br>
+          Porcentaje de inyeccion: {{tenderized.percentage}}
+      </li>
+    </ul>
   </ion-row>
+  <ion-row
+      class="container container__row container__row--buttons ion-justify-content-around"
+    >
+      <ion-col class="container container__column" size="12">
+        <ion-button
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          (click)="addItem()"
+          [disabled]="!isNewRegister"
+          ><ion-grid>
+            <ion-row> <ion-col>Agregar Lote</ion-col></ion-row>
+             </ion-grid>
+          </ion-button>
+      </ion-col>
+    </ion-row>
+ 
 </form>
