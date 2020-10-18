@@ -207,11 +207,11 @@ export class FormTenderizedComponent implements OnInit {
   }
 
   registerTenderized() {
-    const { date, ...values } = this.form.value;
+    
 
     this.store.dispatch(
       tenderizedRegister({
-        ...values,
+        ,
         date: moment(date).format("YYYY-MM-DD"),
       })
     );
