@@ -1,7 +1,16 @@
-import { Reprocessing } from "./reprocessing.interface";
+import { FormulationDetails } from './formulations.interface';
+import { ReprocessingOfProcess } from './reprocessing.interface';
+
 
 export interface ProcessReprocessing {
-  listReprocessing: Reprocessing[];
+  listReprocessing: ReprocessingOfProcess[];
   loading: boolean;
   error: string;
+  formulationDetails:FormulationDetails;
+}
+
+export interface FormulationDefrost{
+  lotMeat:string,
+  defrostId:number,
+  rawMaterial:string
 }

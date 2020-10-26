@@ -5,8 +5,9 @@ import {
   API_ENDPOINT_PROVIDER_MOCKUP,
 } from "src/app/providers/tokens";
 import { Observable } from "rxjs";
-import { Sausage } from "../models/sausage.interface";
+import { Sausage, SausageItemToList } from "../models/sausage.interface";
 import { SausageHour } from "../models/sausage-hour.interface";
+import { SausageHourRequest, SausageOfProcess } from '../models/sausage-page.interface';
 
 @Injectable({ providedIn: "root" })
 export class SausageService {
@@ -20,19 +21,17 @@ export class SausageService {
     this.url = `${endpoint}`;
   }
 
-  getDataSausage(processId): Observable<any> {
-    return this.http.get<any>(`${this.url}/process/sausage/${processId}`);
+  getDataSausage(processId): Observable<SausageOfProcess[]> {
+    return this.http.get<SausageOfProcess[]>(`${this.url}/process/sausage/${processId}`);
   }
 
-  registerSausage(sausage: Sausage, processId: number): Observable<any> {
-    return this.http.post<any>(`${this.url}/process/sausage/${processId}`, {
-      ...sausage,
-    });
+  registerSausage(sausages: SausageItemToList[], formulationId: number): Observable<any> {
+    return this.http.post<any>(`${this.url}/process/sausage/${formulationId}`,
+      sausages
+    );
   }
 
-  registerAnotherHour(hour: SausageHour, sausagedId: number): Observable<any> {
-    return this.http.patch<any>(`${this.url}/sausage/${sausagedId}`, {
-      ...hour,
-    });
+  registerAnotherHour(sausagedId: number,sausageRequest:SausageHourRequest): Observable<any> {
+    return this.http.put<any>(`${this.url}/process/sausage/${sausagedId}`,sausageRequest );
   }
 }

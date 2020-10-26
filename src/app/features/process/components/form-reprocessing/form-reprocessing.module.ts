@@ -3,12 +3,14 @@ import { CommonModule } from "@angular/common";
 import { IonicModule } from "@ionic/angular";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FormReprocessingComponent } from "./form-reprocessing.component";
+import { MatTableModule } from '@angular/material';
 
 const COMMON_IMPORTS = [
   CommonModule,
   IonicModule,
   FormsModule,
   ReactiveFormsModule,
+  MatTableModule
 ];
 
 const COMMON_DECLARATIONS = [FormReprocessingComponent];

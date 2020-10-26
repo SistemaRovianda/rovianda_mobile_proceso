@@ -4,18 +4,20 @@ import { GrindingPageInterface } from "src/app/shared/models/grinding-page.inter
 import { createReducer, on } from "@ngrx/store";
 
 const STATE_INITIAL_GRINDING: GrindingPageInterface = {
-  grinding: null,
+  grindings: [],
   result: false,
   isSelected: false,
   loading: false,
   error: null,
+  formulations:[],
+  processMetadata:null
 };
 
 export const grindingReducer = createReducer(
   STATE_INITIAL_GRINDING,
-  on(fromGrindingActions.grindingLoadData, (state, { grinding }) => ({
+  on(fromGrindingActions.grindingLoadData, (state, { grindings }) => ({
     ...state,
-    grinding,
+    grindings,
   })),
   on(
     fromRecentRecordsActions.recentRecordsLoadRecordsSuccess,
@@ -44,5 +46,7 @@ export const grindingReducer = createReducer(
   on(fromRecentRecordsActions.recentRecordsCreateNewProcess, (state) => ({
     ...state,
     loading: true,
-  }))
+  })),
+  on(fromGrindingActions.setFormulationsByProductRovianda,(state,{formulations})=>({...state,formulations})),
+  on(fromGrindingActions.setGrindingProcessMetadata,(state,{process})=>({...state,processMetadata:process}))
 );

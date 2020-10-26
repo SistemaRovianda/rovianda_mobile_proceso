@@ -5,7 +5,7 @@ const SELECT_TENDERIZED = (state: AppState) => state.tenderized;
 
 export const SELECT_TENDERIZED_DATA = createSelector(
   SELECT_TENDERIZED,
-  (state) => state.tenderized
+  (state) => state.tenderizeds
 );
 
 export const SELECT_TENDERIZED_RESULT = createSelector(
@@ -27,3 +27,8 @@ export const GET_FORMULATIONS_PENDING_TENDERIZED = createSelector(
   SELECT_TENDERIZED,
   (state)=>state.formulations
 );
+
+export const SELECT_TENDERIZED_PROCESS_METADATA = createSelector(
+  SELECT_TENDERIZED,
+  (state)=>state.processMetadata
+)

@@ -5,12 +5,13 @@ import * as fromRecentRecordsActions from "../../store/recent-records/recent-rec
 import { conditioningRegisterSuccess, registerConditioning, setFormulationsByProductRovianda } from './conditioning.actions';
 
 const STATE_INITIAL_CONDITIONING: ConditioningInterface = {
-  conditionings: null,
+  conditionings: [],
   error: null,
   result: false,
   isSelected: false,
   loading: false,
-  formulations:[]
+  formulations:[],
+  processMetadata:null
 };
 
 export const conditioningReducer = createReducer(
@@ -49,5 +50,6 @@ export const conditioningReducer = createReducer(
   on(fromRecentRecordsActions.recentRecordsCreateNewProcess, (state) => ({
     ...state,
     loading: true,
-  }))
+  })),
+  on(fromConditioningActions.setConditioningProcessMetadata,(state,{process})=>({...state,processMetadata:process}))
 );

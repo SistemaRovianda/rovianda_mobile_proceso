@@ -13,15 +13,11 @@ import { reprocessingStartLoadOfListReprocessing } from "src/app/features/proces
 export class ReprocessingResolver implements Resolve<boolean> {
   section: string;
   constructor(private store: Store<AppState>) {
-    this.store
-      .select(SELECT_PROCESS_DETAIL_SECTION)
-      .subscribe((section) => (this.section = section.section));
+    
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    this.store.dispatch(
-      reprocessingStartLoadOfListReprocessing({ section: this.section })
-    );
+    
     return true;
   }
 }

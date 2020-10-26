@@ -9,6 +9,7 @@ import { AppState } from "../models/store.state.interface";
 import { Process } from "../models/process.interface";
 import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "src/app/features/process/store/recent-records/recent-records.selector";
 import { sausageSearchInformation } from "src/app/features/process/store/sausage/sausage.actions";
+import { setSection } from 'src/app/features/process/store/sections/section.actions';
 
 @Injectable()
 export class SausageResolver implements Resolve<boolean> {
@@ -20,13 +21,7 @@ export class SausageResolver implements Resolve<boolean> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (this.isSelected) {
-      this.store.dispatch(
-        sausageSearchInformation({
-          processId: +localStorage.getItem("processId"),
-        })
-      );
-    }
+    this.store.dispatch(setSection({section:"SAUSAGE"}));
     return true;
   }
 }

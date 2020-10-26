@@ -1,6 +1,9 @@
 import { createAction, props } from "@ngrx/store";
-import { Sausage } from "src/app/shared/models/sausage.interface";
+import { Sausage, SausageItemToList } from "src/app/shared/models/sausage.interface";
 import { SausageHour } from "src/app/shared/models/sausage-hour.interface";
+import { FormulationPending } from 'src/app/shared/models/formulations.interface';
+import { ProcessMetadata } from '../process-detail/process-detail.reducer';
+import { SausageHourRequest, SausageOfProcess } from 'src/app/shared/models/sausage-page.interface';
 
 const SAUSAGE_SEARCH_INFORMATION = "[SAUSAGE] Search Information";
 
@@ -24,6 +27,8 @@ const SAUSAGE_START_REGISTER_DATE_AND_WEIGTH =
 const SAUSAGE_SUCCESS_REGISTER_DATE_AND_WEIGTH =
   "[SAUSAGE] Register Date And Weight";
 
+const SAUSAGE_GET_FORMULATIONS_BY_PRODUCT_ROVIANDA = "[SAUSAGE] Getting Formulations Of Product Rovianda"
+const SAUSAGE_SET_FORMULATIONS_BY_PRODUCT_ROVIANDA = "[SAUSAGE] Setting Formulations Of Product Rovianda"
 export const sausageSearchInformation = createAction(
   SAUSAGE_SEARCH_INFORMATION,
   props<{ processId: number }>()
@@ -31,10 +36,10 @@ export const sausageSearchInformation = createAction(
 
 export const sausageLoadData = createAction(
   SAUSAGE_LOAD_DATA,
-  props<{ sausage: Sausage }>()
+  props<{ sausages: SausageOfProcess[] }>()
 );
 
-export const sausageRegister = createAction(SAUSAGE_REGISTER, props<Sausage>());
+export const sausageRegister = createAction(SAUSAGE_REGISTER, props<{sausages:Array<SausageItemToList>,formulationId:number}>());
 
 export const sausageRegisterResults = createAction(
   SAUSAGE_REGISTER_RESULTS,
@@ -63,3 +68,21 @@ export const sausageStartRegisterDateAndWeigth = createAction(
 export const sausageSuccessRegisterDateAndWeigth = createAction(
   SAUSAGE_SUCCESS_REGISTER_DATE_AND_WEIGTH
 );
+
+export const getFormulationsByProductRovianda = createAction(
+  SAUSAGE_GET_FORMULATIONS_BY_PRODUCT_ROVIANDA,
+  props<{productRoviandaId:number}>()
+);
+
+export const setFormulationsByProductRovianda = createAction(
+  SAUSAGE_SET_FORMULATIONS_BY_PRODUCT_ROVIANDA,
+  props<{formulations:FormulationPending[]}>()
+);
+
+
+export const getSausageProcessMetadata = createAction("[SAUSAGE], getting process metadata");
+export const setSausageProcessMetadata = createAction("[SAUSAGE], setting process metadata",props<{process:ProcessMetadata}>());
+
+export const updateSausageHour=createAction("[SAUSAGE] updating sausage hours",props<{sausageId:number,sausageHours:SausageHourRequest}>());
+export const updateErrorSausageHour=createAction("[SAUSAGE] updating sausage hours ERROR",props<{error:string}>());
+export const updateSuccessSausageHour=createAction("[SAUSAGE] updating sausage hours SUCCESS");

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter, Input, SimpleChange, SimpleChanges, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Store, select } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
@@ -8,9 +8,10 @@ import {
   SELECT_CONDITIONING_FORMULATIONS,
   SELECT_CONDITIONING_IS_LOADING,
   SELECT_CONDITIONING_IS_SELECTED,
+  SELECT_CONDITIONING_PROCESS_METADATA,
 } from "../../store/conditioning/conditioning.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
-import { conditioningRegister, conditioningSearchInformation, getFormulationsByProductRovianda, registerConditioning } from "../../store/conditioning/conditioning.actions";
+import { conditioningRegister, conditioningSearchInformation, getConditioningProcessMetadata, getFormulationsByProductRovianda, registerConditioning } from "../../store/conditioning/conditioning.actions";
 import * as moment from "moment";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 import { recentRecordsCreateNewProcess } from "../../store/recent-records/recent-records.actions";
@@ -32,11 +33,13 @@ import { ProcessMetadata } from '../../store/process-detail/process-detail.reduc
 import { FormulationDefrost, FormulationDetails, FormulationPending } from 'src/app/shared/models/formulations.interface';
 import { getFormulationDetails, setFormulationDetails } from '../../store/formulation/formulation.actions';
 import { GET_FORMULATION_DETAILS } from '../../store/formulation/formulation.selectors';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef, MatTableDataSource } from '@angular/material';
 import { ModalFormulationDetailsComponent } from '../modal-formulation-details/modal-formulation-details.component';
 import { ConditioningItem } from 'src/app/shared/models/conditioning-page.interface';
 import { Router } from '@angular/router';
-import { from, Observable, of } from 'rxjs';
+import { from, Observable, of, Subject, Subscription } from 'rxjs';
+import { ModalFormulationDetailsModule } from '../modal-formulation-details/modal-formulation-details.module';
+import { SELECT_CURRENT_SECTION } from '../../store/sections/section.selector';
 
 
 
@@ -45,7 +48,7 @@ import { from, Observable, of } from 'rxjs';
   templateUrl: "./form-conditioning.component.html",
   styleUrls: ["./form-conditioning.component.scss"],
 })
-export class FormConditioningComponent implements OnInit {
+export class FormConditioningComponent implements OnInit, OnDestroy{
   conditioning: Conditioning;
 
   form: FormGroup;
@@ -64,7 +67,7 @@ export class FormConditioningComponent implements OnInit {
 
   isNewRegister: boolean=true;
 
-  section: string;
+  section: string="CONDITIONING";
 
   formulations: Observable<FormulationPending[]>=from([[]]);
   conditioningsSaved:ConditioningOfProcess[]=[];
@@ -72,6 +75,15 @@ export class FormConditioningComponent implements OnInit {
   formulation:FormulationDetails={date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null}
   defrostOfFormulation:FormulationDefrost[]=[];
   conditioningArr:ConditioningItem[]=[];
+  currentProcess:ProcessMetadata=null;
+  matTableDataSource:MatTableDataSource<ConditioningItem>;
+  displayedColumns:string[] = ["Lote","Peso","Deshuesar","Limpieza","Curacion","Fecha"];
+  modalOpened=false;
+
+  private subscriptions=new Subscription();
+  public ngOnDestroy():void{
+    this.subscriptions.unsubscribe();
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -91,8 +103,12 @@ export class FormConditioningComponent implements OnInit {
       formulationId: [0,Validators.required],
       defrostId:["",[Validators.required]]
     });
-    this.store.select(SELECT_CONDITIONING_DATA).subscribe((conditionings)=>{
-      if(conditionings!=null){
+
+    this.matTableDataSource = new MatTableDataSource();
+    this.matTableDataSource.data = this.conditioningArr;
+    
+    this.subscriptions.add(this.store.select(SELECT_CONDITIONING_DATA).subscribe((conditionings)=>{
+      if(conditionings.length){
       this.conditioningsSaved = conditionings;
       this.conditioningArr=conditionings.map((x)=>{
         return {
@@ -106,35 +122,49 @@ export class FormConditioningComponent implements OnInit {
           weight: x.weight
         }
       });
+      this.resetTable();
+      }else{
+        if(localStorage.getItem("processId")!="-1"){
+        this.store.dispatch(getConditioningProcessMetadata());
+        }
+        this.subscriptions.add(this.store.select(SELECT_CONDITIONING_PROCESS_METADATA).subscribe((processMetadata)=>{
+          if(processMetadata!=null){
+            this.currentProcess = processMetadata;
+            console.log("CURRENT PROCESS",this.currentProcess);
+            if(!processMetadata.conditioning){
+              this.formulationId.setValue(processMetadata.formulationId);
+              this.selectFormulationId();
+            }
+            this.productRovianda.setValue(0)
+          }
+        }));
       }
-    });
-
-    this.store.select(GET_FORMULATION_DETAILS).subscribe((details)=>{
+    }));
+    this.subscriptions.add(this.store.select(SELECT_CURRENT_SECTION).subscribe((section)=>{
+      this.section=section;
+    }));
+    this.subscriptions.add(this.store.select(GET_FORMULATION_DETAILS).subscribe((details)=>{
       this.formulation=details;
       this.defrostOfFormulation=this.formulation.defrosts;
       this.conditioningArr=[];
-      if(this.formulation.id!=null && this.isNewRegister){
-        const dialogRef = this.dialog.open(ModalFormulationDetailsComponent, {
+      console.log("Obteniendo detalless");
+      if(details.id!=null && this.isNewRegister && this.section=="CONDITIONING" && this.modalOpened==false){
+        this.modalOpened=true;
+        this.dialog.open(ModalFormulationDetailsComponent, {
           width: '500px',
           height:"50%",
-          data: this.formulation
-        });
-    
-        dialogRef.afterClosed().subscribe(result => {
-          console.log('The dialog was closed');
-          
-        });
+          data: this.formulation,
+          panelClass: "backdropBackground"
+        }).afterClosed().subscribe(()=>this.modalOpened=false);
+        
       }
-    })
-  }
-  isLoading=false;
-  ngOnInit() {
-   
-    this.store.select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER).subscribe((isNewRegister)=>{
+    }));
+    
+    
+    this.subscriptions.add(this.store.select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER).subscribe((isNewRegister)=>{
       if(!isNewRegister){
         this.isNewRegister = isNewRegister;
         this.store.dispatch(conditioningSearchInformation({processId:+localStorage.getItem("processId")}));
-        this.productsRovianda$=from([[{code:"12",name: "asd",id:1,status:true}]]);
         
       }else{
         this.productsRovianda$=this.store.select( // en caso de no existir se asigna al arreglo varios productos de rovianda para su registro
@@ -142,7 +172,13 @@ export class FormConditioningComponent implements OnInit {
         );
         this.formulations=this.store.select(SELECT_CONDITIONING_FORMULATIONS);
       }
-    });
+    }));
+  }
+
+  isLoading=false;
+  ngOnInit() {
+   
+    
    
   }
 
@@ -157,9 +193,7 @@ export class FormConditioningComponent implements OnInit {
       {
         text: "Aceptar",
         handler: () => {
-          this.isNewRegister
-            ? this.store.dispatch(registerConditioning({formulationId:this.formulationId.value,conditioning:this.conditioningArr}))
-            : this.registerConditioning();
+           this.store.dispatch(registerConditioning({formulationId:this.formulationId.value,conditioning:this.conditioningArr}))
         },
       },
     ];
@@ -231,18 +265,22 @@ export class FormConditioningComponent implements OnInit {
 
   selectFormulationId(){ // una vez seleccionado la formulacion, se obtienen los lotes de carne de esa formulacion para su tratamiento individual
     console.log("llamando");
+    if(this.formulationId.value!=null){
     this.store.dispatch(
       getFormulationDetails({formulationId:this.formulationId.value})
     );
+    }
   }
 
   selectProductRovianda() { // al seleccionar el producto de rovianda se buscan todos las formulaciones de ese mismo producto
     console.log("se selecciono un producto de rovianda",this.productRovianda.value);
+    if(this.productRovianda.value!=0 && this.productRovianda.value!=null){
       this.store.dispatch(
         getFormulationsByProductRovianda({
           productRoviandaId: this.productRovianda.value,
         })
       );
+    }
   }
 
   addItem(){ // metod que busca que el lote de enfriamiento no este ya en los registros de condicionamiento a guardar, en caso de no estarlo, procede a guardarlo
@@ -282,6 +320,7 @@ export class FormConditioningComponent implements OnInit {
           this.form.get('weight').reset();
           this.form.get('temperature').reset();
           this.conditioningArr.push(conditioningItemToAdd);
+          this.resetTable();
         }else{
           console.log("Ya esta");
         }
@@ -291,5 +330,9 @@ export class FormConditioningComponent implements OnInit {
   removeOfConditioningArr(index:number){ // metodo que elimina los registros de lotes a condicionamiento
     this.conditioningArr.splice(index,1);
     this.defrostOfFormulation=this.formulation.defrosts.filter(x=>!this.conditioningArr.map(x=>x.defrostId).includes(x.defrostFormulationId));
+    this.resetTable();
+  }
+  resetTable(){
+    this.matTableDataSource.data = this.conditioningArr;
   }
 }

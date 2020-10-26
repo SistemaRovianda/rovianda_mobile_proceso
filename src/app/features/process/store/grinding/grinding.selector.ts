@@ -5,7 +5,7 @@ const SELECT_GRINDING = (state: AppState) => state.grinding;
 
 export const SELECT_GRINDING_DATA = createSelector(
   SELECT_GRINDING,
-  (state) => state.grinding
+  (state) => state.grindings
 );
 
 export const SELECT_GRINDING_RESULT = createSelector(
@@ -22,3 +22,13 @@ export const SELECT_GRINDING_IS_LOADING = createSelector(
   SELECT_GRINDING,
   (state) => state.loading
 );
+
+export const SELECT_GRINDING_FORMULATIONS = createSelector(
+  SELECT_GRINDING,
+  (state)=>state.formulations
+)
+
+export const SELECT_GRINDING_PROCESS_METADATA = createSelector(
+  SELECT_GRINDING,
+  (state)=>state.processMetadata
+)

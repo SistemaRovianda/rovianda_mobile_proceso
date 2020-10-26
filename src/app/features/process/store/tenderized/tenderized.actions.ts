@@ -1,7 +1,8 @@
 import { createAction, props } from "@ngrx/store";
 import { FormulationPending, FormulationProductRovianda } from 'src/app/shared/models/formulations.interface';
-import { TenderizedItemToList } from 'src/app/shared/models/tenderized-page.interface';
+import { TenderizedItemToList, TenderizedOfProcess } from 'src/app/shared/models/tenderized-page.interface';
 import { Tenderized } from "src/app/shared/models/tenderized.interface";
+import { ProcessMetadata } from '../process-detail/process-detail.reducer';
 
 const TENDERIZED_SEARCH_INFORMATION = "[TENDERIZED] Search Information";
 
@@ -29,7 +30,7 @@ export const tenderizedSearchInformation = createAction(
 
 export const tenderizedLoadData = createAction(
   TENDERIZED_LOAD_DATA,
-  props<{ tenderized: Tenderized }>()
+  props<{ tenderizeds: TenderizedOfProcess[] }>()
 );
 
 export const tenderizedRegister = createAction(
@@ -69,3 +70,6 @@ export const setFormulationsByProductRovianda = createAction(
   TENDERIZED_SET_FORMULATIONS_BY_PRODUCT_ROVIANDA,
   props<{formulations:FormulationPending[]}>()
 );
+
+export const getTenderizedProcessMetadata = createAction("[TENDERIZED], getting process metadata");
+export const setTenderizedProcessMetadata = createAction("[TENDERIZED], setting process metadata",props<{process:ProcessMetadata}>());

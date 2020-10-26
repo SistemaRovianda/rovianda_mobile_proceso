@@ -20,7 +20,8 @@ export interface FormulationDetails{
 
 export interface FormulationDefrost{
     defrostFormulationId:number,
-    lotMeat:string
+    lotMeat:string,
+    defrost:any
 }
 
 export interface FormulationUsers{

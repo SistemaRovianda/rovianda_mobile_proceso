@@ -4,19 +4,20 @@ import * as fromRecentRecordsActions from "../../store/recent-records/recent-rec
 import * as fromTenderizedActions from "./tenderized.actions";
 import { setFormulationsByProductRovianda } from './tenderized.actions';
 const STATE_INITIAL_CONDITIONING: TenderizedInterface = {
-  tenderized: null,
+  tenderizeds: [],
   result: false,
   error: null,
   isSelected: false,
   loading: false,
-  formulations:[]
+  formulations:[],
+  processMetadata:null
 };
 
 export const tenderizedReducer = createReducer(
   STATE_INITIAL_CONDITIONING,
-  on(fromTenderizedActions.tenderizedLoadData, (state, { tenderized }) => ({
+  on(fromTenderizedActions.tenderizedLoadData, (state, { tenderizeds }) => ({
     ...state,
-    tenderized,
+    tenderizeds,
   })),
   on(
     fromRecentRecordsActions.recentRecordsLoadRecordsSuccess,
@@ -46,5 +47,6 @@ export const tenderizedReducer = createReducer(
   on(fromRecentRecordsActions.recentRecordsCreateNewProcess, (state) => ({
     ...state,
     loading: true,
-  }))
+  })),
+  on(fromTenderizedActions.setTenderizedProcessMetadata,(state,{process})=>({...state,processMetadata:process}))
 );

@@ -10,8 +10,10 @@ import { Router } from "@angular/router";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { Store } from "@ngrx/store";
 import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.selector";
-import { conditioningRegisterSuccess, getFormulationsByProductRovianda, registerConditioning } from './conditioning.actions';
+import { conditioningRegisterSuccess, getConditioningProcessMetadata, getFormulationsByProductRovianda, registerConditioning } from './conditioning.actions';
 import { FormulationService } from 'src/app/shared/services/formulation.service';
+import { setProcessDetails } from '../process-detail/process-detail.actions';
+import { ProcessService } from 'src/app/shared/services/process.service';
 
 @Injectable()
 export class ConditioningEffects {
@@ -22,7 +24,8 @@ export class ConditioningEffects {
     private conditioningService:ConditioningService,
     private toast: ToastService,
     private router: Router,
-    private _store: Store<AppState>
+    private _store: Store<AppState>,
+    private processService: ProcessService
   ) {
     this._store
       .select(SELECT_RECENT_RECORDS_PATH)
@@ -140,10 +143,19 @@ export class ConditioningEffects {
       ofType(registerConditioning),
       exhaustMap((action)=>this.conditioningService.registerConditioning(action.conditioning,action.formulationId).pipe(
         switchMap(()=>{
-          return [conditioningRegisterSuccess()];
+          return [conditioningRegisterSuccess(),setProcessDetails({process:null})];
         }
       )))
     ))
 
 
+    getConditioningProcessDetails$ = createEffect(()=>
+        this.action$.pipe(
+          ofType(getConditioningProcessMetadata),
+          exhaustMap((action)=>this.processService.getProcessDetails(+localStorage.getItem("processId")).pipe(
+            switchMap((details)=>[fromConditioningActions.setConditioningProcessMetadata({process:details})]),
+            catchError(()=>[fromConditioningActions.setConditioningProcessMetadata({process:null})])
+          )))
+        )
+    
 }

@@ -4,19 +4,23 @@ import * as fromSausageActions from "./sausage.actions";
 import { SausageInterface } from "src/app/shared/models/sausage-page.interface";
 
 const STATE_INITIAL_SAUSAGE: SausageInterface = {
-  sausage: null,
+  sausages:[],
   result: false,
   error: null,
   isSelected: false,
   loading: false,
+  formulations:[],
+  processMetadata:null
 };
 
 export const sausageReducer = createReducer(
   STATE_INITIAL_SAUSAGE,
-  on(fromSausageActions.sausageLoadData, (state, { sausage }) => ({
+  on(fromSausageActions.sausageLoadData, (state, { sausages }) => ({
     ...state,
-    sausage,
+    sausages,
   })),
+  on(fromSausageActions.setFormulationsByProductRovianda,(state,{formulations})=>({...state,formulations}))
+  ,
   on(
     fromRecentRecordsActions.recentRecordsLoadRecordsSuccess,
     (state) => STATE_INITIAL_SAUSAGE
@@ -48,5 +52,9 @@ export const sausageReducer = createReducer(
   on(fromRecentRecordsActions.recentRecordsCreateNewProcess, (state) => ({
     ...state,
     loading: true,
-  }))
+  })),
+  on(fromSausageActions.setSausageProcessMetadata,(state,{process})=>({...state,processMetadata:process})),
+  on(fromSausageActions.updateSausageHour,(state)=>({...state,loading:true})),
+  on(fromSausageActions.updateSuccessSausageHour,(state)=>({...state,loading:false})),
+  on(fromSausageActions.updateErrorSausageHour,(state,{error})=>({...state,loading:false,error}))
 );

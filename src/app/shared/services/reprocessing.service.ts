@@ -2,7 +2,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { API_ENDPOINT_PROVIDER } from "src/app/providers/tokens";
 import { Observable } from "rxjs";
-import { Reprocessing } from "../models/reprocessing.interface";
+import { ReprocessingOfProcess } from "../models/reprocessing.interface";
 import { ReprocessingToProcess } from "../models/reprocessingToProcess.interface";
 
 @Injectable({ providedIn: "root" })
@@ -13,14 +13,14 @@ export class ReprocessingService {
     private http: HttpClient,
     @Inject(API_ENDPOINT_PROVIDER) private endpoint
   ) {
-    this.url = `${endpoint}/packaging/reprocessing`;
+    this.url = `${endpoint}`;
   }
 
-  getListReprocessing(area: string) {
-    return this.http.get<Reprocessing[]>(`${this.url}/${area}`);
+  getListReprocessing(processId:number) {
+    return this.http.get<ReprocessingOfProcess[]>(`${this.url}/process/reprocesing/${processId}`);
   }
 
-  registerReprocessing(reprocessing: ReprocessingToProcess): Observable<any> {
-    return this.http.post<any>(`${this.url}/lot`, { ...reprocessing });
+  registerReprocessing(reprocessing: ReprocessingToProcess[]): Observable<any> {
+    return this.http.post<any>(`${this.url}/process-reprocesing`, reprocessing);
   }
 }

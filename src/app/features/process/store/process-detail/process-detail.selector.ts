@@ -24,10 +24,7 @@ export const SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA = createSelector(
   (state) => state.productsRovianda
 );
 
-export const SELECT_PROCESS_DETAIL_LOTS_MEAT = createSelector(
-  SELECT_PROCESS_DETAIL,
-  (state) => state.lotsMeatProcess
-);
+
 
 export const SELECT_PROCESS_DETAIL_SECTION = createSelector(
   SELECT_PROCESS_DETAIL,

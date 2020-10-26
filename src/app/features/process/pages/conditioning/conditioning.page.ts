@@ -3,23 +3,14 @@ import { AlertService } from "src/app/shared/services/alert.service";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
-import {
-  SELECT_CONDITIONING_RESULT,
-  SELECT_CONDITIONING_IS_LOADING,
-  SELECT_CONDITIONING_IS_SELECTED,
-} from "../../store/conditioning/conditioning.selector";
+
 import { from, Observable } from "rxjs";
-import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
-import {
-  SELECT_PROCESS_DETAIL_PRODUCTS,
-  //SELECT_PROCESS_DETAIL_MATERIALS,
-  SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA,
-  SELECT_PROCESS_DETAIL_LOTS_MEAT,
-} from "../../store/process-detail/process-detail.selector";
+
+
 import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interface";
-import { RawMaterial } from "src/app/shared/models/raw-material.interface";
-import { SELECT_RECENT_RECORDS_IS_NEW_REGISTER, SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-records/recent-records.selector";
-import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
+
+
+import { setConditioningProcessMetadata, setFormulationsByProductRovianda } from '../../store/conditioning/conditioning.actions';
 import { setFormulationDetails } from '../../store/formulation/formulation.actions';
 
 @Component({
@@ -38,6 +29,7 @@ export class ConditioningPage implements OnInit {
 
   loading: boolean;
 
+  
   // isSelected: boolean;
 
   // isSelectedProcess: boolean;
@@ -77,7 +69,6 @@ export class ConditioningPage implements OnInit {
         text: "Aceptar",
         handler: () => {
           form.reset();
-          this.store.dispatch(setFormulationDetails({formulation:null}))
           this.redirectBack();
         },
       },
@@ -99,6 +90,9 @@ export class ConditioningPage implements OnInit {
   }
 
   redirectBack() {
+    
+    this.store.dispatch(setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null}}))
+    this.store.dispatch(setConditioningProcessMetadata({process:null}));
     this.router.navigate([`/process/process-detail`]);
   }
   reprocessing() {

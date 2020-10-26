@@ -12,6 +12,7 @@ import { processDetailReducer, processMetadataReducer } from "src/app/features/p
 import { userReducer } from "src/app/features/process/store/user/user.reducer";
 import { reprocessingReducer } from "src/app/features/process/store/reprocessing/reprocessing.reducer";
 import { formulationReducer } from 'src/app/features/process/store/formulation/formulation.reducer';
+import { sectionReducer } from 'src/app/features/process/store/sections/section.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   auth: authenticationReducer,
@@ -26,6 +27,7 @@ export const reducers: ActionReducerMap<AppState> = {
   user: userReducer,
   reprocessing: reprocessingReducer,
   processMetadata:processMetadataReducer,
-  formulationDetails:formulationReducer
+  formulationDetails:formulationReducer,
+  section: sectionReducer
 };
 export const metaReducers: MetaReducer<AppState>[] = [];

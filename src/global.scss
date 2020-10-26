@@ -47,3 +47,27 @@ $color-text-secondary: #dbdbdb;
   background-color: $color-primary;
   margin: 20px 0px 20px 20px;
 }
+
+.backdropBackground{
+  mat-dialog-container{
+  position: fixed;
+  margin-top: 25%;
+  margin-left: 25%;
+  background-color: white;
+  color: black;
+  width: 50%;
+  height: max-content;
+  min-height: 30%;
+  border-color: burlywood;
+  border-style: dashed;
+  border-width: 1px;
+  .closeButton{
+    text-align: center;
+    align-content: center;
+    margin-bottom: 0%;
+  }
+  }
+}
+.selected{
+  background-color: burlywood;
+}

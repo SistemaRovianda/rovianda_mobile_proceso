@@ -27,3 +27,8 @@ export const SELECT_CONDITIONING_FORMULATIONS = createSelector(
   SELECT_CONDITIONING,
   (state)=>state.formulations
 )
+
+export const SELECT_CONDITIONING_PROCESS_METADATA =createSelector(
+  SELECT_CONDITIONING,
+  (state)=>state.processMetadata
+);

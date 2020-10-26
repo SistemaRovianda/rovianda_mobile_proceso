@@ -130,7 +130,8 @@ export class ProcessDetailEffect {
   this.actions$.pipe(
     ofType(getProcessDetails),
     exhaustMap((action)=>this.processService.getProcessDetails(+localStorage.getItem("processId")).pipe(
-      switchMap((process:ProcessMetadata)=>[fromProcessDetailActions.setProcessDetails({process})])
+      switchMap((process:ProcessMetadata)=>[fromProcessDetailActions.setProcessDetails({process})]),
+      catchError(()=>[fromProcessDetailActions.setProcessDetails({process:null})])
     ))
   ))
 }

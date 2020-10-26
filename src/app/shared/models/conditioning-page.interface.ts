@@ -1,5 +1,7 @@
+import { ProcessMetadata } from 'src/app/features/process/store/process-detail/process-detail.reducer';
 import { Conditioning, ConditioningOfProcess } from "./conditioning.interface";
 import { FormulationPending } from './formulations.interface';
+
 
 export interface ConditioningInterface {
   error: string;
@@ -8,6 +10,7 @@ export interface ConditioningInterface {
   isSelected: boolean;
   loading: boolean;
   formulations:Array<FormulationPending>
+  processMetadata:ProcessMetadata
 }
 
 

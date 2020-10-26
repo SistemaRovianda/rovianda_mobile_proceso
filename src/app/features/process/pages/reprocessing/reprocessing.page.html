@@ -8,7 +8,7 @@
     <ion-row>
       <ion-col>
         <h1 class="title">
-          Reproceso de {{currentSection.name.toLowerCase()}}
+          Reproceso de Embutido
         </h1>
       </ion-col>
     </ion-row>
@@ -17,8 +17,7 @@
       <ion-col class="container container__column" size="12">
         <div class="container container__form">
           <app-form-reprocessing
-            (onSubmit)="onSubmit($event)"
-            [listReprocessing]="listReprocessing$|async"
+            
             #form
           ></app-form-reprocessing>
         </div>
@@ -30,7 +29,7 @@
     >
       <ion-col class="container container__column" size="12">
         <ion-button
-          [disabled]="form.form.invalid || loading"
+          [disabled]="form.alreadyRegistered"
           (click)="form.onSubmit()"
           class="container container_buttton"
           color="secondary"

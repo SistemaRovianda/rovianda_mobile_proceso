@@ -6,7 +6,7 @@ import {
 } from "src/app/providers/tokens";
 import { Observable } from "rxjs";
 import { Tenderized } from "../models/tenderized.interface";
-import { TenderizedItemToList } from '../models/tenderized-page.interface';
+import { TenderizedItemToList, TenderizedOfProcess } from '../models/tenderized-page.interface';
 
 @Injectable({ providedIn: "root" })
 export class TenderizedService {
@@ -20,8 +20,8 @@ export class TenderizedService {
     this.url = `${endpoint}/process`;
   }
 
-  getDataTenderized(processId): Observable<any> {
-    return this.http.get<any>(`${this.url}/injection-tenderized/${processId}`);
+  getDataTenderized(processId): Observable<TenderizedOfProcess[]> {
+    return this.http.get<TenderizedOfProcess[]>(`${this.url}/injection-tenderized/${processId}`);
   }
 
   registerTenderized(
@@ -31,9 +31,9 @@ export class TenderizedService {
     console.log(tenderized);
     return this.http.post<any>(
       `${this.url}/injection-tenderized/${formulationId}`,
-      {
+      
         tenderized
-      }
+      
     );
   }
 

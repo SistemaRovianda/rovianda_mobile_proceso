@@ -6,20 +6,20 @@ const STATE_INITIAL_PROCESSING: ProcessReprocessing = {
   error: null,
   listReprocessing: [],
   loading: false,
+  formulationDetails:null
 };
 
 export const reprocessingReducer = createReducer(
   STATE_INITIAL_PROCESSING,
-  on(
-    fromReprocessingActions.reprocessingLoadListOfListReprocessing,
-    (state, { listReprocessing }) => ({ ...state, listReprocessing })
-  ),
-  on(fromReprocessingActions.reprocessingStartReprocessing, (state) => ({
+
+  on(fromReprocessingActions.registerReprocesings, (state) => ({
     ...state,
     loading: true,
   })),
   on(fromReprocessingActions.reprocessigFinish, (state) => ({
     ...state,
     loading: false,
-  }))
+  })),
+  on(fromReprocessingActions.setFormulationDetails,(state,{formulationDetails})=>({...state,formulationDetails})),
+  on(fromReprocessingActions.setReprocesingOfProcess,(state,{reprocesings})=>({...state,listReprocessing:reprocesings}))
 );

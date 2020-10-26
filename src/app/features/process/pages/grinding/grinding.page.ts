@@ -13,11 +13,13 @@ import { ProductsRovianda } from "src/app/shared/models/produts-rovianda.interfa
 import {
   SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA,
   //SELECT_PROCESS_DETAIL_MATERIALS,
-  SELECT_PROCESS_DETAIL_LOTS_MEAT,
 } from "../../store/process-detail/process-detail.selector";
-import { RawMaterial } from "src/app/shared/models/raw-material.interface";
+
 import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-records/recent-records.selector";
-import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
+
+import { setFormulationsByProductRovianda, setGrindingProcessMetadata } from '../../store/grinding/grinding.actions';
+import { setFormulationDetails } from '../../store/formulation/formulation.actions';
+
 
 @Component({
   selector: "app-grinding",
@@ -37,33 +39,15 @@ export class GrindingPage implements OnInit {
 
   loading: boolean;
 
-  isSelectedProcess: boolean;
+  
 
-  products$: Observable<ProductsRovianda[]> = this.store.select(
-    SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA
-  );
+  private insection:boolean=true;
 
-  // materials$: Observable<RawMaterial[]> = this.store.select(
-  //   SELECT_PROCESS_DETAIL_MATERIALS
-  // );
+  
 
-  lotsMeat$: Observable<ProcessLotMeat[]> = this.store.select(
-    SELECT_PROCESS_DETAIL_LOTS_MEAT
-  );
 
   ngOnInit() {
-    this.store
-      .select(SELECT_GRINDING_RESULT)
-      .subscribe((tempResult) => (this.result = tempResult));
-    this.store
-      .select(SELECT_GRINDING_IS_SELECTED)
-      .subscribe((selected) => (this.isSelected = selected));
-    this.store
-      .select(SELECT_GRINDING_IS_LOADING)
-      .subscribe((loading) => (this.loading = loading));
-    this.store
-      .select(SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS)
-      .subscribe((selected) => (this.isSelectedProcess = selected));
+  
   }
 
   onBackButton(form) {
@@ -96,6 +80,9 @@ export class GrindingPage implements OnInit {
   }
 
   redirectBack() {
+    this.insection=false;
+    this.store.dispatch(setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null}}))
+    this.store.dispatch(setGrindingProcessMetadata({process:null}));
     this.router.navigate([`/process/process-detail`]);
   }
   reprocessing() {

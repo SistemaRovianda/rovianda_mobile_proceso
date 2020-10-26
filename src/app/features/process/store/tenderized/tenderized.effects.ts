@@ -12,6 +12,8 @@ import { Store } from "@ngrx/store";
 import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.selector";
 import { getFormulationsByProductRovianda, setFormulationsByProductRovianda } from './tenderized.actions';
 import { FormulationService } from 'src/app/shared/services/formulation.service';
+import { setProcessDetails } from '../process-detail/process-detail.actions';
+import { ProcessService } from 'src/app/shared/services/process.service';
 
 @Injectable()
 export class TenderizedEffects {
@@ -22,7 +24,8 @@ export class TenderizedEffects {
     private formulationService:FormulationService,
     private toast: ToastService,
     private router: Router,
-    private _store: Store<AppState>
+    private _store: Store<AppState>,
+    private processService:ProcessService
   ) {
     this._store
       .select(SELECT_RECENT_RECORDS_PATH)
@@ -51,15 +54,15 @@ export class TenderizedEffects {
       ofType(fromTenderizedActions.tenderizedSearchInformation),
       exhaustMap((action) =>
         this.tenderizedService.getDataTenderized(action.processId).pipe(
-          switchMap((tenderized) =>
-            Object.keys(tenderized).length > 0
+          switchMap((tenderizeds) =>
+            tenderizeds.length > 0
               ? [
-                  fromTenderizedActions.tenderizedLoadData({ tenderized }),
+                  fromTenderizedActions.tenderizedLoadData({ tenderizeds }),
                   fromTenderizedActions.tenderizedIsSelected({
                     isSelected: true,
                   }),
                 ]
-              : [fromTenderizedActions.tenderizedLoadData({ tenderized: null })]
+              : [fromTenderizedActions.tenderizedLoadData({ tenderizeds: [] })]
           ),
           catchError((error) => {
             return of(
@@ -88,6 +91,7 @@ export class TenderizedEffects {
                 }),
                 fromTenderizedActions.tenderizedRegisterFinish(),
                 fromTenderizedActions.tenderizedRegisterSuccess(),
+                setProcessDetails({process:null})
               ];
             }),
             catchError((error) => {
@@ -125,4 +129,13 @@ export class TenderizedEffects {
       )
     )
   );
+
+  getTenderizedProcessMetadata$ = createEffect(()=>this.action$.pipe(
+    ofType(fromTenderizedActions.getTenderizedProcessMetadata),
+    exhaustMap((action)=>this.processService.getProcessDetails(+localStorage.getItem("processId")).pipe(
+      switchMap((process)=>[fromTenderizedActions.setTenderizedProcessMetadata({process})]),
+      catchError(()=>[fromTenderizedActions.setTenderizedProcessMetadata({process:null})])
+    ))
+  )
+  )
 }

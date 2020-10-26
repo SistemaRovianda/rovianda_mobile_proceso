@@ -1,5 +1,7 @@
 import { createAction, props } from "@ngrx/store";
-import { Grinding } from "src/app/shared/models/grinding.interface";
+import { FormulationPending } from 'src/app/shared/models/formulations.interface';
+import { Grinding, GrindingItemToList, GrindingOfProcess } from "src/app/shared/models/grinding.interface";
+import { ProcessMetadata } from '../process-detail/process-detail.reducer';
 
 const GRINDING_SEARCH_INFORMATION = "[GRINDING] Search Information";
 
@@ -24,12 +26,12 @@ export const grindingSearchInformation = createAction(
 
 export const grindingLoadData = createAction(
   GRINDING_LOAD_DATA,
-  props<{ grinding: Grinding }>()
+  props<{ grindings: GrindingOfProcess[] }>()
 );
 
 export const grindingRegister = createAction(
   GRINDING_REGISTER,
-  props<Grinding>()
+  props<{formulationId:number,grindings:GrindingItemToList[]}>()
 );
 
 export const grindingRegisterResult = createAction(
@@ -50,3 +52,16 @@ export const grindingIsSelected = createAction(
   GRINDING_IS_SELECTED,
   props<{ isSelected: boolean }>()
 );
+
+export const getFormulationsByProductRovianda = createAction(
+  "[GRINDING] get formulatinos of productRovianda",
+  props<{productRoviandaId:number}>()
+  );
+
+  export const setFormulationsByProductRovianda = createAction(
+    "[GRINDING] set formulations of productRovianda",
+    props<{formulations:Array<FormulationPending>}>()
+  );
+
+  export const getGrindingProcessMetadata = createAction("[GRINDING], getting process metadata");
+export const setGrindingProcessMetadata = createAction("[GRINDING], setting process metadata",props<{process:ProcessMetadata}>());

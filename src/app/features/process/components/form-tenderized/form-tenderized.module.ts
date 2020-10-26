@@ -5,13 +5,15 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FormTenderizedComponent } from "./form-tenderized.component";
 import { ModalFormulationDetailsModule } from '../modal-formulation-details/modal-formulation-details.module';
 import { ModalFormulationDetailsComponent } from '../modal-formulation-details/modal-formulation-details.component';
+import { MatTableModule } from '@angular/material';
 
 const COMMON_IMPORTS = [
   CommonModule,
   IonicModule,
   FormsModule,
   ReactiveFormsModule,
-  ModalFormulationDetailsModule
+  ModalFormulationDetailsModule,
+  MatTableModule
 ];
 
 const COMMON_DECLARATIONS = [FormTenderizedComponent];

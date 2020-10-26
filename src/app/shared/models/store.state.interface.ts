@@ -10,6 +10,7 @@ import { UserPageInterface } from "./user-page.interfac";
 import { ProcessReprocessing } from "./process-reprocessing.interface";
 import { ProcessMetadata } from 'src/app/features/process/store/process-detail/process-detail.reducer';
 import { FormulationDetails } from './formulations.interface';
+import { sectionInterface } from 'src/app/features/process/store/sections/section.reducer';
 
 export interface LoginState {
   loading: boolean;
@@ -41,7 +42,8 @@ export interface AppState {
   user: UserPageInterface;
   reprocessing: ProcessReprocessing;
   processMetadata: ProcessMetadata;
-  formulationDetails:FormulationDetails
+  formulationDetails:FormulationDetails,
+  section:sectionInterface
 }
 
 export interface SignIn {

@@ -19,3 +19,21 @@ export interface Time {
   hour3: string;
   weightFinal: number;
 }
+
+export interface SausageItemToList{
+  sausageId?:number;
+  temperature:string;
+  date: string;
+  time:
+  {
+      hour1:string;
+      weightInitial:string;
+      hour2?:string;
+      weightMedium?:string;
+      hour3?:string;
+      weightFinal?:string;
+  },
+  defrostId:number;
+  lotId:string;
+  productRovianda?:string;
+}

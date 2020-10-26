@@ -10,6 +10,9 @@ import { ToastService } from "src/app/shared/services/toast.service";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
 import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.selector";
+import { FormulationService } from 'src/app/shared/services/formulation.service';
+import { setProcessDetails } from '../process-detail/process-detail.actions';
+import { ProcessService } from 'src/app/shared/services/process.service';
 
 @Injectable()
 export class GrindingEffects {
@@ -19,26 +22,45 @@ export class GrindingEffects {
     private grindingService: GrindingService,
     private router: Router,
     private toast: ToastService,
-    private _store: Store<AppState>
+    private _store: Store<AppState>,
+    private formulationService:FormulationService,
+    private processService:ProcessService
   ) {
     this._store
       .select(SELECT_RECENT_RECORDS_PATH)
       .subscribe((pathTemp) => (this.path = pathTemp));
   }
 
+  gettingFormulations = createEffect(()=>
+    this.action$.pipe(
+      ofType(fromGrindingActions.getFormulationsByProductRovianda),
+      exhaustMap((action)=>this.formulationService.getFormulationsByProductRoviandaId(action.productRoviandaId).pipe(
+        switchMap((formulations)=>
+        {
+          if(!formulations.length){
+            this.toast.presentToastMessageWarning("No existen formulaciones para este producto")
+          }
+        return [fromGrindingActions.setFormulationsByProductRovianda({formulations})]
+        }
+        ),
+        catchError(()=>[])
+      ))
+    )
+  )
+
   loadDataGrinding = createEffect(() =>
     this.action$.pipe(
       ofType(fromGrindingActions.grindingSearchInformation),
       exhaustMap((action) =>
         this.grindingService.getDataGrinding(action.processId).pipe(
-          switchMap((grinding) =>
-            Object.keys(grinding).length > 0
+          switchMap((grindings) =>
+            grindings.length
               ? [
-                  fromGrindingActions.grindingLoadData({ grinding }),
+                  fromGrindingActions.grindingLoadData({ grindings }),
                   fromGrindingActions.grindingIsSelected({ isSelected: true }),
                 ]
               : [
-                  fromGrindingActions.grindingLoadData({ grinding: null }),
+                  fromGrindingActions.grindingLoadData({ grindings: [] }),
                   fromGrindingActions.grindingIsSelected({ isSelected: false }),
                 ]
           ),
@@ -57,9 +79,9 @@ export class GrindingEffects {
   registerGrinding = createEffect(() =>
     this.action$.pipe(
       ofType(fromGrindingActions.grindingRegister),
-      exhaustMap((grinding) =>
+      exhaustMap((action) =>
         this.grindingService
-          .registerGrinding(grinding, +localStorage.getItem("processId"))
+          .registerGrinding(action.grindings, action.formulationId)
           .pipe(
             switchMap((action) => {
               this.toast.presentToastSuccess();
@@ -67,6 +89,7 @@ export class GrindingEffects {
                 fromGrindingActions.grindingRegisterResult({ result: true }),
                 fromGrindingActions.grindingRegisterSuccess(),
                 fromGrindingActions.grindingRegisterFinish(),
+                setProcessDetails({process:null})
               ];
             }),
             catchError((error) => {
@@ -102,4 +125,13 @@ export class GrindingEffects {
       )
     )
   );
+
+  getGrindingProcessMetadata$ = createEffect(()=>
+  this.action$.pipe(
+    ofType(fromGrindingActions.getGrindingProcessMetadata),
+    exhaustMap((action)=>this.processService.getProcessDetails(+localStorage.getItem("processId")).pipe(
+      switchMap((process)=>[fromGrindingActions.setGrindingProcessMetadata({process})]),
+      catchError(()=>[fromGrindingActions.setGrindingProcessMetadata({process:null})])
+    ))
+  ))
 }

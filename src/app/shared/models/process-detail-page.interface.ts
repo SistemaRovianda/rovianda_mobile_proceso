@@ -10,6 +10,6 @@ export interface ProcessDetail {
   error: string;
   formulations: ProductsRovianda[];
   productsRovianda: ProductsRovianda[];
-  lotsMeatProcess: ProcessLotMeat[];
+  
   section: MenuButton;
 }

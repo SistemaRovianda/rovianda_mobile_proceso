@@ -1,69 +1,140 @@
-<form [formGroup]="form" class="form" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" class="form" (ngSubmit)="onSubmit()" flex layout="column" style="overflow: auto; height: 100%;">
   <ion-row>
-    <ion-col size="7">
-      <ion-item *ngIf="!isSelected">
+    <ion-col size="6">
+      <ion-item *ngIf="isNewRegister">
         <ion-label position="floating">
-          Materia prima*
+          Productos Rovianda*
         </ion-label>
         <ion-select
           class="item-form"
           interface="action-sheet"
-          placeholder="Seleccionar materia prima"
-          formControlName="rawMaterial"
-          [disabled]="materials.length == 0"
-          (ionChange)="selectMaterial()"
+          placeholder="Seleccionar el producto a procesar"
+          formControlName="productRovianda"
+          [disabled]="(productsRovianda$ |async ).length == 0"
+          (ionChange)="selectProductRovianda()"
         >
           <ion-select-option
-            [value]="material.rawMaterialId"
-            *ngFor="let material of materials"
+            [value]="productRovianda.id"
+            *ngFor="let productRovianda of productsRovianda$ | async"
           >
-            {{ material.rawMaterial }}</ion-select-option
+            {{ productRovianda.name }}</ion-select-option
           >
         </ion-select>
       </ion-item>
-      <ion-item *ngIf="isSelected">
-        <ion-label position="floating">Materia prima*</ion-label>
+      <ion-item *ngIf="!isNewRegister && grindingsOfProcess.length">
+        <ion-label position="floating">
+          Producto Rovianda*
+        </ion-label>
         <ion-input
           class="item-form"
-          placeholder="Ingresar producto"
-          formControlName="rawMaterial"
-          [disabled]="isSelected"
+          interface="action-sheet"
+          placeholder="{{grindingsOfProcess[0].productRovianda}}"
+          disabled
         ></ion-input>
+        
       </ion-item>
-      <div class="error">
-        <ion-label
-          *ngIf="
-            form.hasError('required', 'rawMaterial') &&
-            (form.controls.rawMaterial.touched ||
-              form.controls.rawMaterial.dirty)
-          "
-          >Ingrese un valor</ion-label
-        >
-      </div>
-    </ion-col>
-    <ion-col size="5">
-      <ion-item>
-        <ion-label position="floating">Proceso*</ion-label>
+      <ion-item *ngIf="!isNewRegister && !grindingsOfProcess.length && currentProcess!=null">
+        <ion-label position="floating">
+          Producto Rovianda*
+        </ion-label>
         <ion-input
           class="item-form"
-          placeholder="Ingresa proceso"
-          formControlName="process"
-          [disabled]="isSelected"
+          interface="action-sheet"
+          placeholder="{{currentProcess.productName}}"
+          disabled
         ></ion-input>
+        
       </ion-item>
-      <div class="error">
-        <ion-label
-          *ngIf="
-            form.hasError('required', 'process') &&
-            (form.controls.process.touched || form.controls.process.dirty)
-          "
-          >Ingrese un valor</ion-label
-        >
-      </div>
     </ion-col>
+    <ion-col size="6">
+        <ion-item *ngIf="isNewRegister && (formulations | async).length">
+          <ion-label position="floating">Formulaciones</ion-label>
+          <ion-select
+            class="item-form"
+            interface="action-sheet"
+            placeholder="Seleccionar formulacion"
+            formControlName="formulationId"
+            (ionChange)="selectFormulationId()"
+          >
+            <ion-select-option   *ngFor="let formulation of  formulations | async " [value]="formulation.formulationId"
+              >{{ formulation.lotDay}}-{{formulation.productName}}</ion-select-option
+            >
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="!isNewRegister && grindingsOfProcess.length">
+          <ion-label position="floating">Formulacion</ion-label>
+          <ion-input
+            class="item-form"
+            interface="action-sheet"
+            placeholder="{{grindingsOfProcess[0].formulation}}"
+            disabled
+          ></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="!isNewRegister && !grindingsOfProcess.length && currentProcess!=null">
+          <ion-label position="floating">Formulacion</ion-label>
+          <ion-input
+            class="item-form"
+            interface="action-sheet"
+            placeholder="{{currentProcess.lotDay}}"
+            disabled
+          ></ion-input>
+        </ion-item>
+
+      </ion-col>
   </ion-row>
   <ion-row>
-    <ion-col size="7">
+    <ion-col>
+      <ion-item *ngIf="formulation && defrostOfFormulation.length && !grindingArr.length">
+        <ion-label position="floating">Lotes de carne en esta formulación</ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar lote"
+          formControlName="defrostId"
+        >
+          <ion-select-option   *ngFor="let defrost of  defrostOfFormulation" [value]="defrost.defrostFormulationId"
+            >{{ defrost.lotMeat}}-{{defrost.defrost.dateEnd}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      
+    </ion-col>
+
+  </ion-row>
+  <ion-row>
+    <ion-col size="6">
+      <ion-item>
+        <ion-label position="floating">Proceso*</ion-label>
+        <ion-select
+        class="item-form"
+        interface="action-sheet"
+        placeholder="Seleccionar el un proceso"
+        formControlName="process"
+      >
+        <ion-select-option
+          value="LIMPIEZA"
+        >
+          LIMPIEZA</ion-select-option
+        >
+      
+      <ion-select-option
+          value="SALADO Y CURADO"
+        >
+          SALADO Y CURADO</ion-select-option
+        >
+      
+      <ion-select-option
+          value="DESHUESE"
+        >
+          DESHUESE</ion-select-option
+        >
+      </ion-select>
+      </ion-item>
+   
+    </ion-col>
+
+    <ion-col size="6">
       <ion-item>
         <ion-label position="floating">Peso (Kg)*</ion-label>
         <ion-input
@@ -92,6 +163,8 @@
         </ion-label>
       </div>
     </ion-col>
+  </ion-row>
+  <ion-row>
     <ion-col size="5">
       <ion-item class="item-datetime">
         <ion-label position="floating">Fecha actual*</ion-label>
@@ -115,69 +188,70 @@
       </div>
     </ion-col>
   </ion-row>
+
   <ion-row>
-    <ion-col size="7">
-      <ion-item *ngIf="!isSelected">
-        <ion-label position="floating">Producto*</ion-label>
-        <ion-select
-          class="item-form"
-          interface="action-sheet"
-          placeholder="Seleccionar producto"
-          formControlName="productId"
-          [disabled]="isSelected"
-        >
-          <ion-select-option
-            [value]="product.id"
-            *ngFor="let product of products"
-            >{{ product.name }}</ion-select-option
-          >
-        </ion-select>
-      </ion-item>
-      <ion-item *ngIf="isSelected">
-        <ion-label position="floating">Producto*</ion-label>
-        <ion-input
-          class="item-form"
-          placeholder="Producto"
-          formControlName="productId"
-          disabled
-        ></ion-input>
-      </ion-item>
+    <ion-col>
+
+      <table mat-table [dataSource]="matTableDataSource" class="mat-elevation-z8 tableGrinding" >
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+      
+        <!-- Position Column -->
+        <ng-container matColumnDef="Lote" >
+          <th mat-header-cell *matHeaderCellDef> Lote </th>
+          <td mat-cell *matCellDef="let element;let index=index" (click)="(isNewRegister)?removeOfGrindingArr(index):null"> {{element.lotId}} </td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="Peso">
+          <th mat-header-cell *matHeaderCellDef> Peso </th>
+          <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="Proceso">
+          <th mat-header-cell *matHeaderCellDef> Proceso </th>
+          <td mat-cell *matCellDef="let element"> {{element.process}} </td>
+        </ng-container>
+      
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="Fecha">
+          <th mat-header-cell *matHeaderCellDef> Fecha </th>
+          <td mat-cell *matCellDef="let element"> {{element.date | date: 'M-d-yyyy'}}</td>
+        </ng-container>
+  
+       
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
     </ion-col>
-    <ion-col size="5">
-      <ion-item *ngIf="!isSelected">
-        <ion-label position="floating">Lote de carne{{isNewRegister?"*":""}}</ion-label>
-        <ion-select
-          class="item-form"
-          interface="action-sheet"
-          placeholder="Seleccionar lote"
-          formControlName="loteMeat"
-          
-        >
-        <ion-select-option   *ngFor="let lotMeat of  formulations" [value]="lotMeat.outputId"
-        >{{ lotMeat.lotId}}:{{lotMeat.quantity}}</ion-select-option
-      >
-          >
-        </ion-select>
-      </ion-item>
-      <ion-item *ngIf="isSelected && !emptyProcess">
-        <ion-label position="floating">Lote de carne*</ion-label>
-        <ion-input
-          class="item-form"
-          placeholder="{{grinding?grinding.lotMeat:'Producto'}}"
-          formControlName="loteMeat"
-          disabled
-        ></ion-input>
-      </ion-item>
-      <div class="error">
-        <ion-label
-          *ngIf="
-            form.hasError('required', 'lotId') &&
-            (form.controls.lotId.touched || form.controls.lotId.dirty)
-          "
-        >
-          Ingrese un valor
-        </ion-label>
-      </div>
-    </ion-col>
+    <!-- <ul style="list-style: none;">
+      <li *ngFor="let grinding of grindingArr; let index=index" (click)="(isNewRegister)?removeOfGrindingArr(index):null">
+          lote: {{grinding.lotId}}<br>
+          peso: {{grinding.weight}} <br>
+          fecha:{{grinding.date}} <br>
+          proceso: {{grinding.process}}
+      </li>
+    </ul> -->
   </ion-row>
+  <ion-row
+      class="container container__row container__row--buttons ion-justify-content-around"
+    >
+      <ion-col class="container container__column" size="12">
+        <ion-button
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          (click)="addItem()"
+          [disabled]="!(isNewRegister || (!isNewRegister && !grindingArr.length && currentProcess!=null)) "
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Agregar Lote</ion-col></ion-row>
+             </ion-grid>
+          </ion-button>
+      </ion-col>
+    </ion-row>
+
 </form>

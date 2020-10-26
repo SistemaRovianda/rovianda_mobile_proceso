@@ -3,19 +3,8 @@ import { AlertService } from "src/app/shared/services/alert.service";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/app/shared/models/store.state.interface";
-import {
-  SELECT_TENDERIZED_RESULT,
-  SELECT_TENDERIZED_IS_LOADING,
-  SELECT_TENDERIZED_IS_SELECTED,
-} from "../../store/tenderized/tenderized.selector";
-import {
-  SELECT_PROCESS_DETAIL_PRODUCTS,
-  SELECT_PROCESS_DETAIL_LOTS_MEAT,
-} from "../../store/process-detail/process-detail.selector";
-import { Observable } from "rxjs";
-import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
-import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
-import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-records/recent-records.selector";
+import {  setTenderizedProcessMetadata } from '../../store/tenderized/tenderized.actions';
+import { setFormulationDetails } from '../../store/formulation/formulation.actions';
 
 @Component({
   selector: "app-tenderized",
@@ -35,7 +24,7 @@ export class TenderizedPage implements OnInit {
 
   isSelected: boolean;
 
-  isSelectedProcess: boolean;
+  private insection:boolean=true;
 
   ngOnInit() {
    
@@ -51,6 +40,7 @@ export class TenderizedPage implements OnInit {
         text: "Aceptar",
         handler: () => {
           form.reset();
+          
           this.redirectBack();
         },
       },
@@ -71,6 +61,9 @@ export class TenderizedPage implements OnInit {
   }
 
   redirectBack() {
+    this.insection=false;
+    this.store.dispatch(setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null}}))
+    this.store.dispatch(setTenderizedProcessMetadata({process:null}));
     this.router.navigate([`/process/process-detail`]);
   }
   reprocessing() {

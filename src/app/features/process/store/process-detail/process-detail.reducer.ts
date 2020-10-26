@@ -11,7 +11,6 @@ const STATE_PROCESS_DETAIL_INITIAL: ProcessDetail = {
   loading: false,
   formulations:[],
   productsRovianda: [],
-  lotsMeatProcess: [],
   section: { name: "", path: "", section: "" },
 };
 
@@ -53,17 +52,26 @@ export const processDetailReducer = createReducer(
 );
 
 export interface ProcessMetadata{
-  loteInterno:string;
-  outputLotRecordId:number;
-  createAt:string;
-  currentProces:string;
-  temperature:string;
-  weigth:number;
-  entranceHour:string;
-  outputHour:string;
-  startDate:string;
-  endDate:string;
-  rawMaterialName:string;
+
+  processId:number,
+  formulationId:number,
+  productName:string,
+  lotDay:string
+  sausage:boolean,
+  tenderized:boolean,
+  conditioning:boolean,
+  grinding:boolean
+  // loteInterno:string;
+  // outputLotRecordId:number;
+  // createAt:string;
+  // currentProces:string;
+  // temperature:string;
+  // weigth:number;
+  // entranceHour:string;
+  // outputHour:string;
+  // startDate:string;
+  // endDate:string;
+  // rawMaterialName:string;
 }
 const initValueProcessMetadata:ProcessMetadata =null;
 export const processMetadataReducer = createReducer<ProcessMetadata>(initValueProcessMetadata,

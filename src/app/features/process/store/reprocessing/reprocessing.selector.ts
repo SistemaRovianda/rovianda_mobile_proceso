@@ -12,3 +12,8 @@ export const SELECT_REPROCESSING_IS_LOADING = createSelector(
   SELECT_REPROCESSING,
   (state) => state.loading
 );
+
+export const SELECT_FORMULATION_DETAILS = createSelector(
+  SELECT_REPROCESSING,
+  (state)=>state.formulationDetails
+);

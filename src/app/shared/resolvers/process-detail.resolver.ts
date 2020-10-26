@@ -21,7 +21,7 @@ export class ProcessDetailResolver implements Resolve<boolean> {
     this.store.dispatch(processDetailStartLoadProducts());
     //this.store.dispatch(processDetailStartLoadMaterials());
     this.store.dispatch(processDetailStartLoadProductsRovianda());
-    this.store.dispatch(processDetailStartLoadLotsMeatProcess());
+    //this.store.dispatch(processDetailStartLoadLotsMeatProcess());
     return true;
   }
 }

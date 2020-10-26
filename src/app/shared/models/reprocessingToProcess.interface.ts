@@ -1,4 +1,6 @@
 export interface ReprocessingToProcess {
-  loteProcess: string;
-  reprocessingId: number;
+  date: string,
+    weight : number,
+    allergen : string
+    defrostId:number
 }

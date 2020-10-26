@@ -1,125 +1,236 @@
-import { Component, OnInit, EventEmitter, Output, Input } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, Input, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AppState } from "src/app/shared/models/store.state.interface";
-import { Store, select } from "@ngrx/store";
-import { Sausage } from "src/app/shared/models/sausage.interface";
+import { Store } from "@ngrx/store";
+import {  SausageItemToList } from "src/app/shared/models/sausage.interface";
 import {
   SELECT_SAUSAGE_DATA,
-  SELECT_SAUSAGE_IS_SELECTED,
+  SELECT_SAUSAGE_ERRORS_UPDATING,
+  SELECT_SAUSAGE_IS_LOADING,
+  SELECT_SAUSAGE_PROCESS_METADATA,
+  SELECT_SAUSAGE_SAUSAGE,
 } from "../../store/sausage/sausage.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
 import * as moment from "moment";
 import {
+  getFormulationsByProductRovianda,
+  getSausageProcessMetadata,
   sausageRegister,
-  sausageStartRegisterDateAndWeigth,
+  sausageSearchInformation,
+  updateSausageHour,
 } from "../../store/sausage/sausage.actions";
-import { ProductCatalog } from "src/app/shared/models/product-catalog.interface";
-import { decimalValidator } from "src/app/shared/validators/decimal.validator";
-import { recentRecordsCreateNewProcess } from "../../store/recent-records/recent-records.actions";
+
 import {
   SELECT_RECENT_RECORDS_IS_NEW_REGISTER,
-  SELECT_RECENT_RECORDS_PROCESS_SUCCESS,
 } from "../../store/recent-records/recent-records.selector";
-import { ProcessLotMeat } from "src/app/shared/models/procces-lot-meat.interface";
-import { SELECT_PROCESS_DETAIL_SECTION, SELECT_PROCESS_METADATA, SELECT_PROCESS_DETAIL_LOTS_MEAT } from "../../store/process-detail/process-detail.selector";
+
+import { SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA } from "../../store/process-detail/process-detail.selector";
+
+import { from, Observable, Subscription } from 'rxjs';
+import { ProductsRovianda } from 'src/app/shared/models/produts-rovianda.interface';
+import { FormulationDefrost, FormulationDetails, FormulationPending } from 'src/app/shared/models/formulations.interface';
+import { GET_FORMULATION_DETAILS } from '../../store/formulation/formulation.selectors';
+import { ModalFormulationDetailsComponent } from '../modal-formulation-details/modal-formulation-details.component';
+import { MatDialog, MatDialogRef, MatTableDataSource } from '@angular/material';
+import { getFormulationDetails } from '../../store/formulation/formulation.actions';
 import { ProcessMetadata } from '../../store/process-detail/process-detail.reducer';
 import { getProcessDetails } from '../../store/process-detail/process-detail.actions';
+import { SausageHourRequest, SausageOfProcess } from 'src/app/shared/models/sausage-page.interface';
+import { SELECT_CURRENT_SECTION } from '../../store/sections/section.selector';
+import { NumberSymbol } from '@angular/common';
 
 @Component({
   selector: "app-form-sausage",
   templateUrl: "./form-sausage.component.html",
   styleUrls: ["./form-sausage.component.scss"],
 })
-export class FormSausageComponent implements OnInit {
-  sausage: Sausage;
+export class FormSausageComponent implements OnInit,OnDestroy {
+  
 
   form: FormGroup;
 
-  @Input() products: ProductCatalog[];
-
-  @Input() lotsMeat: ProcessLotMeat[]=[];
+  productsRovianda$: Observable<ProductsRovianda[]> = from([]);
+  formulations:Observable<FormulationPending[]>=from([[]]);
+  defrostOfFormulation:FormulationDefrost[]=[];
+  formulation:FormulationDetails={
+    date:null,defrosts:[],id:null,lotDay:null,make:null,productRovianda:null,status:null,temp:null,
+    verifit:null,waterTemp:null
+  }
+  sausageArr:SausageItemToList[]=[];
+  sausageOfProcess:SausageOfProcess[]=[];
+  matTableDataSource:MatTableDataSource<SausageItemToList>;
+  displayedColumns:string[] = ["Lote","Temperatura","Fecha"];
 
   @Output("onSubmit") submit = new EventEmitter();
 
-  minDate = new Date().toISOString();
+  section:string;
 
-  maxDate = new Date().getFullYear() + 5;
+  isNewRegister: boolean = true;
 
-  isSelected: boolean;
+  currentProcess:ProcessMetadata=null;
+  dialogRef:MatDialogRef<ModalFormulationDetailsComponent>;
 
-  optionalMedium = false;
+  private subscriptions=new Subscription();
+  public ngOnDestroy():void{
+    this.subscriptions.unsubscribe();
+  }
 
-  optionalFinal = false;
-
-  isNewRegister: boolean;
-
-  section: string;
 
   constructor(
     private fb: FormBuilder,
     private store: Store<AppState>,
-    private alert: AlertService
+    private alert: AlertService,
+    private dialog:MatDialog
   ) {
     this.form = fb.group({
       productId: ["", Validators.required],
+      formulationId:["",Validators.required],
+      defrostId:["",Validators.required],
       temperature: ["", Validators.required],
-      date: [this.minDate, Validators.required],
+      date: ["", Validators.required],
       hour1: [new Date().toISOString(), Validators.required],
-      weightInitial: ["", [Validators.required, decimalValidator]],
+      weightInitial: ["", [Validators.required]],
       hour2: [""],
-      weightMedium: ["", [decimalValidator]],
+      weightMedium: ["", ],
       hour3: [""],
-      weightFinal: ["", [decimalValidator]],
-      loteMeat: ["", Validators.required],
+      weightFinal: [""],
     });
+    this.subscriptions.add(this.store.select(SELECT_CURRENT_SECTION).subscribe((section)=>{
+      this.section=section;
+    }));
+    this.matTableDataSource=new MatTableDataSource();
+    this.resetTable();
+    this.subscriptions.add(this.store.select(SELECT_SAUSAGE_DATA).subscribe((sausages)=>{
+      this.sausageOfProcess=sausages;
+      if(this.sausageOfProcess.length){
+        this.sausageArr=this.sausageOfProcess.map((x)=>{
+          return {
+            sausageId: +x.sausagedId,
+            date: x.date,
+            defrostId:0,
+            lotId: x.lotId,
+            temperature: x.temperature,
+            time:{
+              hour1: x.time.hour1,
+              weightInitial: x.time.weightInitial,
+              hour2: x.time.hour2,
+              weightMedium: x.time.weightMedium,
+              hour3: x.time.hour3,
+              weightFinal: x.time.weightMedium
+            },
+            productRovianda: x.productRovianda
+          }
+        })  
+        this.resetTable(); 
+      }else{
+        this.subscriptions.add(this.store.select(SELECT_SAUSAGE_PROCESS_METADATA).subscribe((processMetadata)=>{
+          if(processMetadata!=null){
+            this.currentProcess = processMetadata;
+            console.log("CURRENT PROCESS",this.currentProcess);
+            this.formulationId.setValue(this.currentProcess.formulationId);
+            if(!this.currentProcess.sausage){
+            this.selectFormulationId()
+            }
+            
+            this.productId.setValue(0)
+          }
+        }));
+        if(localStorage.getItem("processId")!="-1"){
+        this.store.dispatch(getSausageProcessMetadata());
+        }
+      }
+    }));
+    
+    this.subscriptions.add(this.store.select(GET_FORMULATION_DETAILS).subscribe((details)=>{
+      this.formulation=details;
+      this.defrostOfFormulation=this.formulation.defrosts;
+      this.sausageArr=[];
+      if(details.id!=null && this.isNewRegister && this.section=="SAUSAGE"){
+        this.dialogRef = this.dialog.open(ModalFormulationDetailsComponent, {
+          width: '500px',
+          height:"50%",
+          data: this.formulation,
+          panelClass: "backdropBackground"
+        });
+        this.dialogRef.afterClosed().subscribe(result => {
+          console.log('The dialog was closed');
+          this.dialogRef=null;
+        });
+      }
+    }))
+
+    this.subscriptions.add(this.store.select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER).subscribe((isNewRegister)=>{
+      
+      if(!isNewRegister){
+        this.isNewRegister=isNewRegister;
+        console.log("NO ES NUEVO");  
+        this.store.dispatch(sausageSearchInformation({processId:+localStorage.getItem("processId")}));
+      }else{
+        this.productsRovianda$=this.store.select( // en caso de no existir se asigna al arreglo varios productos de rovianda para su registro
+          SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA
+        );
+        this.formulations = this.store.select(SELECT_SAUSAGE_SAUSAGE);
+      }
+    }));
   }
 
-  ngOnInit() {
-    if(localStorage.getItem("processId")!=null && +localStorage.getItem("processId")!=-1){
-        
-      this.store.pipe(select(SELECT_PROCESS_METADATA)).subscribe((process:ProcessMetadata)=>{
-        console.log("PROCESS EMBUTIDO",process);
-        if(process!=null && process.loteInterno!=""){
-        this.lotsMeat = [
-          {
-            loteMeat:process.loteInterno,
-            productId:0
-          }
-        ];
-      }else{
-        this.store.dispatch(getProcessDetails());
-      }
-      })
-  }else{
-    this.store.select(
-      SELECT_PROCESS_DETAIL_LOTS_MEAT
-    ).subscribe((lots) => (this.lotsMeat = lots));
+  selectProductRovianda(){
+    console.log("Solicitando formulaciones");
+    if(this.productId.value!=null && this.productId.value!=0){
+    this.store.dispatch(getFormulationsByProductRovianda({productRoviandaId:this.productId.value}));
+    }
   }
-    this.store.select(SELECT_SAUSAGE_DATA).subscribe((tempSausage) => {
-      if (tempSausage != null) {
-        this.sausage = tempSausage;
-        this.updateForm();
-      }
-    });
-    this.store
-      .select(SELECT_SAUSAGE_IS_SELECTED)
-      .subscribe((selected) => (this.isSelected = selected));
-    this.store
-      .select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER)
-      .subscribe((isNew) => (this.isNewRegister = isNew));
-    this.store
-      .select(SELECT_RECENT_RECORDS_PROCESS_SUCCESS)
-      .subscribe((success) => {
-        if (success && this.section === "EMBUTIDO") {
-          this.registerSausage();
+  selectFormulationId(){
+    if(this.formulationId.value!=null){
+    this.store.dispatch(
+      getFormulationDetails({formulationId:this.formulationId.value})
+    );
+    }
+  }
+
+  resetTable(){
+    this.matTableDataSource.data = this.sausageArr;
+  }
+  isLoading:boolean =false;
+  error=null;
+  ngOnInit() {
+    this.subscriptions.add(this.store.select(SELECT_SAUSAGE_ERRORS_UPDATING).subscribe((error)=>{
+      this.error = error;
+    }));
+    this.subscriptions.add(this.store.select(SELECT_SAUSAGE_IS_LOADING).subscribe((isLoading:boolean)=>{
+      if(isLoading==true){
+        this.isLoading = isLoading;
+      }else if (isLoading==false && this.isLoading==true){
+        if(this.sausageSelected!=null){
+          let sausageItem = this.sausageArr[this.sausageSelected];
+          if(sausageItem.time.hour2==null || sausageItem.time.hour2==""){
+            if(this.error!=null){
+              this.hour2.setValue(null);
+              this.weightMedium.setValue(null);
+            }else{
+              this.sausageArr[this.sausageSelected].time.hour2=this.hour2.value;
+              this.sausageArr[this.sausageSelected].time.weightMedium=this.weightMedium.value;
+              this.secondHoursEnabled=false;
+              this.thirdHoursEnabled=true;
+            }
+          }else if(sausageItem.time.hour3==null || sausageItem.time.hour3==""){
+            if(this.error!=null){
+              this.hour3.setValue(null);
+              this.weightFinal.setValue(null);
+            }else{
+              this.sausageArr[this.sausageSelected].time.hour3=this.hour3.value;
+              this.sausageArr[this.sausageSelected].time.weightFinal=this.weightFinal.value;
+              this.thirdHoursEnabled=false;
+            }
+          }
         }
-      });
-    this.store
-      .select(SELECT_PROCESS_DETAIL_SECTION)
-      .subscribe((section) => (this.section = section.section));
+      }
+    }));
+   
   }
 
   onSubmit() {
+       if(this.sausageArr.length && this.isNewRegister){
     const buttons: any = [
       {
         text: "Cancel",
@@ -128,9 +239,7 @@ export class FormSausageComponent implements OnInit {
       {
         text: "Aceptar",
         handler: () => {
-          this.isNewRegister
-            ? this.store.dispatch(recentRecordsCreateNewProcess())
-            : this.registerSausage();
+          this.store.dispatch(sausageRegister({formulationId:this.formulationId.value,sausages:this.sausageArr}))  
         },
       },
     ];
@@ -144,32 +253,46 @@ export class FormSausageComponent implements OnInit {
       `Los campos opcionales también deberán ser guardados más adelante para poder cerrar el proceso.`,
       buttons
     );
+       }else if(this.sausageSelected!=null){
+        console.log("Ya esta");
+        if(this.sausageArr[this.sausageSelected].time.hour2==null ||this.sausageArr[this.sausageSelected].time.hour2=="" ){
+          if(this.hour2.valid && this.weightMedium.valid){
+            console.log("Valido para actualizar segunda hora");
+            let sausageRequest:SausageHourRequest={
+               hour: 2,
+               hourSaved: this.hour2.value,
+               weigthSaved: this.weightMedium.value
+            }
+            this.updateForm(this.sausageArr[this.sausageSelected].sausageId,sausageRequest);
+          }else{
+            console.log("No valido para actualizar segunda hora");
+          }
+        }else if(this.sausageArr[this.sausageSelected].time.hour3==null ||this.sausageArr[this.sausageSelected].time.hour3=="" ){
+          if(this.hour2.valid && this.weightMedium.valid){
+            console.log("Valido para actualizar tercera hora");
+            let sausageRequest:SausageHourRequest={
+               hour: 3,
+               hourSaved: this.hour3.value,
+               weigthSaved: this.weightFinal.value
+            }
+            this.updateForm(this.sausageArr[this.sausageSelected].sausageId,sausageRequest);
+          }else{
+            console.log("No valido para actualizar tercera hora");
+          }
+        }else{
+          this.alert.showAlert("Informacion","Registro completado","El lote ya tiene todos sus campos registrados",["Aceptar"]);
+        }
+      }
   }
 
-  onSubmitDate() {
-    const { hour2, hour3, weightMedium, weightFinal } = this.form.value;
-    if (this.optionalMedium) {
-      this.store.dispatch(
-        sausageStartRegisterDateAndWeigth({
-          hour: {
-            hour: moment(hour2).format("HH:mm"),
-            weight: weightMedium,
-          },
-          sausagedId: this.sausage.sausagedId,
-        })
-      );
-    } else if (this.optionalFinal) {
-      this.store.dispatch(
-        sausageStartRegisterDateAndWeigth({
-          hour: {
-            hour: moment(hour3).format("HH:mm"),
-            weight: weightFinal,
-          },
-          sausagedId: this.sausage.sausagedId,
-        })
-      );
-    }
-  }
+  
+
+
+  // onSubmitDate() {
+  //   if(this.sausageArr.length){
+  //       this.registerSausage();
+  //   }
+  // }
 
   registerSausage() {
     const { date, hour1, weightInitial, ...values } = this.form.value;
@@ -186,28 +309,17 @@ export class FormSausageComponent implements OnInit {
     );
   }
 
-  updateForm() {
-    const { product, time, ...value } = this.sausage;
-
-    this.optionalMedium = time.hour2 === "" && time.weightMedium <= 0;
-    this.optionalFinal = time.hour3 === "" && time.weightFinal <= 0;
-
-    this.form.patchValue({
-      ...value,
-      productId: product.description,
-      hour1: time.hour1,
-      hour2: time.hour2,
-      hour3: time.hour3,
-      weightInitial: time.weightInitial,
-      weightMedium: time.weightMedium,
-      weightFinal: time.weightFinal,
-    });
+  updateForm(sausageId:number,sausageHours:SausageHourRequest) {
+    this.store.dispatch(updateSausageHour({sausageId,sausageHours}));
   }
 
   get productId() {
     return this.form.get("productId");
   }
 
+  get formulationId(){
+    return this.form.get("formulationId");
+  }
   get temperature() {
     return this.form.get("temperature");
   }
@@ -240,6 +352,10 @@ export class FormSausageComponent implements OnInit {
     return this.form.get("weightFinal");
   }
 
+  get defrostId(){
+    return this.form.get("defrostId");
+  }
+
   get fieldsRequireds() {
     return (
       this.productId.valid &&
@@ -256,4 +372,80 @@ export class FormSausageComponent implements OnInit {
   get fieldsOptionalFinal() {
     return this.hour3.value === "" || this.weightFinal.invalid;
   }
+
+  addItem(){
+    console.log(this.form.valid,this.form.value);
+    if(this.form.valid){
+
+        let has=this.sausageArr.filter(x=>x.defrostId==this.form.get('defrostId').value);
+        if(!has.length){
+          this.defrostOfFormulation=this.defrostOfFormulation.filter(x=>x.defrostFormulationId!=this.defrostId.value);
+          console.log("agregando");
+          let lotString = "";
+          console.log("defrostId",this.defrostId.value);
+          for(let defrost of this.formulation.defrosts){
+            console.log(defrost);
+            if(defrost.defrostFormulationId==+this.defrostId.value){
+              lotString=defrost.lotMeat;
+              console.log("coincide");
+            }else{
+              console.log("no coincide");
+            }
+          }
+          let item:SausageItemToList ={
+            date: this.date.value,
+            defrostId: this.defrostId.value,
+            temperature: this.temperature.value,
+            time:{
+              hour1: this.hour1.value,
+              weightInitial: this.weightInitial.value,
+            },
+            lotId:lotString
+          }
+          this.sausageArr.push(item);
+          this.resetTable
+        }
+    }
+  }
+  removeOfSausageArr(index:number){
+    this.sausageArr.splice(index,1);
+    this.defrostOfFormulation=this.formulation.defrosts.filter(x=>!this.sausageArr.map(x=>x.defrostId).includes(x.defrostFormulationId));
+    this.resetTable()
+  }
+
+  secondHoursEnabled:boolean=false;
+  thirdHoursEnabled:boolean=false;
+  sausageSelected:NumberSymbol;
+  selectItemToUpdate(index:number){
+    
+    if(index==this.sausageSelected){
+      this.sausageSelected=null;
+    }else{
+      this.sausageSelected=index;
+      let sausageItem:SausageItemToList = this.sausageArr[index];
+      this.date.setValue(sausageItem.date);
+      this.temperature.setValue(sausageItem.temperature);
+      console.log("Sausaged selected: ",sausageItem);
+      this.weightInitial.setValue(sausageItem.time.weightInitial);
+      this.hour1.setValue(sausageItem.time.hour1);
+      if(sausageItem.time.hour2==null|| sausageItem.time.hour2==""){
+        this.secondHoursEnabled=true;
+      }else if(sausageItem.time.hour3==null || sausageItem.time.hour3==""){
+        this.weightMedium.setValue(sausageItem.time.weightMedium);
+        this.hour2.setValue(sausageItem.time.hour2);
+        this.thirdHoursEnabled=true;
+      }else{
+        console.log("Contiene todos los registros");
+        this.hour2.setValue(sausageItem.time.hour2);
+        this.weightMedium.setValue(sausageItem.time.weightMedium);
+        this.hour3.setValue(sausageItem.time.hour3);
+        this.weightFinal.setValue(sausageItem.time.weightFinal);
+      }
+    }
+    
+    
+  }
+
+
+
 }

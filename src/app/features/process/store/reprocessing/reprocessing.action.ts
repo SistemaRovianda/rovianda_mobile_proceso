@@ -1,5 +1,7 @@
 import { createAction, props } from "@ngrx/store";
-import { Reprocessing } from "src/app/shared/models/reprocessing.interface";
+import { FormulationDetails } from 'src/app/shared/models/formulations.interface';
+import { ReprocessingOfProcess } from 'src/app/shared/models/reprocessing.interface';
+
 import { ReprocessingToProcess } from "src/app/shared/models/reprocessingToProcess.interface";
 
 const REPROCESSING_START_REPROCESSING = "[REPROCESSING] Start Reprocessing";
@@ -21,15 +23,7 @@ export const reprocessingStartLoadOfListReprocessing = createAction(
   props<{ section: string }>()
 );
 
-export const reprocessingLoadListOfListReprocessing = createAction(
-  REPROCESSING_LOAD_LIST_OF_LIST_REPROCESSING,
-  props<{ listReprocessing: Reprocessing[] }>()
-);
 
-export const reprocessingStartReprocessing = createAction(
-  REPROCESSING_START_REPROCESSING,
-  props<ReprocessingToProcess>()
-);
 
 export const reprocessigFinish = createAction(REPROCESSIN_FINISH);
 
@@ -38,4 +32,29 @@ export const reprocessingSucces = createAction(REPROCESSING_SUCCESS);
 export const reprocessingFailure = createAction(
   REPROCESSING_FAILURE,
   props<{ error: string }>()
+);
+
+
+export const getFormulationDetails = createAction(
+  "[REPROCESING] getting formulationDetails",
+  props<{formulationId:number}>()
+);
+
+export const setFormulationDetails = createAction(
+  "[REPROCESING] setting formulationDetails",
+  props<{formulationDetails:FormulationDetails}>()
+);
+
+export const getReprocesingOfProcess = createAction(
+  "[REPROCESING] getting reprocesings records"
+);
+
+export const setReprocesingOfProcess = createAction(
+  "[REPROCESING] setting reprocesings records",
+  props<{reprocesings:ReprocessingOfProcess[]}>()
+);
+
+export const registerReprocesings = createAction(
+  "[REPROCESING] saving reprocesings records",
+  props<{reprocesings:ReprocessingToProcess[]}>()
 );

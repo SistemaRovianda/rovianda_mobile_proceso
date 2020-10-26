@@ -8,6 +8,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../models/store.state.interface";
 import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "src/app/features/process/store/recent-records/recent-records.selector";
 import { tenderizedSearchInformation } from "src/app/features/process/store/tenderized/tenderized.actions";
+import { setSection } from 'src/app/features/process/store/sections/section.actions';
 
 @Injectable()
 export class TenderizedResolver implements Resolve<boolean> {
@@ -19,13 +20,7 @@ export class TenderizedResolver implements Resolve<boolean> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (this.isSelected) {
-      this.store.dispatch(
-        tenderizedSearchInformation({
-          processId: +localStorage.getItem("processId"),
-        })
-      );
-    }
+    this.store.dispatch(setSection({section:"TENDERIZED"}));
     return true;
   }
 }

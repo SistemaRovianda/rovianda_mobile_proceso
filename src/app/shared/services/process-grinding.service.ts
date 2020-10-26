@@ -5,7 +5,7 @@ import {
   API_ENDPOINT_PROVIDER_MOCKUP,
 } from "src/app/providers/tokens";
 import { Observable } from "rxjs";
-import { Grinding } from "../models/grinding.interface";
+import { Grinding, GrindingItemToList, GrindingOfProcess } from "../models/grinding.interface";
 
 @Injectable({ providedIn: "root" })
 export class GrindingService {
@@ -20,12 +20,10 @@ export class GrindingService {
   }
 
   getDataGrinding(processId): Observable<any> {
-    return this.http.get<any>(`${this.url}/grinding/${processId}`);
+    return this.http.get<Array<GrindingOfProcess>>(`${this.url}/grinding/${processId}`);
   }
 
-  registerGrinding(grinding: Grinding, processId: number): Observable<any> {
-    return this.http.post<any>(`${this.url}/grinding/${processId}`, {
-      ...grinding,
-    });
+  registerGrinding(grindings: GrindingItemToList[], formulationId: number): Observable<any> {
+    return this.http.post<any>(`${this.url}/grinding/${formulationId}`, grindings);
   }
 }
