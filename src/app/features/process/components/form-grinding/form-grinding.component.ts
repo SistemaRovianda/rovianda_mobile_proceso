@@ -11,7 +11,7 @@ import {
 } from "../../store/grinding/grinding.selector";
 import { AlertService } from "src/app/shared/services/alert.service";
 
-import { getFormulationsByProductRovianda, getGrindingProcessMetadata, grindingRegister, grindingSearchInformation } from "../../store/grinding/grinding.actions";
+import { getFormulationsByProductRovianda, getGrindingProcessMetadata, grindingRegister, grindingSearchInformation, setReprocesingLots } from "../../store/grinding/grinding.actions";
 import { decimalValidator } from "src/app/shared/validators/decimal.validator";
 import {
   SELECT_RECENT_RECORDS_IS_NEW_REGISTER,
@@ -33,6 +33,9 @@ import { ProcessMetadata } from '../../store/process-detail/process-detail.reduc
 import { getProcessDetails } from '../../store/process-detail/process-detail.actions';
 import { ModalFormulationDetailsModule } from '../modal-formulation-details/modal-formulation-details.module';
 import { SELECT_CURRENT_SECTION } from '../../store/sections/section.selector';
+import { getLotsReprocesingOfProcess } from '../../store/reprocesing-grinding/reprocesing-grinding.actions';
+import { SELECT_REPROCESINGS_OF_PROCESS } from '../../store/reprocesing-grinding/reprocesing-grinding.selectors';
+import { reprocesingOfGrinding, ReprocessingOfProcess } from 'src/app/shared/models/reprocessing.interface';
 //import { SELECT_BASIC_REGISTER_LOTS } from '../../store/basic-register/basic-register.select';
 
 @Component({
@@ -57,16 +60,21 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
   formulations: Observable<FormulationPending[]>=from([[]]);
   formulation:FormulationDetails={
     date:null,defrosts:null,id:null,lotDay:null,make:null,productRovianda:null,status:null,temp:null,
-    verifit:null,waterTemp:null
+    verifit:null,waterTemp:null,reprocesings:[]
   }
   defrostOfFormulation:FormulationDefrost[]=[];
   grindingArr:GrindingItemToList[]=[];
   grindingsOfProcess:GrindingOfProcess[]=[];
   matTableDataSource:MatTableDataSource<GrindingItemToList>;
   dialogRef:MatDialogRef<ModalFormulationDetailsComponent>;
-  displayedColumns:string[] = ["Lote","Peso","Proceso","Fecha"];
+  displayedColumns:string[] = ["Lote","Materia Prima","Peso","Proceso","Fecha","Tipo"];
+  reprocesingsPendingTemp:ReprocessingOfProcess[]=[];
+  reprocesingsPending:ReprocessingOfProcess[]=[];
+  reprocesingsToRegister:reprocesingOfGrinding[]=[];
   private subscriptions=new Subscription();
+  hasReprocesing:boolean = false;
   public ngOnDestroy():void{
+    console.log("destruyendo");
     this.subscriptions.unsubscribe();
   }
 
@@ -82,11 +90,13 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
       weight: ["", [Validators.required, decimalValidator]],
       date: ["", Validators.required],
       defrostId: ["", [Validators.required]],
-      process:["",[Validators.required]]
+      process:["",[Validators.required]],
+      reprocesingId:[""]
     });
     this.subscriptions.add(this.store.select(SELECT_CURRENT_SECTION).subscribe((section)=>{
       this.section=section;
     }));
+    this.store.dispatch(getLotsReprocesingOfProcess());
     this.matTableDataSource = new MatTableDataSource();
     this.resetTable();
     this.subscriptions.add(this.store.select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER).subscribe((isNewRegister)=>{
@@ -103,20 +113,23 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
     this.subscriptions.add(this.store.select(SELECT_GRINDING_DATA).subscribe((grindings)=>{
       this.grindingsOfProcess=grindings;
       if(grindings.length){
-        this.grindingArr= this.grindingsOfProcess.map((x)=>{
+        this.grindingArr= [...this.grindingsOfProcess.map((x)=>{
           return {
             date:x.date,
             defrostId:0,
             lotId:x.formulation,
             process: x.process,
-            weight: x.weight
+            weight: x.weight,
+            typeRecord: "NORMAL",
+            reprocesingId:0,
+            rawMaterial: x.rawMaterial
           }
-        })
+        }),...this.grindingArr]
         this.resetTable();
       }else{
-        if(localStorage.getItem("processId")!="-1"){
+        
         this.store.dispatch(getGrindingProcessMetadata());
-        }
+        
         this.subscriptions.add(this.store.select(SELECT_GRINDING_PROCESS_METADATA).subscribe((processMetadata)=>{
           if(processMetadata!=null){
             this.currentProcess = processMetadata;
@@ -149,6 +162,38 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
       }
     }))
    
+    this.subscriptions.add(this.store.select(SELECT_REPROCESINGS_OF_PROCESS).subscribe((reprocesings)=>{
+      console.log("Reprocesos asignados",reprocesings);
+      
+      this.reprocesingsPending =reprocesings.filter(x=>x.used==false);
+      this.reprocesingsPendingTemp=reprocesings.filter(x=>x.used==false);
+      if(this.reprocesingsPending.length){
+        this.hasReprocesing=true;  
+      }else{
+        this.hasReprocesing=false;
+      }
+      let reprocesingsUsed =reprocesings.filter(x=>x.used==true);
+      if(reprocesingsUsed.length){
+        console.log("REPROCESO UTILIZADO");
+      this.grindingArr.push(...reprocesingsUsed.map((x)=>{
+        return { 
+          date: x.dateUsed,
+          defrostId:0,
+          lotId: x.lotId,
+          process: x.process,
+          weight: +x.weightUsed,
+          typeRecord: "REPROCESO",
+          reprocesingId: x.reprocesingId,
+          rawMaterial: x.productName
+        }
+      }));
+      this.resetTable();
+    }else{
+      console.log("Todos los reprocesos usados");
+    }
+  }
+    ));
+
   }
 
   resetTable(){
@@ -179,6 +224,10 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
   get process(){
     return this.form.get("process");
   }
+
+  get reprocesingId(){
+    return this.form.get("reprocesingId");
+  }
   selectFormulationId(){
     if(this.formulationId.value!=null){
     this.store.dispatch(
@@ -200,13 +249,13 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
       {
         text: "Aceptar",
         handler: () => {
-          
-             this.registerGrinding()
             
+             this.registerGrinding()
+ 
         },
       },
     ];
-    if (this.grindingArr.length) {
+    if (this.grindingArr.length && !this.hasReprocesing && !this.grindingsOfProcess.length) {
       this.alert.showAlert(
         "Informacion",
         `${
@@ -217,6 +266,35 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
         "Una vez guardada la información no podrá ser modificada, ¿Deseas guardar la información?",
         buttons
       );
+    }else if(this.hasReprocesing){
+      if(this.reprocesingsToRegister.length && !this.reprocesingsPendingTemp.length){
+        const buttons2: any = [
+          {
+            text: "Cencelar",
+            role: "cancel",
+          },
+          {
+            text: "Aceptar",
+            handler: () => {
+              this.store.dispatch(setReprocesingLots({reprocesings:this.reprocesingsToRegister}));
+            },
+          },
+        ];
+        this.alert.showAlert(
+          "Informacion",
+          `Registro de reproceso`,
+          "Una vez guardada la información no podrá ser modificada, ¿Deseas guardar la información?",
+          buttons2
+        );
+        
+        }else if(this.reprocesingsPendingTemp.length){
+          this.alert.showAlert(
+            "Informacion",
+            `Registros de reproceso pendientes`,
+            "Aún no se han registrados todos los lotes de reproceso",
+            ["Aceptar"]
+          );
+        }
     }
   }
 
@@ -239,17 +317,19 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
   addItem(){
     console.log(this.form.valid,this.form.value);
     if(this.form.valid){
-
+      if(!this.hasReprocesing){
         let has=this.grindingArr.filter(x=>x.defrostId==this.form.get('defrostId').value);
         if(!has.length){
           this.defrostOfFormulation=this.defrostOfFormulation.filter(x=>x.defrostFormulationId!=this.defrostId.value);
           console.log("agregando");
           let lotString = "";
+          let rawMaterial="";
           console.log("defrostId",this.defrostId.value);
           for(let defrost of this.formulation.defrosts){
             console.log(defrost);
             if(defrost.defrostFormulationId==+this.defrostId.value){
               lotString=defrost.lotMeat;
+              rawMaterial=defrost.defrost.outputCooling.rawMaterial.rawMaterial;
               console.log("coincide");
             }else{
               console.log("no coincide");
@@ -260,7 +340,10 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
             defrostId: this.defrostId.value,
             process: this.process.value,
             weight: this.weigth.value,
-            lotId: lotString
+            lotId: lotString,
+            typeRecord: "NORMAL",
+            reprocesingId:0,
+            rawMaterial
           }
           this.grindingArr.push(item);
           this.resetTable();
@@ -268,11 +351,48 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
           console.log("Ya esta");
         }
     }
+  }else{
+    if(this.date.valid && this.process.valid && this.weigth.valid && this.reprocesingId.value!="" && this.reprocesingsPendingTemp.length){
+    let item= this.reprocesingsPendingTemp.filter(x=>x.reprocesingId==this.reprocesingId.value);
+    this.reprocesingsPendingTemp= this.reprocesingsPendingTemp.filter(x=>x.reprocesingId!=this.reprocesingId.value);
+    this.reprocesingsToRegister.push({
+      date: this.date.value,
+      process: this.process.value,
+      weight: this.weigth.value,
+      reprocesingId: item[0].reprocesingId
+    });
+    this.grindingArr.push({
+      date: this.date.value,
+      defrostId: 0,
+      lotId: item[0].lotId,
+      process: this.process.value,
+      reprocesingId: item[0].reprocesingId,
+      typeRecord: "REPROCESO",
+      weight: this.weigth.value,
+      rawMaterial: item[0].productName
+    });
+    console.log("Estado de reproceso",this.reprocesingsToRegister);
+    this.resetTable();
+  }
+  }
   }
 
+
+
   removeOfGrindingArr(index:number){
-    this.grindingArr.splice(index,1);
-    this.defrostOfFormulation=this.formulation.defrosts.filter(x=>!this.grindingArr.map(x=>x.defrostId).includes(x.defrostFormulationId));
-    this.resetTable();
+    if(this.grindingArr[index].typeRecord!="REPROCESO"){
+      if(this.isNewRegister){
+        this.grindingArr.splice(index,1);
+        this.defrostOfFormulation=this.formulation.defrosts.filter(x=>!this.grindingArr.map(x=>x.defrostId).includes(x.defrostFormulationId));
+        this.resetTable();
+      }
+    }else if(this.hasReprocesing){
+      let reprocesingId:number = this.grindingArr[index].reprocesingId;
+      this.reprocesingsPendingTemp.push(...this.reprocesingsPending.filter(x=>x.reprocesingId==reprocesingId));
+      this.reprocesingsToRegister=this.reprocesingsToRegister.filter(x=>x.reprocesingId!=reprocesingId);
+      this.grindingArr.splice(index,1);
+      this.resetTable();
+      console.log("Estado de reproceso",this.reprocesingsToRegister);
+    }
   }
 }

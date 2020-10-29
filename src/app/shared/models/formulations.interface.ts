@@ -15,7 +15,8 @@ export interface FormulationDetails{
     productRovianda:FormulationProductRovianda,
     verifit:FormulationUsers,
     make:FormulationUsers,
-    defrosts: FormulationDefrost[]
+    defrosts: FormulationDefrost[],
+    reprocesings:any[]
 }
 
 export interface FormulationDefrost{

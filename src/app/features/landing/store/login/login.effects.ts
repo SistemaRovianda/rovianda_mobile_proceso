@@ -71,7 +71,7 @@ export class LoginEffects {
             this._storage.set("role", rol);
             this._storage.set(
               "currentUser",
-              name + " " + firstSurname + " " + lastSurname
+              name
             );
             this._storage.set("job", job);
             return [

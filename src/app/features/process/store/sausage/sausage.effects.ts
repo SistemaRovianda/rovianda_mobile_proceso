@@ -12,6 +12,7 @@ import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.sel
 import { FormulationService } from 'src/app/shared/services/formulation.service';
 import { setProcessDetails } from '../process-detail/process-detail.actions';
 import { ProcessService } from 'src/app/shared/services/process.service';
+import { setFormulationDetails } from '../formulation/formulation.actions';
 
 @Injectable()
 export class SausageEffects {
@@ -78,6 +79,9 @@ export class SausageEffects {
                 fromSausageActions.sausageRegisterResults({
                   result: true,
                 }),
+                setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null,reprocesings:[]}}),
+                fromSausageActions.setSausageProcessMetadata({process:null})
+                ,
                 fromSausageActions.sausageFinish(),
                 fromSausageActions.sausageRegisterSuccess(),
                 setProcessDetails({process:null})

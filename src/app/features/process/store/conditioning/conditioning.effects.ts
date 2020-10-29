@@ -14,6 +14,7 @@ import { conditioningRegisterSuccess, getConditioningProcessMetadata, getFormula
 import { FormulationService } from 'src/app/shared/services/formulation.service';
 import { setProcessDetails } from '../process-detail/process-detail.actions';
 import { ProcessService } from 'src/app/shared/services/process.service';
+import { setFormulationDetails } from '../formulation/formulation.actions';
 
 @Injectable()
 export class ConditioningEffects {
@@ -38,8 +39,8 @@ export class ConditioningEffects {
       exhaustMap((action) =>
         this.conditioningService.getDataConditioning(action.processId).pipe(
           switchMap((conditionings) =>
-            conditionings.length > 0
-              ? [
+            
+               [
                   fromConditioningActions.conditioningLoadData({
                     conditionings,
                   }),
@@ -47,14 +48,7 @@ export class ConditioningEffects {
                     isSelected: true,
                   }),
                 ]
-              : [
-                  fromConditioningActions.conditioningLoadData({
-                    conditionings: null,
-                  }),
-                  fromConditioningActions.conditioningIsSelected({
-                    isSelected: false,
-                  }),
-                ]
+           
           ),
           catchError((error) => {
             return of(
@@ -143,7 +137,9 @@ export class ConditioningEffects {
       ofType(registerConditioning),
       exhaustMap((action)=>this.conditioningService.registerConditioning(action.conditioning,action.formulationId).pipe(
         switchMap(()=>{
-          return [conditioningRegisterSuccess(),setProcessDetails({process:null})];
+          return [conditioningRegisterSuccess(),setProcessDetails({process:null}),
+            setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null,reprocesings:[]}}),
+            fromConditioningActions.setConditioningProcessMetadata({process:null})];
         }
       )))
     ))

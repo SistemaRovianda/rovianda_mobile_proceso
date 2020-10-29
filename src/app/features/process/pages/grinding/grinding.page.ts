@@ -17,8 +17,10 @@ import {
 
 import { SELECT_RECENT_RECORDS_IS_SELECTED_PROCESS } from "../../store/recent-records/recent-records.selector";
 
-import { setFormulationsByProductRovianda, setGrindingProcessMetadata } from '../../store/grinding/grinding.actions';
+import { setFormulationsByProductRovianda, setGrindingProcessMetadata, setReprocesingLots } from '../../store/grinding/grinding.actions';
 import { setFormulationDetails } from '../../store/formulation/formulation.actions';
+import { setLotsOfReprocesing, setLotsReprocesingOfProcess } from '../../store/reprocesing-grinding/reprocesing-grinding.actions';
+import { setReprocesingOfProcess } from '../../store/reprocessing/reprocessing.action';
 
 
 @Component({
@@ -39,11 +41,7 @@ export class GrindingPage implements OnInit {
 
   loading: boolean;
 
-  
-
-  private insection:boolean=true;
-
-  
+  isNewRegister:boolean=true;
 
 
   ngOnInit() {
@@ -80,12 +78,13 @@ export class GrindingPage implements OnInit {
   }
 
   redirectBack() {
-    this.insection=false;
-    this.store.dispatch(setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null}}))
+    
+    this.store.dispatch(setLotsReprocesingOfProcess({reprocesings:[]}));
+    this.store.dispatch(setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null,reprocesings:[]}}))
     this.store.dispatch(setGrindingProcessMetadata({process:null}));
     this.router.navigate([`/process/process-detail`]);
   }
   reprocessing() {
-    this.router.navigate([`/process/reprocessing`]);
+    this.router.navigate([`/process/reprocesing-grinding`]);
   }
 }

@@ -13,6 +13,9 @@ import { SELECT_RECENT_RECORDS_PATH } from "../recent-records/recent-records.sel
 import { FormulationService } from 'src/app/shared/services/formulation.service';
 import { setProcessDetails } from '../process-detail/process-detail.actions';
 import { ProcessService } from 'src/app/shared/services/process.service';
+import { ReprocessingService } from 'src/app/shared/services/reprocessing.service';
+import { getLotsReprocesingOfProcess } from '../reprocesing-grinding/reprocesing-grinding.actions';
+import { setFormulationDetails } from '../formulation/formulation.actions';
 
 @Injectable()
 export class GrindingEffects {
@@ -24,7 +27,8 @@ export class GrindingEffects {
     private toast: ToastService,
     private _store: Store<AppState>,
     private formulationService:FormulationService,
-    private processService:ProcessService
+    private processService:ProcessService,
+    private reprocesingService:ReprocessingService
   ) {
     this._store
       .select(SELECT_RECENT_RECORDS_PATH)
@@ -65,11 +69,11 @@ export class GrindingEffects {
                 ]
           ),
           catchError((error) => {
-            return of(
+            return [
               fromGrindingActions.grindingRegisterFailure({
                 error: error.error.msg,
-              })
-            );
+              }),fromGrindingActions.grindingLoadData({grindings:[]})
+            ]
           })
         )
       )
@@ -88,6 +92,8 @@ export class GrindingEffects {
               return [
                 fromGrindingActions.grindingRegisterResult({ result: true }),
                 fromGrindingActions.grindingRegisterSuccess(),
+                setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null,reprocesings:[]}}),
+                fromGrindingActions.setGrindingProcessMetadata({process:null}),
                 fromGrindingActions.grindingRegisterFinish(),
                 setProcessDetails({process:null})
               ];
@@ -132,6 +138,22 @@ export class GrindingEffects {
     exhaustMap((action)=>this.processService.getProcessDetails(+localStorage.getItem("processId")).pipe(
       switchMap((process)=>[fromGrindingActions.setGrindingProcessMetadata({process})]),
       catchError(()=>[fromGrindingActions.setGrindingProcessMetadata({process:null})])
+    ))
+  ))
+
+  setReprocesingLots$ = createEffect(()=>this.action$.pipe(
+    ofType(fromGrindingActions.setReprocesingLots),
+    exhaustMap((action)=>this.reprocesingService.setGrindingReprocesing(action.reprocesings).pipe(
+      switchMap(()=>
+      {
+        this.toast.presentToastSuccessCustom("Lotes de reproceso registrados correctamente");
+        return [getLotsReprocesingOfProcess()]
+      }),
+      catchError(()=>
+      {
+        this.toast.presentToastMessageWarning("Error lotes de reproceso no registrados")
+        return []
+      })
     ))
   ))
 }

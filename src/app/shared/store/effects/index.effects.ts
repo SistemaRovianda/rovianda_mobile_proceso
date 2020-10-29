@@ -9,6 +9,7 @@ import { ProcessDetailEffect } from "src/app/features/process/store/process-deta
 import { UsersEffects } from "src/app/features/process/store/user/user.effect";
 import { ReprocessingEffects } from 'src/app/features/process/store/reprocessing/reprocessing.effects';
 import { FormulationEffects } from 'src/app/features/process/store/formulation/formulation.effects';
+import { ReprocessingGrindingEffects } from 'src/app/features/process/store/reprocesing-grinding/reprocesing-grinding.effects';
 
 export const effects = [
   LoginEffects,
@@ -21,5 +22,6 @@ export const effects = [
   ProcessDetailEffect,
   UsersEffects,
   ReprocessingEffects,
-  FormulationEffects
+  FormulationEffects,
+  ReprocessingGrindingEffects
 ];

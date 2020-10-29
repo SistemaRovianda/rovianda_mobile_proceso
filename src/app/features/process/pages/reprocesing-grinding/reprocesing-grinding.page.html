@@ -1,58 +1,44 @@
 <app-title-header
   titlePath="Regresar"
   path="/process/process-detail"
-  (OnClickEvent)="onBackButton(form.form)"
+  (OnClickEvent)="onBackButton()"
 ></app-title-header>
 <ion-content>
   <ion-grid class="container container--all">
     <ion-row>
       <ion-col>
-        <h1 class="title">Molienda</h1>
+        <h1 class="title">Reproceso Molienda</h1>
       </ion-col>
-    </ion-row>
-
-    <ion-row class="row-button">
-      <ion-col size="3"
-        ><ion-button
-          
-          class="reprocessing-btn"
-          (click)="reprocessing()"
-          [disabled]="!form.grindingsOfProcess.length"
-          >reproceso</ion-button
-        ></ion-col
-      >
     </ion-row>
 
     <ion-row class="container container__row container__row--forms">
       <ion-col class="container container__column" size="12">
         <div class="container container__form">
-          <app-form-grinding
-          
-            #form
-          ></app-form-grinding>
+          <app-reprocesing-grinding-form #form></app-reprocesing-grinding-form>
         </div>
       </ion-col>
     </ion-row>
 
-    <ion-row
+    
+  <ion-row
       class="container container__row container__row--buttons ion-justify-content-around"
     >
       <ion-col class="container container__column" size="12">
         <ion-button
-          [disabled]="!(form.isNewRegister || !form.isNewRegister && form.grindingArr.length || form.hasReprocesing)"
           class="container container_buttton"
           color="secondary"
           size="large"
           expand="block"
           (click)="form.onSubmit()"
           ><ion-grid>
-            <ion-row *ngIf="!loading"> <ion-col>Guardar</ion-col></ion-row>
-            <ion-spinner
+            <ion-row> <ion-col>Guardar</ion-col></ion-row>
+            <!-- <ion-spinner
               *ngIf="loading"
               name="crescent"
-            ></ion-spinner> </ion-grid
+            ></ion-spinner> -->
+             </ion-grid
         ></ion-button>
       </ion-col>
     </ion-row>
-  </ion-grid>
+</ion-grid>
 </ion-content>

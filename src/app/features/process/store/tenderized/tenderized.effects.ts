@@ -14,6 +14,7 @@ import { getFormulationsByProductRovianda, setFormulationsByProductRovianda } fr
 import { FormulationService } from 'src/app/shared/services/formulation.service';
 import { setProcessDetails } from '../process-detail/process-detail.actions';
 import { ProcessService } from 'src/app/shared/services/process.service';
+import { setFormulationDetails } from '../formulation/formulation.actions';
 
 @Injectable()
 export class TenderizedEffects {
@@ -89,6 +90,8 @@ export class TenderizedEffects {
                 fromTenderizedActions.tenderizedRegisterResults({
                   result: true,
                 }),
+                setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null,reprocesings:[]}}),
+                fromTenderizedActions.setTenderizedProcessMetadata({process:null}),
                 fromTenderizedActions.tenderizedRegisterFinish(),
                 fromTenderizedActions.tenderizedRegisterSuccess(),
                 setProcessDetails({process:null})

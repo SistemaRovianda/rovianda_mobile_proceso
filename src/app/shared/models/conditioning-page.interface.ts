@@ -15,6 +15,7 @@ export interface ConditioningInterface {
 
 
 export interface ConditioningItem{
+  rawMaterial:string,
   bone:boolean,
   clean:boolean,
   healthing:boolean,

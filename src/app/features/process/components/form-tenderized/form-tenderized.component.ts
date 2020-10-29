@@ -56,9 +56,9 @@ export class FormTenderizedComponent implements OnInit,OnDestroy {
   section: string;
   tenderizedArr:TenderizedItemToList[]=[];
   formulations:Observable<FormulationPending[]>=from([]);
-  formulation:FormulationDetails={date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null}
+  formulation:FormulationDetails={date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null,reprocesings:[]}
   defrostOfFormulation:FormulationDefrost[];
-  displayedColumns:string[] = ["Lote","Peso","Peso Salmuera","Porcentaje","Fecha"];
+  displayedColumns:string[] = ["Lote","Materia Prima","Peso","Peso Salmuera","Porcentaje","Fecha"];
   matTableDataSource:MatTableDataSource<TenderizedItemToList>;
   currentProcess:ProcessMetadata=null;
   dialogRef:MatDialogRef<ModalFormulationDetailsComponent>;
@@ -118,7 +118,8 @@ export class FormTenderizedComponent implements OnInit,OnDestroy {
           percentage: x.percentage,
           temperature: x.temperature,
           weight: x.weight,
-          weightSalmuera: x.weightSalmuera
+          weightSalmuera: x.weightSalmuera,
+          rawMaterial: x.rawMaterial
         }
       });
       this.resetTable();
@@ -223,7 +224,7 @@ export class FormTenderizedComponent implements OnInit,OnDestroy {
         },
       },
     ];
-    if (this.tenderizedArr.length) {
+    if (this.tenderizedArr.length && !this.tenderizedSaved.length) {
       this.alert.showAlert(
         "Informacion",
         `${
@@ -314,11 +315,13 @@ if(this.form.valid){
           this.defrostOfFormulation=this.defrostOfFormulation.filter(x=>x.defrostFormulationId!=this.form.get('defrostId').value);
           console.log("agregando");
           let lotString = "";
+          let rawMaterial="";
           console.log("defrostId",this.defrostId.value);
           for(let defrost of this.formulation.defrosts){
             console.log(defrost);
             if(defrost.defrostFormulationId==+this.defrostId.value){
               lotString=defrost.lotMeat;
+              rawMaterial=defrost.defrost.outputCooling.rawMaterial.rawMaterial;
               console.log("coincide");
             }else{
               console.log("no coincide");
@@ -332,7 +335,8 @@ if(this.form.valid){
             temperature: this.temperature.value,
             weight: this.weigth.value,
             weightSalmuera: this.weightSalmuera.value,
-            lotId: lotString
+            lotId: lotString,
+            rawMaterial
           };
           
           this.date.setValue("");

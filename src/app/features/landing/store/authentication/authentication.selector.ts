@@ -30,5 +30,5 @@ export const SELECT_USER_JOB = createSelector(
 
 export const SELECT_USER_FULL_NAME = createSelector(
   AUTHENTICATION_STATE,
-  (state) => state.name + " " + state.firstSurname + " " + state.lastSurname
+  (state) => state.name
 );

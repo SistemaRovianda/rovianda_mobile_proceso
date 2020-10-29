@@ -72,12 +72,12 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
   formulations: Observable<FormulationPending[]>=from([[]]);
   conditioningsSaved:ConditioningOfProcess[]=[];
   processId:string;
-  formulation:FormulationDetails={date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null}
+  formulation:FormulationDetails={date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:null,id:null,status:null,reprocesings:[]}
   defrostOfFormulation:FormulationDefrost[]=[];
   conditioningArr:ConditioningItem[]=[];
   currentProcess:ProcessMetadata=null;
   matTableDataSource:MatTableDataSource<ConditioningItem>;
-  displayedColumns:string[] = ["Lote","Peso","Deshuesar","Limpieza","Curacion","Fecha"];
+  displayedColumns:string[] = ["Lote","Materia Prima","Peso","Deshuesar","Limpieza","Curacion","Fecha"];
   modalOpened=false;
 
   private subscriptions=new Subscription();
@@ -119,7 +119,8 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
           healthing: x.healthing,
           lotId: x.lotId,
           temperature: x.temperature,
-          weight: x.weight
+          weight: x.weight,
+          rawMaterial: x.rawMaterial
         }
       });
       this.resetTable();
@@ -152,7 +153,6 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
         this.modalOpened=true;
         this.dialog.open(ModalFormulationDetailsComponent, {
           width: '500px',
-          height:"50%",
           data: this.formulation,
           panelClass: "backdropBackground"
         }).afterClosed().subscribe(()=>this.modalOpened=false);
@@ -164,8 +164,8 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
     this.subscriptions.add(this.store.select(SELECT_RECENT_RECORDS_IS_NEW_REGISTER).subscribe((isNewRegister)=>{
       if(!isNewRegister){
         this.isNewRegister = isNewRegister;
+        console.log("Busncando conditionings");
         this.store.dispatch(conditioningSearchInformation({processId:+localStorage.getItem("processId")}));
-        
       }else{
         this.productsRovianda$=this.store.select( // en caso de no existir se asigna al arreglo varios productos de rovianda para su registro
           SELECT_PROCESS_DETAIL_PRODUCTS_ROVIANDA
@@ -184,7 +184,7 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
 
   onSubmit() {
     console.log("isNew",this.isNewRegister);
-    if(this.isNewRegister ){
+    if(this.isNewRegister || (!this.isNewRegister && this.currentProcess!=null && !this.conditioningsSaved.length)){
     const buttons: any = [
       {
         text: "Cancelar",
@@ -224,13 +224,7 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
     );
   }
 
-  updateForm() {
-    const { product, ...value } = this.conditioning;
-    this.form.patchValue({
-      productId: product.description,
-      ...value,
-    });
-  }
+
 
   get bone() {
     return this.form.get("bone");
@@ -292,11 +286,13 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
           this.defrostOfFormulation=this.defrostOfFormulation.filter(x=>x.defrostFormulationId!=this.form.get('defrostId').value);
           console.log("agregando");
           let lotString = "";
+          let rawMaterial ="";
           console.log("defrostId",this.defrostId.value);
           for(let defrost of this.formulation.defrosts){
             console.log(defrost);
             if(defrost.defrostFormulationId==+this.defrostId.value){
               lotString=defrost.lotMeat;
+              rawMaterial=defrost.defrost.outputCooling.rawMaterial.rawMaterial;
               console.log("coincide");
             }else{
               console.log("no coincide");
@@ -311,7 +307,8 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
             healthing: this.healthing.value,
             temperature: this.form.get('temperature').value,
             weight: this.form.get('weight').value,
-            lotId: lotString
+            lotId: lotString,
+            rawMaterial
           };
           this.bone.setValue(false);
           this.clean.setValue(false);

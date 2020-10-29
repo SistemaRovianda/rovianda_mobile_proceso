@@ -15,7 +15,7 @@ export interface SausageInterface {
 export interface SausageOfProcess{
   date:string,
   lotId:string,
-  productRovianda:string,
+  rawMaterial:string,
   sausagedId:string,
   temperature:string,
   time:{

@@ -21,14 +21,16 @@
           >
         </ion-select>
       </ion-item>
-      <ion-item *ngIf="!isNewRegister && conditioningsSaved.length">
-         <ion-label position="floating">Producto seleccionado</ion-label>
-        <ion-input
-          class="item-form"
-          placeholder="{{conditioningsSaved[0].product.description}}"
-          disabled
-        ></ion-input>
-      </ion-item>
+     
+
+      <ion-item *ngIf="!isNewRegister && currentProcess!=null">
+        <ion-label position="floating">Producto seleccionado</ion-label>
+       <ion-input
+         class="item-form"
+         placeholder="{{currentProcess.productName}}"
+         disabled
+       ></ion-input>
+     </ion-item>
      
     </ion-col>
     <ion-col size="5">
@@ -54,12 +56,20 @@
           disabled
         ></ion-input>
       </ion-item>
+      <ion-item *ngIf="!isNewRegister && !conditioningsSaved.length && currentProcess!=null">
+        <ion-label position="floating">Formulacion*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="{{currentProcess.lotDay}}"
+          disabled
+        ></ion-input>
+      </ion-item>
      
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col>
-      <ion-item *ngIf="isNewRegister && formulation && defrostOfFormulation.length">
+      <ion-item *ngIf="formulation && defrostOfFormulation.length && !conditioningsSaved.length">
         <ion-label position="floating">Lotes de carne en esta formulación</ion-label>
         <ion-select
           class="item-form"
@@ -68,7 +78,7 @@
           formControlName="defrostId"
         >
           <ion-select-option   *ngFor="let defrost of  defrostOfFormulation" [value]="defrost.defrostFormulationId"
-            >{{ defrost.lotMeat}}-{{defrost.defrost.dateEnd}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
+            >{{ defrost.lotMeat}}-{{defrost.defrost.outputCooling.rawMaterial.rawMaterial}}-{{defrost.defrost.dateEnd}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
           >
         </ion-select>
       </ion-item>
@@ -82,17 +92,17 @@
         <ion-label>Deshuese</ion-label>
         <ion-checkbox
           formControlName="bone"
-          [disabled]="!isNewRegister"
+          [disabled]="!(isNewRegister || !isNewRegister && currentProcess!=null && !conditioningsSaved.length)"
         ></ion-checkbox>
         <ion-label class="item-check">Limpieza</ion-label>
         <ion-checkbox
           formControlName="clean"
-          [disabled]="!isNewRegister"
+          [disabled]="!(isNewRegister || !isNewRegister && currentProcess!=null && !conditioningsSaved.length)"
         ></ion-checkbox>
         <ion-label class="item-check">Salado y curado</ion-label>
         <ion-checkbox
           formControlName="healthing"
-          [disabled]="!isNewRegister"
+          [disabled]="!(isNewRegister || !isNewRegister && currentProcess!=null && !conditioningsSaved.length)"
         ></ion-checkbox>
       </ion-item>
       <div class="error">
@@ -120,7 +130,7 @@
           class="item-form"
           placeholder="Ingresar peso en Kg"
           formControlName="weight"
-          [disabled]="!isNewRegister"
+          [disabled]="!(isNewRegister || !isNewRegister && currentProcess!=null && !conditioningsSaved.length)"
           type="number"
         ></ion-input>
       </ion-item>
@@ -150,7 +160,7 @@
           placeholder="Ingresar peso en Kg"
           type="number"
           formControlName="temperature"
-          [disabled]="!isNewRegister"
+          [disabled]="!(isNewRegister || !isNewRegister && currentProcess!=null && !conditioningsSaved.length)"
           pattern="\d+"
         ></ion-input>
       </ion-item>
@@ -212,7 +222,7 @@
           formControlName="date"
           [min]="minDate"
           [max]="maxDate"
-          [disabled]="!isNewRegister"
+          [disabled]="!(isNewRegister || !isNewRegister && currentProcess!=null && !conditioningsSaved.length)"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -237,6 +247,11 @@
       <ng-container matColumnDef="Lote" >
         <th mat-header-cell *matHeaderCellDef> Lote </th>
         <td mat-cell *matCellDef="let element;let index=index" (click)="(isNewRegister)?removeOfConditioningArr(index):null"> {{element.lotId}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Materia Prima" >
+        <th mat-header-cell *matHeaderCellDef> Materia Prima </th>
+        <td mat-cell *matCellDef="let element"> {{element.rawMaterial}} </td>
       </ng-container>
     
       <!-- Name Column -->
@@ -290,7 +305,7 @@
           size="large"
           expand="block"
           (click)="addItem()"
-          [disabled]="!isNewRegister"
+          [disabled]="!(isNewRegister || !isNewRegister && currentProcess!=null && !conditioningsSaved.length)"
           ><ion-grid>
             <ion-row *ngIf="!loading"> <ion-col>Agregar Lote</ion-col></ion-row>
              </ion-grid>

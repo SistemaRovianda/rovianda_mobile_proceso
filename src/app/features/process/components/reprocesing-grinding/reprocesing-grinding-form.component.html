@@ -1,0 +1,110 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()"  flex layout="column" style="overflow: auto; height: 100%;">
+
+  <ion-row>
+    <ion-col size="6">
+      <ion-item *ngIf="currentProcess!=null">
+        <ion-label position="floating">
+          Producto
+        </ion-label>
+        <ion-input
+          class="item-form"
+          interface="action-sheet"
+          placeholder="{{currentProcess.productName}}"
+          disabled
+        ></ion-input>
+        
+      </ion-item>
+      </ion-col>
+    <ion-col size="6">
+<ion-item *ngIf="currentProcess!=null">
+  <ion-label position="floating">
+    Formulación (lote del día)
+  </ion-label>
+  <ion-input
+    class="item-form"
+    interface="action-sheet"
+    placeholder="{{currentProcess.lotDay}}"
+    disabled
+  ></ion-input>
+  
+</ion-item>
+</ion-col>
+</ion-row>
+<ion-row>
+  <ion-col>
+    <ion-item>
+      <ion-label position="floating">
+        Reprocesos
+      </ion-label>
+      <ion-select
+        class="item-form"
+        interface="action-sheet"
+        placeholder="Seleccionar el lote de reproceso"
+        formControlName="reprocesingId"
+        [disabled]="alreadyRegistered || !reprocesingsToTakeTemp.length || registerSuccess"
+      >
+        <ion-select-option
+          [value]="reprocesing.reprocesingId"
+          *ngFor="let reprocesing of reprocesingsToTakeTemp"
+        >
+          {{ reprocesing.lotId }}-{{reprocesing.productName}}-{{reprocesing.weight}}-{{reprocesing.allergen}}-{{reprocesing.date|date: 'M-d-yyyy'}}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
+  </ion-col>
+</ion-row>
+<ion-row>
+  <ion-col>
+    <table mat-table [dataSource]="matTableDataSource" class="mat-elevation-z8 tableReprocesingGrinding" >
+
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+    
+      <!-- Position Column -->
+      <ng-container matColumnDef="Lote" >
+        <th mat-header-cell *matHeaderCellDef> Lote </th>
+        <td mat-cell *matCellDef="let element;let index=index" (click)="!alreadyRegistered?removeItem(index):null"> {{element.lotId}} </td>
+      </ng-container>
+    
+      <!-- Name Column -->
+      <ng-container matColumnDef="Materia Prima">
+        <th mat-header-cell *matHeaderCellDef> Materia Prima </th>
+        <td mat-cell *matCellDef="let element"> {{element.rawMaterial}} </td>
+      </ng-container>
+    
+      <!-- Weight Column -->
+      <ng-container matColumnDef="Peso">
+        <th mat-header-cell *matHeaderCellDef> Peso </th>
+        <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+      </ng-container>
+    
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="Fecha">
+        <th mat-header-cell *matHeaderCellDef> Fecha </th>
+        <td mat-cell *matCellDef="let element"> {{ element.date |  date: 'M-d-yyyy' }} </td>
+      </ng-container>
+
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </ion-col>
+</ion-row>
+<ion-row
+      class="container container__row container__row--buttons ion-justify-content-around"
+    >
+      <ion-col class="container container__column" size="12">
+        <ion-button
+          class="container container_buttton"
+          color="secondary"
+          size="large"
+          expand="block"
+          (click)="addItem()"
+          [disabled]="alreadyRegistered"
+          ><ion-grid>
+            <ion-row *ngIf="!loading"> <ion-col>Agregar Lote</ion-col></ion-row>
+             </ion-grid>
+          </ion-button>
+      </ion-col>
+    </ion-row>
+</form>

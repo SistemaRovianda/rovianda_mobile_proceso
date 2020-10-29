@@ -14,6 +14,7 @@ export interface TenderizedInterface {
 
 
 export interface TenderizedItemToList{
+  rawMaterial:string,
   defrostId:number,
   temperature:string,
   weight:number,
@@ -31,8 +32,5 @@ export interface TenderizedOfProcess{
   weightSalmuera:number,
   percentage:number,
   date:string,
-  product:{
-    id:number,
-    description:number
-  }
+  rawMaterial:string
 }

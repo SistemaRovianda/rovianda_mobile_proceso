@@ -29,6 +29,8 @@ import { ReportPageModule } from "./pages/report/report.module";
 import { ReprocessingPage } from "./pages/reprocessing/reprocessing.page";
 import { ReprocessingPageModule } from "./pages/reprocessing/reprocessing.module";
 import { ReprocessingResolver } from "src/app/shared/resolvers/reprocessing.resolver";
+import { ReprocesingGrindingPage } from './pages/reprocesing-grinding/reprocesing-grinding.page';
+import { ReprocesingGrindingPageModule } from './pages/reprocesing-grinding/reprocesing-grinding.module';
 
 const routes: Routes = [
   {
@@ -101,6 +103,10 @@ const routes: Routes = [
           reprocessing: ReprocessingResolver,
         },
       },
+      {
+        path: "reprocesing-grinding",
+        component: ReprocesingGrindingPage
+      }
     ],
   },
 ];
@@ -118,6 +124,7 @@ const routes: Routes = [
     UserPageModule,
     ReportPageModule,
     ReprocessingPageModule,
+    ReprocesingGrindingPageModule
   ],
   exports: [RouterModule],
   providers: [

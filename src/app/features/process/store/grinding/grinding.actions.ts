@@ -1,6 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 import { FormulationPending } from 'src/app/shared/models/formulations.interface';
 import { Grinding, GrindingItemToList, GrindingOfProcess } from "src/app/shared/models/grinding.interface";
+import { reprocesingOfGrinding } from 'src/app/shared/models/reprocessing.interface';
 import { ProcessMetadata } from '../process-detail/process-detail.reducer';
 
 const GRINDING_SEARCH_INFORMATION = "[GRINDING] Search Information";
@@ -65,3 +66,8 @@ export const getFormulationsByProductRovianda = createAction(
 
   export const getGrindingProcessMetadata = createAction("[GRINDING], getting process metadata");
 export const setGrindingProcessMetadata = createAction("[GRINDING], setting process metadata",props<{process:ProcessMetadata}>());
+
+export const setReprocesingLots = createAction(
+  "[GRINDING] setting reprocesingLots",
+  props<{reprocesings:reprocesingOfGrinding[]}>()
+);

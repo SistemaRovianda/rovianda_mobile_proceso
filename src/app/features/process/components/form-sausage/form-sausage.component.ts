@@ -54,12 +54,12 @@ export class FormSausageComponent implements OnInit,OnDestroy {
   defrostOfFormulation:FormulationDefrost[]=[];
   formulation:FormulationDetails={
     date:null,defrosts:[],id:null,lotDay:null,make:null,productRovianda:null,status:null,temp:null,
-    verifit:null,waterTemp:null
+    verifit:null,waterTemp:null,reprocesings:[]
   }
   sausageArr:SausageItemToList[]=[];
   sausageOfProcess:SausageOfProcess[]=[];
   matTableDataSource:MatTableDataSource<SausageItemToList>;
-  displayedColumns:string[] = ["Lote","Temperatura","Fecha"];
+  displayedColumns:string[] = ["Lote","Materia Prima","Temperatura","Fecha"];
 
   @Output("onSubmit") submit = new EventEmitter();
 
@@ -118,11 +118,14 @@ export class FormSausageComponent implements OnInit,OnDestroy {
               hour3: x.time.hour3,
               weightFinal: x.time.weightMedium
             },
-            productRovianda: x.productRovianda
+            productRovianda: x.rawMaterial
           }
         })  
         this.resetTable(); 
       }else{
+        if(localStorage.getItem("processId")!="-1"){
+          this.store.dispatch(getSausageProcessMetadata());
+          }
         this.subscriptions.add(this.store.select(SELECT_SAUSAGE_PROCESS_METADATA).subscribe((processMetadata)=>{
           if(processMetadata!=null){
             this.currentProcess = processMetadata;
@@ -135,9 +138,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
             this.productId.setValue(0)
           }
         }));
-        if(localStorage.getItem("processId")!="-1"){
-        this.store.dispatch(getSausageProcessMetadata());
-        }
+        
       }
     }));
     
@@ -163,7 +164,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
       
       if(!isNewRegister){
         this.isNewRegister=isNewRegister;
-        console.log("NO ES NUEVO");  
+        console.log("NO ES NUEVO");
         this.store.dispatch(sausageSearchInformation({processId:+localStorage.getItem("processId")}));
       }else{
         this.productsRovianda$=this.store.select( // en caso de no existir se asigna al arreglo varios productos de rovianda para su registro
@@ -230,7 +231,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
   }
 
   onSubmit() {
-       if(this.sausageArr.length && this.isNewRegister){
+       if((this.sausageArr.length && this.isNewRegister) || (!this.isNewRegister && !this.sausageOfProcess.length)){
     const buttons: any = [
       {
         text: "Cancel",
@@ -254,7 +255,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
       buttons
     );
        }else if(this.sausageSelected!=null){
-        console.log("Ya esta");
+        console.log("Ya esta",this.sausageSelected);
         if(this.sausageArr[this.sausageSelected].time.hour2==null ||this.sausageArr[this.sausageSelected].time.hour2=="" ){
           if(this.hour2.valid && this.weightMedium.valid){
             console.log("Valido para actualizar segunda hora");
@@ -382,11 +383,13 @@ export class FormSausageComponent implements OnInit,OnDestroy {
           this.defrostOfFormulation=this.defrostOfFormulation.filter(x=>x.defrostFormulationId!=this.defrostId.value);
           console.log("agregando");
           let lotString = "";
+          let productRovianda="";
           console.log("defrostId",this.defrostId.value);
           for(let defrost of this.formulation.defrosts){
             console.log(defrost);
             if(defrost.defrostFormulationId==+this.defrostId.value){
               lotString=defrost.lotMeat;
+              productRovianda = defrost.defrost.outputCooling.rawMaterial.rawMaterial;
               console.log("coincide");
             }else{
               console.log("no coincide");
@@ -400,10 +403,11 @@ export class FormSausageComponent implements OnInit,OnDestroy {
               hour1: this.hour1.value,
               weightInitial: this.weightInitial.value,
             },
-            lotId:lotString
+            lotId:lotString,
+            productRovianda
           }
           this.sausageArr.push(item);
-          this.resetTable
+          this.resetTable();
         }
     }
   }
@@ -420,6 +424,8 @@ export class FormSausageComponent implements OnInit,OnDestroy {
     
     if(index==this.sausageSelected){
       this.sausageSelected=null;
+      this.secondHoursEnabled=false;
+      this.thirdHoursEnabled=false;
     }else{
       this.sausageSelected=index;
       let sausageItem:SausageItemToList = this.sausageArr[index];
@@ -430,17 +436,26 @@ export class FormSausageComponent implements OnInit,OnDestroy {
       this.hour1.setValue(sausageItem.time.hour1);
       if(sausageItem.time.hour2==null|| sausageItem.time.hour2==""){
         this.secondHoursEnabled=true;
+        this.hour2.reset();
+        this.weightMedium.reset();
+        this.thirdHoursEnabled=false;
       }else if(sausageItem.time.hour3==null || sausageItem.time.hour3==""){
         this.weightMedium.setValue(sausageItem.time.weightMedium);
         this.hour2.setValue(sausageItem.time.hour2);
         this.thirdHoursEnabled=true;
+        this.hour3.reset();
+        this.weightFinal.reset();
+        this.secondHoursEnabled=false;
       }else{
         console.log("Contiene todos los registros");
         this.hour2.setValue(sausageItem.time.hour2);
         this.weightMedium.setValue(sausageItem.time.weightMedium);
         this.hour3.setValue(sausageItem.time.hour3);
         this.weightFinal.setValue(sausageItem.time.weightFinal);
+        this.secondHoursEnabled=false;
+        this.thirdHoursEnabled=false;
       }
+      this.resetTable();
     }
     
     

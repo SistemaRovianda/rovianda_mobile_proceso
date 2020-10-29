@@ -12,7 +12,8 @@ const initValue:FormulationDetails={
     status:null,
     temp:null,
     verifit:null,
-    waterTemp:null
+    waterTemp:null,
+    reprocesings:[]
 }
 
 export const formulationReducer = createReducer<FormulationDetails>(

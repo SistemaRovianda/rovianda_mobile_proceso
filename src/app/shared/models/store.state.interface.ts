@@ -11,6 +11,7 @@ import { ProcessReprocessing } from "./process-reprocessing.interface";
 import { ProcessMetadata } from 'src/app/features/process/store/process-detail/process-detail.reducer';
 import { FormulationDetails } from './formulations.interface';
 import { sectionInterface } from 'src/app/features/process/store/sections/section.reducer';
+import { ReprocesingStore } from './reprocessing.interface';
 
 export interface LoginState {
   loading: boolean;
@@ -43,7 +44,8 @@ export interface AppState {
   reprocessing: ProcessReprocessing;
   processMetadata: ProcessMetadata;
   formulationDetails:FormulationDetails,
-  section:sectionInterface
+  section:sectionInterface,
+  reprocesingGrinding:ReprocesingStore
 }
 
 export interface SignIn {

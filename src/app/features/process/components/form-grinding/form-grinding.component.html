@@ -21,19 +21,8 @@
           >
         </ion-select>
       </ion-item>
-      <ion-item *ngIf="!isNewRegister && grindingsOfProcess.length">
-        <ion-label position="floating">
-          Producto Rovianda*
-        </ion-label>
-        <ion-input
-          class="item-form"
-          interface="action-sheet"
-          placeholder="{{grindingsOfProcess[0].productRovianda}}"
-          disabled
-        ></ion-input>
-        
-      </ion-item>
-      <ion-item *ngIf="!isNewRegister && !grindingsOfProcess.length && currentProcess!=null">
+     
+      <ion-item *ngIf="!isNewRegister && currentProcess!=null">
         <ion-label position="floating">
           Producto Rovianda*
         </ion-label>
@@ -85,7 +74,7 @@
   </ion-row>
   <ion-row>
     <ion-col>
-      <ion-item *ngIf="formulation && defrostOfFormulation.length && !grindingArr.length">
+      <ion-item *ngIf="formulation && defrostOfFormulation.length">
         <ion-label position="floating">Lotes de carne en esta formulación</ion-label>
         <ion-select
           class="item-form"
@@ -94,7 +83,26 @@
           formControlName="defrostId"
         >
           <ion-select-option   *ngFor="let defrost of  defrostOfFormulation" [value]="defrost.defrostFormulationId"
-            >{{ defrost.lotMeat}}-{{defrost.defrost.dateEnd}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
+            >{{ defrost.lotMeat}}-{{defrost.defrost.outputCooling.rawMaterial.rawMaterial}}-{{defrost.defrost.dateEnd}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      
+    </ion-col>
+
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-item *ngIf="reprocesingsPendingTemp.length">
+        <ion-label position="floating">Lotes de carne en esta formulación reproceso</ion-label>
+        <ion-select
+          class="item-form"
+          interface="action-sheet"
+          placeholder="Seleccionar lote"
+          formControlName="reprocesingId"
+        >
+          <ion-select-option   *ngFor="let reprocesing of  reprocesingsPendingTemp" [value]="reprocesing.reprocesingId"
+            >{{ reprocesing.lotId}}-{{reprocesing.productName}}-{{reprocesing.date | date: 'M-d-yyyy'}}-{{reprocesing.weight}}</ion-select-option
           >
         </ion-select>
       </ion-item>
@@ -200,7 +208,12 @@
         <!-- Position Column -->
         <ng-container matColumnDef="Lote" >
           <th mat-header-cell *matHeaderCellDef> Lote </th>
-          <td mat-cell *matCellDef="let element;let index=index" (click)="(isNewRegister)?removeOfGrindingArr(index):null"> {{element.lotId}} </td>
+          <td mat-cell *matCellDef="let element;let index=index" (click)="removeOfGrindingArr(index)"> {{element.lotId}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Materia Prima" >
+          <th mat-header-cell *matHeaderCellDef> Materia Prima </th>
+          <td mat-cell *matCellDef="let element" > {{element.rawMaterial}} </td>
         </ng-container>
       
         <!-- Name Column -->
@@ -219,6 +232,11 @@
         <ng-container matColumnDef="Fecha">
           <th mat-header-cell *matHeaderCellDef> Fecha </th>
           <td mat-cell *matCellDef="let element"> {{element.date | date: 'M-d-yyyy'}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="Tipo">
+          <th mat-header-cell *matHeaderCellDef> Tipo </th>
+          <td mat-cell *matCellDef="let element"> {{element.typeRecord}}</td>
         </ng-container>
   
        
@@ -246,7 +264,7 @@
           size="large"
           expand="block"
           (click)="addItem()"
-          [disabled]="!(isNewRegister || (!isNewRegister && !grindingArr.length && currentProcess!=null)) "
+          [disabled]="!(isNewRegister || (!isNewRegister  && currentProcess!=null) || hasReprocesing)"
           ><ion-grid>
             <ion-row *ngIf="!loading"> <ion-col>Agregar Lote</ion-col></ion-row>
              </ion-grid>

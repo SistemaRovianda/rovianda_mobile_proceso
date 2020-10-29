@@ -42,20 +42,20 @@ export class FormUsersComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.storage
-    //   .get("currentUser")
-    //   .then((user) => this.nameElaborated.setValue(user));
-    // this.storage.get("job").then((job) => this.jobElaborated.setValue(job));
+    this.storage
+      .get("currentUser")
+      .then((user) => this.nameElaborated.setValue(user));
+    this.storage.get("job").then((job) => this.jobElaborated.setValue(job));
 
-    // this.store.select(SELECT_USER_DATA).subscribe((tempUser) => {
-    //   if (tempUser != null) {
-    //     this.user = tempUser;
-    //     this.updateForm();
-    //   }
-    // });
-    // this.store
-    //   .select(SELECT_USER_IS_SELECTED)
-    //   .subscribe((selected) => (this.isSelected = selected));
+    this.store.select(SELECT_USER_DATA).subscribe((tempUser) => {
+      if (tempUser != null) {
+        this.user = tempUser;
+        this.updateForm();
+      }
+    });
+    this.store
+      .select(SELECT_USER_IS_SELECTED)
+      .subscribe((selected) => (this.isSelected = selected));
   }
 
   selectVerify() {

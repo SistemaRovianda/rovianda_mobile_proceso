@@ -114,7 +114,12 @@ export class FormReprocessingComponent implements OnInit,OnDestroy {
         defrostId: this.defrostId.value,
         lotId: itemSelected[0].lotMeat,
         productName: itemSelected[0].rawMaterial,
-        weight: this.weight.value
+        weight: this.weight.value,
+        dateUsed:"",
+        process:"",
+        used:false,
+        weightUsed:"",
+        reprocesingId:0
       });
       this.lotsOfFormulationTemp = this.lotsOfFormulation.filter(x=>x.defrostId!=itemSelected[0].defrostId);
       this.resetTable();

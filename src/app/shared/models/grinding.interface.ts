@@ -14,13 +14,16 @@ export interface GrindingItemToList{
   weight:number,
   date:string,
   defrostId:number,
-  lotId:string
+  lotId:string,
+  typeRecord:string,
+  reprocesingId:number,
+  rawMaterial:string
 }
 
 export interface GrindingOfProcess{
   process:string,
   weight:number,
   date:string,
-  productRovianda:string,
+  rawMaterial:string,
   formulation:string
 }

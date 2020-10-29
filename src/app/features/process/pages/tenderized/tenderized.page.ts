@@ -62,7 +62,7 @@ export class TenderizedPage implements OnInit {
 
   redirectBack() {
     this.insection=false;
-    this.store.dispatch(setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null}}))
+    this.store.dispatch(setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null,reprocesings:[]}}))
     this.store.dispatch(setTenderizedProcessMetadata({process:null}));
     this.router.navigate([`/process/process-detail`]);
   }

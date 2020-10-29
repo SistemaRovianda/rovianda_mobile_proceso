@@ -1,12 +1,13 @@
-<div style="height: 100px;" class="details">
+<div  class="details">
 <ul>
 <li *ngFor="let item of data.defrosts">
   Lote: {{item.defrost.outputCooling.loteInterno}}<br>
   Fecha descongelamiento: {{item.defrost.dateEnd}}<br>
   Hora de salida: {{item.defrost.outputHour}}<br>
+  Materia prima: {{item.defrost.outputCooling.rawMaterial.rawMaterial}}<br>
   Cantidad: {{item.defrost.outputCooling.quantity}}
 </li>
 </ul>
-
-</div>
 <div class="closeButton"><button mat-raised-button (click)="closeModal()">Aceptar</button></div>
+</div>
+
