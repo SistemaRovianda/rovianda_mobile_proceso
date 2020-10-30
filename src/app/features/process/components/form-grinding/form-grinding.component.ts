@@ -173,8 +173,11 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
         this.hasReprocesing=false;
       }
       let reprocesingsUsed =reprocesings.filter(x=>x.used==true);
+      let reprocesingsAlreadyInArray = this.grindingArr.map(x=>x.reprocesingId);
+      reprocesingsUsed = reprocesingsUsed.filter(x=>!reprocesingsAlreadyInArray.includes(x.reprocesingId));
       if(reprocesingsUsed.length){
         console.log("REPROCESO UTILIZADO");
+      
       this.grindingArr.push(...reprocesingsUsed.map((x)=>{
         return { 
           date: x.dateUsed,
@@ -237,7 +240,7 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit() {
-  
+    console.log("Reloaded");
   }
 
   onSubmit() {

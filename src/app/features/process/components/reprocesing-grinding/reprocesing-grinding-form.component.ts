@@ -79,13 +79,17 @@ this.subscriptions.add(this.store.select(SELECT_REPROCESINGS_OF_PROCESS_LOADING)
 
     this.subscriptions.add(this.store.select(SELECT_ALL_REPROCESINGS).subscribe((reprocesings)=>{
         console.log("REPROCESOS DISPONIBLES",reprocesings);
-        this.reprocesingsToTake=reprocesings;
-        this.reprocesingsToTakeTemp=reprocesings;
+        let reprocesingsAlreadyAdded = this.reprocesingsToSet.map(x=>x.reprocesingId);
+        this.reprocesingsToTake=reprocesings.filter(x=>!reprocesingsAlreadyAdded.includes(x.reprocesingId));
+        this.reprocesingsToTakeTemp=reprocesings.filter(x=>!reprocesingsAlreadyAdded.includes(x.reprocesingId));;
         this.resetTable();
     })); 
     this.subscriptions.add(this.store.select(SELECT_REPROCESINGS_OF_PROCESS).subscribe((reprocesingsOfProcess)=>{
+      
         if(reprocesingsOfProcess.length){
             this.alreadyRegistered=true;
+
+            
             this.reprocesingsToSet=reprocesingsOfProcess.map((x)=>{
               return {
                 date: x.date,
@@ -95,6 +99,9 @@ this.subscriptions.add(this.store.select(SELECT_REPROCESINGS_OF_PROCESS_LOADING)
                 weight: x.weight
               }
             });
+            let alreadyItemsToSet = this.reprocesingsToSet.map(x=>x.reprocesingId);
+            this.reprocesingsToTake=this.reprocesingsToTake.filter(x=>!alreadyItemsToSet.includes(x.reprocesingId));
+            this.reprocesingsToTakeTemp=this.reprocesingsToTakeTemp.filter(x=>!alreadyItemsToSet.includes(x.reprocesingId));
             this.resetTable();
         }
     }))
@@ -133,7 +140,6 @@ this.subscriptions.add(this.store.select(SELECT_REPROCESINGS_OF_PROCESS_LOADING)
       if(this.reprocesingsToSet.length<=10){
       let reprocesingId:number = this.reprocesingId.value;
       let reprocesing = this.reprocesingsToTake.filter(x=>x.reprocesingId==reprocesingId);
-      this.reprocesingsToTakeTemp = this.reprocesingsToTake.filter(x=>x.reprocesingId!=reprocesingId);
       this.reprocesingsToSet.push({
         date: reprocesing[0].date,
         lotId: reprocesing[0].lotId,
@@ -141,6 +147,9 @@ this.subscriptions.add(this.store.select(SELECT_REPROCESINGS_OF_PROCESS_LOADING)
         weight: reprocesing[0].weight,
         rawMaterial: reprocesing[0].productName
       });
+      let reprocesingsAlreadyAdded = this.reprocesingsToSet.map(x=>x.reprocesingId);
+      this.reprocesingsToTakeTemp = this.reprocesingsToTake.filter(x=>!reprocesingsAlreadyAdded.includes(x.reprocesingId));
+      
       this.form.reset();
       this.resetTable();
       }else{

@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/shared/models/store.state.interface';
 import { setFormulationDetails } from '../../store/formulation/formulation.actions';
 import { setGrindingProcessMetadata } from '../../store/grinding/grinding.actions';
+import {  setLotsReprocesingOfProcess } from '../../store/reprocesing-grinding/reprocesing-grinding.actions';
 
 @Component({
   selector: 'app-reprocesing-grinding',
@@ -20,6 +21,7 @@ export class ReprocesingGrindingPage implements OnInit {
   onBackButton(){
     this.store.dispatch(setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null,reprocesings:[]}}))
     this.store.dispatch(setGrindingProcessMetadata({process:null}));
+    
     this.router.navigate([`/process/grinding`]);
   }
 
