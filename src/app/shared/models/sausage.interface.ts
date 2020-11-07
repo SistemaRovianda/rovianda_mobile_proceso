@@ -33,7 +33,6 @@ export interface SausageItemToList{
       hour3?:string;
       weightFinal?:string;
   },
-  defrostId:number;
   lotId:string;
   productRovianda?:string;
 }

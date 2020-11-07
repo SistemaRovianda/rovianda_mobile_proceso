@@ -59,7 +59,7 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
 
   @Output("onSubmit") submit = new EventEmitter();
 
-  minDate = new Date().toISOString();
+  
 
   maxDate = new Date().getFullYear() + 5;
 
@@ -99,7 +99,7 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
       healthing: [false, Validators.required],
       weight: ["", [Validators.required, decimalValidator]],
       temperature: ["", Validators.required],
-      date: [this.minDate, Validators.required],
+      date: ["", Validators.required],
       formulationId: [0,Validators.required],
       defrostId:["",[Validators.required]]
     });
@@ -316,7 +316,9 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
           this.healthing.setValue(false);
           this.form.get('weight').reset();
           this.form.get('temperature').reset();
+          this.defrostId.reset();
           this.conditioningArr.push(conditioningItemToAdd);
+          
           this.resetTable();
         }else{
           console.log("Ya esta");

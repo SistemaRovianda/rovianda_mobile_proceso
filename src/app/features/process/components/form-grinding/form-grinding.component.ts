@@ -348,6 +348,9 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
             reprocesingId:0,
             rawMaterial
           }
+          this.date.reset();
+          this.process.reset();
+          this.weigth.reset();
           this.grindingArr.push(item);
           this.resetTable();
         }else{

@@ -31,13 +31,13 @@ import { ProductsRovianda } from 'src/app/shared/models/produts-rovianda.interfa
 import { FormulationDefrost, FormulationDetails, FormulationPending } from 'src/app/shared/models/formulations.interface';
 import { GET_FORMULATION_DETAILS } from '../../store/formulation/formulation.selectors';
 import { ModalFormulationDetailsComponent } from '../modal-formulation-details/modal-formulation-details.component';
-import { MatDialog, MatDialogRef, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { getFormulationDetails } from '../../store/formulation/formulation.actions';
 import { ProcessMetadata } from '../../store/process-detail/process-detail.reducer';
-import { getProcessDetails } from '../../store/process-detail/process-detail.actions';
+
 import { SausageHourRequest, SausageOfProcess } from 'src/app/shared/models/sausage-page.interface';
 import { SELECT_CURRENT_SECTION } from '../../store/sections/section.selector';
-import { NumberSymbol } from '@angular/common';
+
 
 @Component({
   selector: "app-form-sausage",
@@ -56,10 +56,9 @@ export class FormSausageComponent implements OnInit,OnDestroy {
     date:null,defrosts:[],id:null,lotDay:null,make:null,productRovianda:null,status:null,temp:null,
     verifit:null,waterTemp:null,reprocesings:[]
   }
-  sausageArr:SausageItemToList[]=[];
-  sausageOfProcess:SausageOfProcess[]=[];
-  matTableDataSource:MatTableDataSource<SausageItemToList>;
-  displayedColumns:string[] = ["Lote","Materia Prima","Temperatura","Fecha"];
+  
+  sausageOfProcess:SausageItemToList=null;
+
 
   @Output("onSubmit") submit = new EventEmitter();
 
@@ -69,13 +68,15 @@ export class FormSausageComponent implements OnInit,OnDestroy {
 
   currentProcess:ProcessMetadata=null;
   dialogRef:MatDialogRef<ModalFormulationDetailsComponent>;
-
+  lotDay:string=null;
   private subscriptions=new Subscription();
   public ngOnDestroy():void{
     this.subscriptions.unsubscribe();
   }
 
-
+  
+  secondHoursEnabled:boolean=false;
+  thirdHoursEnabled:boolean=false;
   constructor(
     private fb: FormBuilder,
     private store: Store<AppState>,
@@ -85,7 +86,6 @@ export class FormSausageComponent implements OnInit,OnDestroy {
     this.form = fb.group({
       productId: ["", Validators.required],
       formulationId:["",Validators.required],
-      defrostId:["",Validators.required],
       temperature: ["", Validators.required],
       date: ["", Validators.required],
       hour1: [new Date().toISOString(), Validators.required],
@@ -98,54 +98,75 @@ export class FormSausageComponent implements OnInit,OnDestroy {
     this.subscriptions.add(this.store.select(SELECT_CURRENT_SECTION).subscribe((section)=>{
       this.section=section;
     }));
-    this.matTableDataSource=new MatTableDataSource();
-    this.resetTable();
+    
     this.subscriptions.add(this.store.select(SELECT_SAUSAGE_DATA).subscribe((sausages)=>{
-      this.sausageOfProcess=sausages;
-      if(this.sausageOfProcess.length){
-        this.sausageArr=this.sausageOfProcess.map((x)=>{
-          return {
-            sausageId: +x.sausagedId,
-            date: x.date,
-            defrostId:0,
-            lotId: x.lotId,
-            temperature: x.temperature,
-            time:{
-              hour1: x.time.hour1,
-              weightInitial: x.time.weightInitial,
-              hour2: x.time.hour2,
-              weightMedium: x.time.weightMedium,
-              hour3: x.time.hour3,
-              weightFinal: x.time.weightMedium
-            },
-            productRovianda: x.rawMaterial
+      
+      if(sausages.length){
+        this.isNewRegister=false;
+        this.sausageOfProcess={
+          sausageId:+sausages[0].sausagedId,
+          date: sausages[0].date,
+          lotId: sausages[0].lotId,
+          temperature: sausages[0].temperature,
+          time:{
+            hour1: sausages[0].time.hour1,
+            weightInitial: sausages[0].time.weightInitial,
+            hour2: sausages[0].time.hour2,
+            weightMedium: sausages[0].time.weightMedium,
+            hour3: sausages[0].time.hour3,
+            weightFinal: sausages[0].time.weightFinal
           }
-        })  
-        this.resetTable(); 
-      }else{
-        if(localStorage.getItem("processId")!="-1"){
-          this.store.dispatch(getSausageProcessMetadata());
-          }
-        this.subscriptions.add(this.store.select(SELECT_SAUSAGE_PROCESS_METADATA).subscribe((processMetadata)=>{
-          if(processMetadata!=null){
-            this.currentProcess = processMetadata;
-            console.log("CURRENT PROCESS",this.currentProcess);
-            this.formulationId.setValue(this.currentProcess.formulationId);
-            if(!this.currentProcess.sausage){
-            this.selectFormulationId()
-            }
-            
-            this.productId.setValue(0)
-          }
-        }));
+        }
+        this.date.setValue(this.sausageOfProcess.date);
+        this.temperature.setValue(this.sausageOfProcess.temperature);
+        this.hour1.setValue(this.sausageOfProcess.time.hour1);
+        this.weightInitial.setValue(this.sausageOfProcess.time.weightInitial);
+        if(sausages[0].time.hour2==null || sausages[0].time.hour2==""){
+          this.secondHoursEnabled=true;
+          this.thirdHoursEnabled=false;
+          
+        }else if(sausages[0].time.hour3==null || sausages[0].time.hour3==""){
+          this.sausageOfProcess.time.hour2=sausages[0].time.hour2;
+          this.sausageOfProcess.time.weightMedium=sausages[0].time.weightMedium;
+          this.hour2.setValue(this.sausageOfProcess.time.hour2);
+          this.weightMedium.setValue(this.sausageOfProcess.time.weightMedium);
+          this.secondHoursEnabled=false;
+          this.thirdHoursEnabled=true;
+        }else{
+          this.secondHoursEnabled=false;
+          this.thirdHoursEnabled=false;
+          this.hour2.setValue(this.sausageOfProcess.time.hour2);
+          this.weightMedium.setValue(this.sausageOfProcess.time.weightMedium);
+          this.hour3.setValue(this.sausageOfProcess.time.hour3);
+          this.weightFinal.setValue(this.sausageOfProcess.time.weightFinal);
+          this.sausageOfProcess.time.hour2=sausages[0].time.hour2;
+          this.sausageOfProcess.time.weightMedium=sausages[0].time.weightMedium;
+          this.sausageOfProcess.time.hour3=sausages[0].time.hour3;
+          this.sausageOfProcess.time.weightFinal=sausages[0].time.weightFinal;
+        }
         
       }
+      if(localStorage.getItem("processId")!="-1"){
+        this.store.dispatch(getSausageProcessMetadata());
+        }
+      this.subscriptions.add(this.store.select(SELECT_SAUSAGE_PROCESS_METADATA).subscribe((processMetadata)=>{
+        if(processMetadata!=null){
+          this.currentProcess = processMetadata;
+          this.lotDay=this.currentProcess.lotDay;
+          console.log("CURRENT PROCESS",this.currentProcess);
+          this.formulationId.setValue(this.currentProcess.formulationId);
+          if(!this.currentProcess.sausage){
+          this.selectFormulationId()
+          }
+          
+          this.productId.setValue(0)
+        }
+      }));
     }));
     
     this.subscriptions.add(this.store.select(GET_FORMULATION_DETAILS).subscribe((details)=>{
       this.formulation=details;
-      this.defrostOfFormulation=this.formulation.defrosts;
-      this.sausageArr=[];
+      this.lotDay=details.lotDay;
       if(details.id!=null && this.isNewRegister && this.section=="SAUSAGE"){
         this.dialogRef = this.dialog.open(ModalFormulationDetailsComponent, {
           width: '500px',
@@ -189,9 +210,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
     }
   }
 
-  resetTable(){
-    this.matTableDataSource.data = this.sausageArr;
-  }
+
   isLoading:boolean =false;
   error=null;
   ngOnInit() {
@@ -202,28 +221,11 @@ export class FormSausageComponent implements OnInit,OnDestroy {
       if(isLoading==true){
         this.isLoading = isLoading;
       }else if (isLoading==false && this.isLoading==true){
-        if(this.sausageSelected!=null){
-          let sausageItem = this.sausageArr[this.sausageSelected];
-          if(sausageItem.time.hour2==null || sausageItem.time.hour2==""){
-            if(this.error!=null){
-              this.hour2.setValue(null);
-              this.weightMedium.setValue(null);
-            }else{
-              this.sausageArr[this.sausageSelected].time.hour2=this.hour2.value;
-              this.sausageArr[this.sausageSelected].time.weightMedium=this.weightMedium.value;
-              this.secondHoursEnabled=false;
-              this.thirdHoursEnabled=true;
-            }
-          }else if(sausageItem.time.hour3==null || sausageItem.time.hour3==""){
-            if(this.error!=null){
-              this.hour3.setValue(null);
-              this.weightFinal.setValue(null);
-            }else{
-              this.sausageArr[this.sausageSelected].time.hour3=this.hour3.value;
-              this.sausageArr[this.sausageSelected].time.weightFinal=this.weightFinal.value;
-              this.thirdHoursEnabled=false;
-            }
-          }
+        if(this.secondHoursEnabled==true){
+          this.secondHoursEnabled=false;
+          this.thirdHoursEnabled=true;
+        }else if(this.thirdHoursEnabled==true){
+          this.thirdHoursEnabled=false;
         }
       }
     }));
@@ -231,7 +233,8 @@ export class FormSausageComponent implements OnInit,OnDestroy {
   }
 
   onSubmit() {
-       if((this.sausageArr.length && this.isNewRegister) || (!this.isNewRegister && !this.sausageOfProcess.length)){
+    console.log(this.form.valid);
+       if((this.form.valid && this.secondHoursEnabled==false && this.thirdHoursEnabled==false && this.isNewRegister)){
     const buttons: any = [
       {
         text: "Cancel",
@@ -240,23 +243,33 @@ export class FormSausageComponent implements OnInit,OnDestroy {
       {
         text: "Aceptar",
         handler: () => {
-          this.store.dispatch(sausageRegister({formulationId:this.formulationId.value,sausages:this.sausageArr}))  
+          this.store.dispatch(sausageRegister(
+            {
+              formulationId:this.formulationId.value,
+              sausages:[
+                {
+                  date:this.date.value,
+                  lotId:this.lotDay,
+                  temperature:this.temperature.value,
+                  time:{
+                    hour1: this.hour1.value,
+                    weightInitial: this.weightInitial.value
+                  }
+                }
+              ]
+            }))  
         },
       },
     ];
     this.alert.showAlert(
       "Infomacion",
-      `${
-        this.isNewRegister
-          ? "Para registrar esta sección se creará un nuevo proceso"
-          : ""
-      }`,
+      this.isNewRegister?`Para registrar esta sección se creará un nuevo proceso`:"",
       `Los campos opcionales también deberán ser guardados más adelante para poder cerrar el proceso.`,
       buttons
     );
-       }else if(this.sausageSelected!=null){
-        console.log("Ya esta",this.sausageSelected);
-        if(this.sausageArr[this.sausageSelected].time.hour2==null ||this.sausageArr[this.sausageSelected].time.hour2=="" ){
+       }else if(this.form.valid){
+        
+        if(this.secondHoursEnabled==true){
           if(this.hour2.valid && this.weightMedium.valid){
             console.log("Valido para actualizar segunda hora");
             let sausageRequest:SausageHourRequest={
@@ -264,11 +277,11 @@ export class FormSausageComponent implements OnInit,OnDestroy {
                hourSaved: this.hour2.value,
                weigthSaved: this.weightMedium.value
             }
-            this.updateForm(this.sausageArr[this.sausageSelected].sausageId,sausageRequest);
+            this.updateForm(this.sausageOfProcess.sausageId,sausageRequest);
           }else{
             console.log("No valido para actualizar segunda hora");
           }
-        }else if(this.sausageArr[this.sausageSelected].time.hour3==null ||this.sausageArr[this.sausageSelected].time.hour3=="" ){
+        }else if(this.thirdHoursEnabled==true){
           if(this.hour2.valid && this.weightMedium.valid){
             console.log("Valido para actualizar tercera hora");
             let sausageRequest:SausageHourRequest={
@@ -276,7 +289,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
                hourSaved: this.hour3.value,
                weigthSaved: this.weightFinal.value
             }
-            this.updateForm(this.sausageArr[this.sausageSelected].sausageId,sausageRequest);
+            this.updateForm(this.sausageOfProcess.sausageId,sausageRequest);
           }else{
             console.log("No valido para actualizar tercera hora");
           }
@@ -287,13 +300,6 @@ export class FormSausageComponent implements OnInit,OnDestroy {
   }
 
   
-
-
-  // onSubmitDate() {
-  //   if(this.sausageArr.length){
-  //       this.registerSausage();
-  //   }
-  // }
 
   registerSausage() {
     const { date, hour1, weightInitial, ...values } = this.form.value;
@@ -353,9 +359,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
     return this.form.get("weightFinal");
   }
 
-  get defrostId(){
-    return this.form.get("defrostId");
-  }
+  
 
   get fieldsRequireds() {
     return (
@@ -373,94 +377,5 @@ export class FormSausageComponent implements OnInit,OnDestroy {
   get fieldsOptionalFinal() {
     return this.hour3.value === "" || this.weightFinal.invalid;
   }
-
-  addItem(){
-    console.log(this.form.valid,this.form.value);
-    if(this.form.valid){
-
-        let has=this.sausageArr.filter(x=>x.defrostId==this.form.get('defrostId').value);
-        if(!has.length){
-          this.defrostOfFormulation=this.defrostOfFormulation.filter(x=>x.defrostFormulationId!=this.defrostId.value);
-          console.log("agregando");
-          let lotString = "";
-          let productRovianda="";
-          console.log("defrostId",this.defrostId.value);
-          for(let defrost of this.formulation.defrosts){
-            console.log(defrost);
-            if(defrost.defrostFormulationId==+this.defrostId.value){
-              lotString=defrost.lotMeat;
-              productRovianda = defrost.defrost.outputCooling.rawMaterial.rawMaterial;
-              console.log("coincide");
-            }else{
-              console.log("no coincide");
-            }
-          }
-          let item:SausageItemToList ={
-            date: this.date.value,
-            defrostId: this.defrostId.value,
-            temperature: this.temperature.value,
-            time:{
-              hour1: this.hour1.value,
-              weightInitial: this.weightInitial.value,
-            },
-            lotId:lotString,
-            productRovianda
-          }
-          this.sausageArr.push(item);
-          this.resetTable();
-        }
-    }
-  }
-  removeOfSausageArr(index:number){
-    this.sausageArr.splice(index,1);
-    this.defrostOfFormulation=this.formulation.defrosts.filter(x=>!this.sausageArr.map(x=>x.defrostId).includes(x.defrostFormulationId));
-    this.resetTable()
-  }
-
-  secondHoursEnabled:boolean=false;
-  thirdHoursEnabled:boolean=false;
-  sausageSelected:NumberSymbol;
-  selectItemToUpdate(index:number){
-    
-    if(index==this.sausageSelected){
-      this.sausageSelected=null;
-      this.secondHoursEnabled=false;
-      this.thirdHoursEnabled=false;
-    }else{
-      this.sausageSelected=index;
-      let sausageItem:SausageItemToList = this.sausageArr[index];
-      this.date.setValue(sausageItem.date);
-      this.temperature.setValue(sausageItem.temperature);
-      console.log("Sausaged selected: ",sausageItem);
-      this.weightInitial.setValue(sausageItem.time.weightInitial);
-      this.hour1.setValue(sausageItem.time.hour1);
-      if(sausageItem.time.hour2==null|| sausageItem.time.hour2==""){
-        this.secondHoursEnabled=true;
-        this.hour2.reset();
-        this.weightMedium.reset();
-        this.thirdHoursEnabled=false;
-      }else if(sausageItem.time.hour3==null || sausageItem.time.hour3==""){
-        this.weightMedium.setValue(sausageItem.time.weightMedium);
-        this.hour2.setValue(sausageItem.time.hour2);
-        this.thirdHoursEnabled=true;
-        this.hour3.reset();
-        this.weightFinal.reset();
-        this.secondHoursEnabled=false;
-      }else{
-        console.log("Contiene todos los registros");
-        this.hour2.setValue(sausageItem.time.hour2);
-        this.weightMedium.setValue(sausageItem.time.weightMedium);
-        this.hour3.setValue(sausageItem.time.hour3);
-        this.weightFinal.setValue(sausageItem.time.weightFinal);
-        this.secondHoursEnabled=false;
-        this.thirdHoursEnabled=false;
-      }
-      this.resetTable();
-    }
-    
-    
-  }
-
-
 
 }

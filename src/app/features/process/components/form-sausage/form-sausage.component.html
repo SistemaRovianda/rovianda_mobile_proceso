@@ -45,42 +45,30 @@
         </ion-select>
       </ion-item>
 
-      <ion-item *ngIf="!isNewRegister && sausageOfProcess.length">
+      <ion-item *ngIf="!isNewRegister">
         <ion-label position="floating">Formulaciones</ion-label>
         <ion-input
             class="item-form"
             interface="action-sheet"
-            placeholder="{{sausageOfProcess[0].formulation.lotDay}}"
+            placeholder="{{lotDay}}"
             disabled
           ></ion-input>
       </ion-item>
 
-      <ion-item *ngIf="!isNewRegister && !sausageOfProcess.length && currentProcess!=null">
-        <ion-label position="floating">Formulaciones</ion-label>
-        <ion-input
-            class="item-form"
-            interface="action-sheet"
-            placeholder="{{currentProcess.lotDay}}"
-            disabled
-          ></ion-input>
-      </ion-item>
+     
 
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col>
-      <ion-item *ngIf=" formulation && defrostOfFormulation.length  && !sausageOfProcess.length">
-        <ion-label position="floating">Lotes de carne en esta formulación</ion-label>
-        <ion-select
+      <ion-item *ngIf="formulation!=null">
+        <ion-label position="floating">Lote del día</ion-label>
+          <ion-input
           class="item-form"
           interface="action-sheet"
-          placeholder="Seleccionar lote"
-          formControlName="defrostId"
-        >
-          <ion-select-option   *ngFor="let defrost of  defrostOfFormulation" [value]="defrost.defrostFormulationId"
-            >{{ defrost.lotMeat}}-{{defrost.defrost.outputCooling.rawMaterial.rawMaterial}}-{{defrost.defrost.dateEnd}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
-          >
-        </ion-select>
+          value="{{lotDay}}"
+          disabled
+        ></ion-input>
       </ion-item>
     </ion-col>
   </ion-row>
@@ -94,7 +82,7 @@
           formControlName="date"
           [min]="minDate"
           [max]="maxDate"
-          [disabled]="!(isNewRegister || !isNewRegister && !sausageOfProcess.length)"
+          [disabled]="!(isNewRegister || !isNewRegister && sausageOfProcess==null)"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -115,8 +103,7 @@
           placeholder="Ingresa temperatura"
           formControlName="temperature"
           type="number"
-          [disabled]="!(isNewRegister || !isNewRegister && !sausageOfProcess.length)"
-          pattern="\d+"
+          [disabled]="!(isNewRegister || !isNewRegister && sausageOfProcess==null)"
         ></ion-input>
       </ion-item>
       <div class="error">
@@ -140,7 +127,7 @@
           class="item-form"
           placeholder="Ingresa peso en Kg"
           formControlName="weightInitial"
-          [disabled]="!(isNewRegister || !isNewRegister && !sausageOfProcess.length)"
+          [disabled]="!(isNewRegister || !isNewRegister && sausageOfProcess==null)"
           type="number"
         ></ion-input>
       </ion-item>
@@ -170,7 +157,7 @@
           class="item-form"
           displayFormat="HH:mm"
           formControlName="hour1"
-          [disabled]="!(isNewRegister || !isNewRegister && !sausageOfProcess.length)"
+          [disabled]="!(isNewRegister || !isNewRegister && sausageOfProcess==null)"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -192,7 +179,7 @@
           class="item-form"
           placeholder="Ingresa peso en Kg"
           formControlName="weightMedium"
-          [disabled]="!(secondHoursEnabled && sausageOfProcess.length)"
+          [disabled]="!(secondHoursEnabled && sausageOfProcess!=null)"
           type="number"
         ></ion-input>
       </ion-item>
@@ -222,7 +209,7 @@
           class="item-form"
           displayFormat="HH:mm"
           formControlName="hour2"
-          [disabled]="!(secondHoursEnabled && sausageOfProcess.length)"
+          [disabled]="!(secondHoursEnabled && sausageOfProcess!=null)"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -244,7 +231,7 @@
           class="item-form"
           placeholder="Ingresa peso en Kg"
           formControlName="weightFinal"
-          [disabled]="!(thirdHoursEnabled && sausageOfProcess.length)"
+          [disabled]="!(thirdHoursEnabled && sausageOfProcess!=null)"
           type="number"
         ></ion-input>
       </ion-item>
@@ -267,7 +254,7 @@
           class="item-form"
           displayFormat="HH:mm"
           formControlName="hour3"
-          [disabled]="!(thirdHoursEnabled && sausageOfProcess.length)"
+          [disabled]="!(thirdHoursEnabled && sausageOfProcess!=null)"
         ></ion-datetime>
       </ion-item>
       <div class="error">
@@ -282,68 +269,5 @@
     </ion-col>
   </ion-row>
 
-  <ion-row>
-    
-    <ion-col>
-
-      <table mat-table [dataSource]="matTableDataSource" class="mat-elevation-z8 tableSausage" >
-
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-      
-        <!-- Position Column -->
-        <ng-container matColumnDef="Lote" >
-          <th mat-header-cell *matHeaderCellDef> Lote </th>
-          <td mat-cell *matCellDef="let element;let index=index" (click)="(isNewRegister || (!isNewRegister && !sausageOfProcess.length))?removeOfSausageArr(index):selectItemToUpdate(index)" [class]="sausageSelected==index?'selected':''"> {{element.lotId}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="Materia Prima" >
-          <th mat-header-cell *matHeaderCellDef> Materia Prima </th>
-          <td mat-cell *matCellDef="let element;let index=index" [class]="sausageSelected==index?'selected':''"> {{element.productRovianda}} </td>
-        </ng-container>
-      
-        <!-- Name Column -->
-        <ng-container matColumnDef="Temperatura">
-          <th mat-header-cell *matHeaderCellDef> Temperatura </th>
-          <td mat-cell *matCellDef="let element;let index=index" [class]="sausageSelected==index?'selected':''"> {{element.temperature}} </td>
-        </ng-container>
-      
-        <!-- Weight Column -->
-        <ng-container matColumnDef="Fecha">
-          <th mat-header-cell *matHeaderCellDef> Fecha </th>
-          <td mat-cell *matCellDef="let element; let index=index" [class]="sausageSelected==index?'selected':''"> {{element.date | date: 'M-d-yyyy'}} </td>
-        </ng-container>
-      
-       
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-
-    </ion-col>
-    <!-- <ul style="list-style: none;">
-      <li *ngFor="let sausage of sausageArr; let index=index" (click)="(isNewRegister)?removeOfSausageArr(index):null">
-          lote: {{sausage.lotId}}<br>
-          fecha:{{sausage.date}} <br>
-          temperatura: {{sausage.temperature}}<br>
-      </li>
-    </ul> -->
-  </ion-row>
-  <ion-row
-      class="container container__row container__row--buttons ion-justify-content-around"
-    >
-      <ion-col class="container container__column" size="12">
-        <ion-button
-          class="container container_buttton"
-          color="secondary"
-          size="large"
-          expand="block"
-          (click)="addItem()"
-          [disabled]="!(isNewRegister || (!isNewRegister && currentProcess!=null && !sausageOfProcess.length))"
-          ><ion-grid>
-            <ion-row *ngIf="!loading"> <ion-col>Agregar Lote</ion-col></ion-row>
-             </ion-grid>
-          </ion-button>
-      </ion-col>
-    </ion-row>
-
+  
 </form>
