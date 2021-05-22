@@ -17,7 +17,8 @@ export interface GrindingItemToList{
   lotId:string,
   typeRecord:string,
   reprocesingId:number,
-  rawMaterial:string
+  rawMaterial:string,
+  temperature:number
 }
 
 export interface GrindingOfProcess{
@@ -25,5 +26,6 @@ export interface GrindingOfProcess{
   weight:number,
   date:string,
   rawMaterial:string,
-  formulation:string
+  formulation:string,
+  temperature:number
 }

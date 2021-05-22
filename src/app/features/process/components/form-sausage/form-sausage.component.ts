@@ -234,7 +234,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
 
   onSubmit() {
     console.log(this.form.valid);
-       if((this.form.valid && this.secondHoursEnabled==false && this.thirdHoursEnabled==false && this.isNewRegister)){
+       if((this.form.valid && this.secondHoursEnabled==false && this.thirdHoursEnabled==false && this.sausageOfProcess==null)){
     const buttons: any = [
       {
         text: "Cancel",

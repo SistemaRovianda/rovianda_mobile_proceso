@@ -6,7 +6,7 @@ import { AuthGuard } from "./shared/guards/auth.guard";
 const routes: Routes = [
   {
     path: "",
-    canActivate: [IsAuthGuard],
+    
     loadChildren: () =>
       import("./features/landing/layout/layout.module").then(
         (m) => m.LayoutModule

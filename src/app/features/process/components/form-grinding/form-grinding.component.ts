@@ -67,7 +67,7 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
   grindingsOfProcess:GrindingOfProcess[]=[];
   matTableDataSource:MatTableDataSource<GrindingItemToList>;
   dialogRef:MatDialogRef<ModalFormulationDetailsComponent>;
-  displayedColumns:string[] = ["Lote","Materia Prima","Peso","Proceso","Fecha","Tipo"];
+  displayedColumns:string[] = ["Lote","Materia Prima","Peso","Proceso","Fecha","Temperatura","Tipo"];
   reprocesingsPendingTemp:ReprocessingOfProcess[]=[];
   reprocesingsPending:ReprocessingOfProcess[]=[];
   reprocesingsToRegister:reprocesingOfGrinding[]=[];
@@ -91,7 +91,8 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
       date: ["", Validators.required],
       defrostId: ["", [Validators.required]],
       process:["",[Validators.required]],
-      reprocesingId:[""]
+      reprocesingId:[""],
+      temperature:["",Validators.required]
     });
     this.subscriptions.add(this.store.select(SELECT_CURRENT_SECTION).subscribe((section)=>{
       this.section=section;
@@ -122,7 +123,8 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
             weight: x.weight,
             typeRecord: "NORMAL",
             reprocesingId:0,
-            rawMaterial: x.rawMaterial
+            rawMaterial: x.rawMaterial,
+            temperature: x.temperature
           }
         }),...this.grindingArr]
         this.resetTable();
@@ -187,7 +189,8 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
           weight: +x.weightUsed,
           typeRecord: "REPROCESO",
           reprocesingId: x.reprocesingId,
-          rawMaterial: x.productName
+          rawMaterial: x.productName,
+          temperature: +this.temperature.value
         }
       }));
       this.resetTable();
@@ -230,6 +233,10 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
 
   get reprocesingId(){
     return this.form.get("reprocesingId");
+  }
+
+  get temperature(){
+    return this.form.get('temperature');
   }
   selectFormulationId(){
     if(this.formulationId.value!=null){
@@ -346,12 +353,14 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
             lotId: lotString,
             typeRecord: "NORMAL",
             reprocesingId:0,
-            rawMaterial
+            rawMaterial,
+            temperature: this.temperature.value
           }
           this.date.reset();
           this.process.reset();
           this.weigth.reset();
           this.grindingArr.push(item);
+          this.temperature.reset();
           this.resetTable();
         }else{
           console.log("Ya esta");
@@ -375,7 +384,8 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
       reprocesingId: item[0].reprocesingId,
       typeRecord: "REPROCESO",
       weight: this.weigth.value,
-      rawMaterial: item[0].productName
+      rawMaterial: item[0].productName,
+      temperature: this.temperature.value
     });
     console.log("Estado de reproceso",this.reprocesingsToRegister);
     this.resetTable();

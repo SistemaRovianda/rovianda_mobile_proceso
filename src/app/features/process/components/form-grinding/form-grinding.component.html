@@ -195,6 +195,18 @@
         >
       </div>
     </ion-col>
+    <ion-col size="5">
+      <ion-item >
+        <ion-label position="floating">Temperatura*</ion-label>
+        <ion-input
+          class="item-form"
+          placeholder="Ingrese una temperatura"
+          formControlName="temperature"
+          type="number"
+        ></ion-input>
+       
+      </ion-item>
+    </ion-col>
   </ion-row>
 
   <ion-row>
@@ -232,6 +244,11 @@
         <ng-container matColumnDef="Fecha">
           <th mat-header-cell *matHeaderCellDef> Fecha </th>
           <td mat-cell *matCellDef="let element"> {{element.date | date: 'M-d-yyyy'}}</td>
+        </ng-container>
+
+         <ng-container matColumnDef="Temperatura">
+          <th mat-header-cell *matHeaderCellDef> Temperatura </th>
+          <td mat-cell *matCellDef="let element"> {{element.temperature}}</td>
         </ng-container>
 
         <ng-container matColumnDef="Tipo">
