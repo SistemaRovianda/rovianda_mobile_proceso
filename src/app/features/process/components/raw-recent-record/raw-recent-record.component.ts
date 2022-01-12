@@ -46,4 +46,9 @@ export class RawRecentRecordComponent implements OnInit {
       this.process.temperature > 0
     );
   }
+
+  dateParsetStr(date:string){
+    let dateSplited= date.split("-");
+    return `${dateSplited[2]}/${dateSplited[1]}/${dateSplited[0]}`;
+  }
 }

@@ -13,6 +13,7 @@ import { FormulationService } from 'src/app/shared/services/formulation.service'
 import { setProcessDetails } from '../process-detail/process-detail.actions';
 import { ProcessService } from 'src/app/shared/services/process.service';
 import { setFormulationDetails } from '../formulation/formulation.actions';
+import { getSausageProcessMetadata, sausageSearchInformation } from "./sausage.actions";
 
 @Injectable()
 export class SausageEffects {
@@ -76,9 +77,9 @@ export class SausageEffects {
             switchMap((action) => {
               this.toast.presentToastSuccess();
               return [
-                fromSausageActions.sausageRegisterResults({
-                  result: true,
-                }),
+                // fromSausageActions.sausageRegisterResults({
+                //   result: true,
+                // }),
                 setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null,reprocesings:[]}}),
                 fromSausageActions.setSausageProcessMetadata({process:null})
                 ,
@@ -107,17 +108,19 @@ export class SausageEffects {
   registerSausageSuccess = createEffect(() =>
     this.action$.pipe(
       ofType(fromSausageActions.sausageRegisterSuccess),
-      exhaustMap(() =>
+      switchMap(
+        () =>
         from(this.router.navigate([this.path])).pipe(
           switchMap((result) =>
-            result
-              ? [fromSausageActions.sausageFinish()]
+
+            result?
+               [fromSausageActions.sausageFinish(),sausageSearchInformation({processId:+localStorage.getItem("processId")})]
               : [
-                  fromSausageActions.sausageRegisterFailure({
-                    error: "No autorizado",
-                  }),
-                ]
-          )
+                 fromSausageActions.sausageRegisterFailure({
+                   error: "No autorizado",
+                 }),
+               ]
+         )
         )
       )
     )

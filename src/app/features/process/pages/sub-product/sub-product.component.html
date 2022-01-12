@@ -1,0 +1,33 @@
+<app-title-header
+  titlePath="Regresar"
+  path="/process/process-detail"
+  (click)="onBackButton()"
+>
+</app-title-header>
+<ion-content>
+  <ion-grid class="container container--all">
+    <ion-row>
+      <ion-col>
+        <h1 class="title">División de subproductos</h1>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col  size="12">
+        <div class="container-sub-product-sections">
+         <app-form-sub-product [_items]="items" class="section list" (deleteSubProduct)="reloadList($event)"></app-form-sub-product>
+         <app-form-add-sub-product (newRegister)="newRegister($event)" class="section" #Form></app-form-add-sub-product>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      class=""
+    >
+      <ion-col  size="12">
+        
+      
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

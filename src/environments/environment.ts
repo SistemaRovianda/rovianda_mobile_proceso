@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  basePath:
-  "https://us-central1-sistema-rovianda.cloudfunctions.net/app/rovianda",// "https://us-central1-rovianda-88249.cloudfunctions.net/app/rovianda",//"http://localhost:5001/rovianda-88249/us-central1/app/rovianda",// 
+  basePath: "https://us-central1-sistema-rovianda.cloudfunctions.net/app/rovianda",//"http://localhost:5001/sistema-rovianda/us-central1/app/rovianda",// "https://us-central1-rovianda-88249.cloudfunctions.net/app/rovianda",//
+   
   basePathMock: "https://e00561fb-33ee-4c43-aec1-de6d47b03e1f.mock.pstmn.io",
   basePathMockJsonServer: " http://localhost:3000",
 };

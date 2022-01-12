@@ -334,4 +334,10 @@ export class FormConditioningComponent implements OnInit, OnDestroy{
   resetTable(){
     this.matTableDataSource.data = this.conditioningArr;
   }
+
+  
+  dateParseStr(date:string,hint:string){
+    let dateSplited = date.split(hint);
+    return `${dateSplited[2]}/${dateSplited[1]}/${dateSplited[0]}`;
+  }
 }

@@ -78,7 +78,7 @@
           formControlName="defrostId"
         >
           <ion-select-option   *ngFor="let defrost of  defrostOfFormulation" [value]="defrost.defrostFormulationId"
-            >{{ defrost.lotMeat}}-{{defrost.defrost.outputCooling.rawMaterial.rawMaterial}}-{{defrost.defrost.dateEnd}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
+            >{{ defrost.lotMeat}}-{{defrost.defrost.outputCooling.rawMaterial.rawMaterial}}-{{dateParseStr(defrost.defrost.dateEnd,'/')}}-{{defrost.defrost.outputHour}}-{{defrost.defrost.outputCooling.quantity}}</ion-select-option
           >
         </ion-select>
       </ion-item>
@@ -218,7 +218,7 @@
         <ion-label position="floating">Fecha*</ion-label>
         <ion-datetime
           class="item-form"
-          displayFormat="MM/DD/YYYY"
+          displayFormat="DD/MM/YYYY"
           formControlName="date"
           [min]="minDate"
           [max]="maxDate"
@@ -279,7 +279,7 @@
 
       <ng-container matColumnDef="Fecha">
         <th mat-header-cell *matHeaderCellDef> Fecha </th>
-        <td mat-cell *matCellDef="let element"> {{element.date | date: 'M-d-yyyy'}} </td>
+        <td mat-cell *matCellDef="let element"> {{dateParseStr(element.date.split("T")[0],'-')}} </td>
       </ng-container>
     
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

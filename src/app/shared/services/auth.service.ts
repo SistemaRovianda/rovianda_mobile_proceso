@@ -43,16 +43,19 @@ export class AuthService {
     return from(
       this.auth
         .signInWithEmailAndPassword(email, password)
-        .then((userCredentials) =>
-          Promise.all([
+        .then((userCredentials) =>{
+         this.storage.set("userId",userCredentials.user.uid);
+         return  Promise.all([
             Promise.resolve(userCredentials.user.uid),
             Promise.resolve(userCredentials.user.refreshToken),
           ])
+        }
         )
     ).pipe(map(([uid, token]) => ({ uid, token })));
   }
 
   getUserData(uid: string): Observable<AuthenticationUser> {
+    localStorage.setItem("userId",uid);
     return this.http.get<AuthenticationUser>(`${this.url}/user/${uid}`);
   }
 
@@ -60,6 +63,9 @@ export class AuthService {
     return from(
       this.storage.get("token").then((token) => {
         console.log("Token: ", token);
+        this.storage.get("userId").then((uid)=>{
+          localStorage.setItem("userId",uid);
+        })
         if (token) return Promise.resolve(true);
         return false;
       })

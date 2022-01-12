@@ -60,12 +60,15 @@ export class SausagePage implements OnInit {
   }
 
   redirectBack() {
-    
     this.store.dispatch(setFormulationDetails({formulation:{date:null,waterTemp:null,verifit:null,temp: null,productRovianda:null,make:null,lotDay:null,defrosts:[],id:null,status:null,reprocesings:[]}}))
     this.store.dispatch(setSausageProcessMetadata({process:null}));
     this.router.navigate([`/process/process-detail`]);
   }
   reprocessing() {
     this.router.navigate([`/process/reprocessing`]);
+  }
+
+  subProduct() {
+    this.router.navigate([`/process/sub-product`]);
   }
 }

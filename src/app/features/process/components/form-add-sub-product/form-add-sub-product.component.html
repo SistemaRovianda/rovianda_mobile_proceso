@@ -1,0 +1,25 @@
+<ion-content>
+  <ion-label class="title-parts">Agregar Partida</ion-label>
+  <ion-list>
+    <ion-item>
+      <ion-label color="primary">Selecciona un producto </ion-label>
+      <ion-select ok-text="Seleccionar" cancel-text="Cancelar" interface="alert" multiple="false" [(ngModel)]="product">
+        <ion-select-option *ngFor="let item of products" [value]="item">{{item.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label color="primary" stacked>Total de kg</ion-label>
+      <ion-input type="number" placeholder="120.3"  [(ngModel)]="kgNumber"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="primary" stacked>Observaciones</ion-label>
+      <ion-textarea [(ngModel)]="observations" class="text-area" placeholder="Se añadieron 120.3 kg a la partida"></ion-textarea>
+    </ion-item>
+  </ion-list>
+  <ion-item>
+    <div class="button-add-subproduct-container">
+      <ion-button (click)="register()" [disabled]="isLoading">Agregar partida</ion-button>
+      <ion-progress-bar type="indeterminate" *ngIf="isLoading"></ion-progress-bar>
+    </div>
+  </ion-item>
+</ion-content>

@@ -411,4 +411,10 @@ export class FormGrindingComponent implements OnInit,OnDestroy {
       console.log("Estado de reproceso",this.reprocesingsToRegister);
     }
   }
+
+  
+  dateParseStr(date:string,hint:string){
+    let dateSplited = date.split(hint);
+    return `${dateSplited[2]}/${dateSplited[1]}/${dateSplited[0]}`;
+  }
 }

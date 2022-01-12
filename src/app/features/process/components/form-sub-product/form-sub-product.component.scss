@@ -1,0 +1,18 @@
+.title-parts{
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    color: black;
+}
+
+.deleted{
+    
+    background-color:  gray !important ;    
+    padding-top: 10px;
+    padding-bottom: 10px;
+    }
+.list{
+    height: 300px;
+    overflow-y: scroll;
+}

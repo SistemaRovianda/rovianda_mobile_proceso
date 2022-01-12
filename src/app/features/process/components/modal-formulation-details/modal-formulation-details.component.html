@@ -2,7 +2,7 @@
 <ul>
 <li *ngFor="let item of data.defrosts">
   Lote: {{item.defrost.outputCooling.loteInterno}}<br>
-  Fecha descongelamiento: {{item.defrost.dateEnd}}<br>
+  Fecha descongelamiento: {{dateParseStr(item.defrost.dateEnd)}}<br>
   Hora de salida: {{item.defrost.outputHour}}<br>
   Materia prima: {{item.defrost.outputCooling.rawMaterial.rawMaterial}}<br>
   Cantidad: {{item.defrost.outputCooling.quantity}}

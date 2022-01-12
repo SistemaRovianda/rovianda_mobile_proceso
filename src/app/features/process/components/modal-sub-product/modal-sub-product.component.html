@@ -1,0 +1,27 @@
+<div class="modal">
+  <ion-item>
+    <ion-label>Producto: {{processSubProductItem.name}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>Peso: {{processSubProductItem.quantity}} KG</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>Estatus: {{processSubProductItem.status=='ACTIVE'?'Activo':(processSubProductItem.status=='INACTIVE'?'Procesado':'Eliminado')}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>Registró: {{processSubProductItem.createdBy}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>Fecha de registro: {{dateParseStr(processSubProductItem.createAt.split("T")[0],"-")}}</ion-label>
+  </ion-item>
+  <ion-item >
+    <ion-label class="text-area">Observaciones: {{processSubProductItem.observations}}</ion-label>
+  </ion-item>
+  <ion-item >
+    <div class="button-container">
+      <ion-progress-bar type="indeterminate" *ngIf="isLoading"></ion-progress-bar>
+      <ion-button (click)="viewC.dismiss(false);">Aceptar</ion-button>
+      <ion-button color="danger" (click)="delete(processSubProductItem)" *ngIf="processSubProductItem.status=='ACTIVE'">Eliminar</ion-button>
+    </div>
+  </ion-item>
+</div>

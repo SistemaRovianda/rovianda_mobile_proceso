@@ -121,11 +121,11 @@ export class FormSausageComponent implements OnInit,OnDestroy {
         this.temperature.setValue(this.sausageOfProcess.temperature);
         this.hour1.setValue(this.sausageOfProcess.time.hour1);
         this.weightInitial.setValue(this.sausageOfProcess.time.weightInitial);
-        if(sausages[0].time.hour2==null || sausages[0].time.hour2==""){
+        if(sausages[0].time.hour2==null || (sausages[0].time.hour2=="" && sausages[0].time.hour2!=null)){
           this.secondHoursEnabled=true;
           this.thirdHoursEnabled=false;
           
-        }else if(sausages[0].time.hour3==null || sausages[0].time.hour3==""){
+        }else if(sausages[0].time.hour3==null || (sausages[0].time.hour3=="" && sausages[0].time.hour3!=null)){
           this.sausageOfProcess.time.hour2=sausages[0].time.hour2;
           this.sausageOfProcess.time.weightMedium=sausages[0].time.weightMedium;
           this.hour2.setValue(this.sausageOfProcess.time.hour2);
@@ -270,7 +270,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
        }else if(this.form.valid){
         
         if(this.secondHoursEnabled==true){
-          if(this.hour2.valid && this.weightMedium.valid){
+          if(this.hour2.value!="" && this.weightMedium.valid){
             console.log("Valido para actualizar segunda hora");
             let sausageRequest:SausageHourRequest={
                hour: 2,
@@ -282,7 +282,7 @@ export class FormSausageComponent implements OnInit,OnDestroy {
             console.log("No valido para actualizar segunda hora");
           }
         }else if(this.thirdHoursEnabled==true){
-          if(this.hour2.valid && this.weightMedium.valid){
+          if(this.hour3.value!="" && this.weightMedium.valid){
             console.log("Valido para actualizar tercera hora");
             let sausageRequest:SausageHourRequest={
                hour: 3,
