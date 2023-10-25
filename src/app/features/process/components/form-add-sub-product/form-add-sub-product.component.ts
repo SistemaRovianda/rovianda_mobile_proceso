@@ -35,6 +35,7 @@ export class FormAddSubProductComponent implements OnInit {
       this.isLoading=true;
       let processId= +localStorage.getItem("processId");
       let userId=localStorage.getItem("userId");
+      
         this.roviandaApi.registerNewSubProduct(processId,this.product.id,this.kgNumber,this.observations,userId).subscribe(()=>{
           this.newRegister.emit(true);
           this.product=null;
